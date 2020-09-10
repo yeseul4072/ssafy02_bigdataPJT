@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
+import itertools
+import os
 
 sido_url = 'http://www.childcare.go.kr/cpis2gi/nursery/NurserySlPL.jsp?programId=P0001PG00001909'
 gugun_url = 'http://www.childcare.go.kr/common/util/AreaCodeSlL.jsp'
@@ -37,80 +39,85 @@ def get_summary(url):
     req = requests.get(url)    
     soup = BeautifulSoup(req.text, 'html.parser')
     table = soup.find('table',  {"class":"table_childcare2"})
-    services = {
-        '일반':'service_general',
-        '영아전담':'service_infant',
-        '장애아전문':'service_special_disable',
-        '장애아통합':'service_integration_disable',
-        '방과후 전담':'service_after',
-        '방과후 통합':'service_integration_after',
-        '야간연장':'service_night_extension',
-        '휴일보육':'service_holiday_care',
-        '24시간':'service_full_day',
-        '시간제보육':'service_part_time'
-    }
-    class_columns = ['zero_class','one_class','two_class','three_class','four_class','five_class','zero_two_class','three_five_class','disable_class','total_class']
-    child_columns = ['zero_child','one_child','two_child','three_child','four_child','five_child','zero_two_child','three_five_child','disable_child','total_child']
 
     result = {}
     for tr in table.find_all('tr'):
-        header = tr.find('th').text.strip()
-        column = {}
+        header = tr.find('th').text.strip()        
         if header == '기관명':
-            column = {'organization_name' : tr.find('td').text.strip()}            
+            result.update({'organization_name' : tr.find('td').text.strip()})
         elif header == '원장명':  
-            column = {'director_name' : tr.find('td').text.strip()}                        
+            result.update({'director_name' : tr.find('td').text.strip()})                        
         elif header == '설립유형':
-            column = {'establishment_type' : tr.find('td').text.strip()}
+            result.update({'establishment_type' : tr.find('td').text.strip()})
         elif header == '설립(개원)일':         
-            column = {'jurisdiction' : tr.find('td').text.strip()}            
+            result.update({'created_date' : tr.find('td').text.strip()})            
         elif header == '관할 행정기관':
-            column = {'administrative_agency' : tr.find('td').text.strip()}
+            result.update({'agency' : tr.find('td').text.strip()})
         elif header == '전화번호':            
-            column = {'tel' : tr.find('td').text.strip()}
+            result.update({'tel' : tr.find('td').text.strip()})
         elif header == '홈페이지':
-            column = {'homepage' : tr.find('td').text.strip()}
+            result.update({'homepage' : tr.find('td').text.strip()})
         elif header == '운영시간':            
-            column = {'operating_time' : tr.find('td').text.strip()}
+            result.update({'operating_time' : tr.find('td').text.strip()})
         elif header == '주소':
-            column = {'address' : tr.find('td').text.strip()}
+            result.update({'address' : tr.find('td').text.strip()})
         elif header == '제공서비스':      
-            for li in tr.find_all('li'):
+            services_list = []
+            for li in tr.find_all('li'):                
                 if li.find('input', checked=True):
-                    column.update({services[li.text.strip()]:True})
-        elif header == '반수':
-            
-            for (idx, td) in enumerate(tr.find_all('td')):                
-                column.update({class_columns[idx]:td.text.strip()})                
-        elif header == '아동수':                     
-            for (idx, td) in enumerate(tr.find_all('td')):                
-                column.update({child_columns[idx]:td.text.strip()})
+                    services_list.append(li.text.strip())
+            result.update({'services' : services_list})
         elif header == '통학차량 운영':
-            column = {'school_car' : tr.find('td').text.strip()}
-        result.update(column)     
+            result.update({'school_bus' : tr.find('td').text.strip()})     
     return result
 
 def get_basic(url):
+    result = {}
     req = requests.get(url)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
-    area_table = tables[1].find('tbody')
-    area_column = ['nursery_room_count', 'nursery_room_area', 'playground_indoor_area', 'playground_outdoor_area', 'playground_rooftop_area', 'playground_nearby_area', 'health_room_area', 'kitchen_area', 'staffroom_area', 'other_space_area']
+    
+    area_thead = tables[1].find('thead')
+    area_tbody = tables[1].find('tbody')
+    area_columns = [[],[]]
+    area_info = []
+    for (idx,tr) in enumerate(area_thead.find_all('tr')):
+        for th in tr.find_all('th'):
+            if 'colspan' in th.attrs: continue
+            area_columns[idx].append(th.text.strip())
+    
+    for td in area_tbody.find_all('td'):
+        area_info.append(td.text.strip())
 
-    result = {}
-    for (idx,td) in enumerate(area_table.find_all('td')):
-        result.update({area_column[idx]: td.text.strip()})
-
+    result.update({'area': {'columns': area_columns[1] + area_columns[0], 'info': area_info}})
+    
     building_table = tables[2].find('tbody')
-    building_column = ['building_year', 'building_floor' , 'building_type ', 'building_ownership_type' , 'building_only_area' , 'total_site_area', 'emergency_facility']
-    for (idx,td) in enumerate(building_table.find_all('td')):
-        result.update({building_column[idx]: td.text.strip()})
+    building_columns = []
+    building_info = []
+    for th in building_table.find_all('th'):
+        building_columns.append(th.text.strip())
+    for td in building_table.find_all('td'):
+        building_info.append(td.text.strip())
+
+    result.update({'building': {'columns': building_columns, 'info': building_info}})
+
 
     cctv_table = tables[3].find('tbody')
-    cctv_column = ['cctv_type', 'cctv_total_count', 'cctv_nursery_room_count', 'cctv_playroom_count', 'cctv_playground_count', 'cctv_restaurant_count', 'cctv_auditorium_count', 'cctv_kitchen_count', 'cctv_hallway_count', 'cctv_office_count', 'cctv_health_room_count', 'cctv_building exterior_count', 'cctv_other_count','cctv_preservation_period', 'cctv_quality', 'cctv_installation_classification', 'cctv_installation_date', 'cctv_operation_method']
+    cctv_columns = []
+    cctv_info = []
+
+    for (idx,tr) in enumerate(cctv_table.find_all('tr')):
+        cctv_columns.append([])        
+        for th in tr.find_all('th'):
+            if 'colspan' in th.attrs and th['colspan'] == '5': continue
+            cctv_columns[idx].append(th.text.strip())
     
-    for (idx,td) in enumerate(cctv_table.find_all('td')):
-        result.update({cctv_column[idx]: td.text.strip()})
+    for td in cctv_table.find_all('td'):
+        cctv_info.append(td.text.strip())
+    if len(cctv_table.find_all('tr')) > 3:
+        result.update({'cctv': {'columns': cctv_columns[0] + cctv_columns[1][:1] + cctv_columns[2] + cctv_columns[1][1:] + list(itertools.chain.from_iterable(cctv_columns[3:])), 'info': cctv_info}})
+    else:
+        result.update({'cctv': {'columns': cctv_columns[0], 'info': cctv_info }})
     return result
 
 def get_staff(url):
@@ -119,21 +126,51 @@ def get_staff(url):
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
-    age_table = tables[0].find('tbody')
-    age_column = ['age_total_fixed_number', 'age_total_current_number'] + ['tmp']*13 + ['fixed_zero_child','fixed_one_child','fixed_two_child','fixed_three_child','fixed_four_child','fixed_five_child','fixed_zero_two_child','fixed_three_five_child','fixed_disable_child'] + ['tmp']*14
-    for (idx,td) in enumerate(age_table.find_all('td')):
-        result.update({age_column[idx]: td.text.strip()})
+    age_thead = tables[0].find('thead')
+    age_tbody = tables[0].find('tbody')
+    age_columns = [[],[]]
+    age_info = []
+    for (idx,tr) in enumerate(age_thead.find_all('tr')):
+        for th in tr.find_all('th'):
+            if 'colspan' in th.attrs: continue
+            age_columns[idx].append(th.text.strip())
+    tmp = age_tbody.find_all('td', {'rowspan':'3'})
 
-    staff_table = tables[1].find('tbody')
-    staff_column = ['total_staff', 'director_count', 'nursery_teacher_count', 'special_teacher_count', 'therapist_count', 'nutritionist_count', 'nurse_count', 'cook_count', 'clerk_count', 'first_grade_staff_count', 'second_grade_staff_count', 'Third_grade_staff_count']
-    for (idx,td) in enumerate(staff_table.find_all('td')):
-        result.update({staff_column[idx]: td.text.strip()})
+    for (idx,tr) in enumerate(age_tbody.find_all('tr')):
+        age_info += [[tmp[0].text.strip(),tmp[1].text.strip()]]
+        for td in tr.find_all('td'):
+            if 'rowspan' in td.attrs: continue
+            age_info[idx].append(td.text.strip())
+
+    result.update({'age_by_class': {'columns': age_columns[0][:2] + age_columns[1] + age_columns[0][2:], 'info': age_info}})
+
+    staff_thead = tables[1].find('thead')
+    staff_tbody = tables[1].find('tbody')
+    staff_columns = []
+    staff_info = []
+    for tr in staff_thead.find_all('tr'):
+        for th in tr.find_all('th'):
+            if 'colspan' in th.attrs: continue
+            staff_columns.append(th.text.strip())
+
+    for td in staff_tbody.find_all('td'):
+        staff_info.append(td.text.strip())
+
+    result.update({'staff': {'columns': staff_columns, 'info': staff_info}})
     
-    year_table = tables[2].find('tbody')
-    year_column = ['continuous_service_year_zero_one', 'continuous_service_year_one_two', 'continuous_service_year_two_four', 'continuous_service_year_four_six', 'continuous_service_year_six'] + ['tmp']*5
-    for (idx,td) in enumerate(year_table.find_all('td')):    
-        result.update({year_column[idx]: td.text.strip()})
+    continuous_years_thead = tables[2].find('thead')
+    continuous_years_tbody = tables[2].find('tbody')
+    continuous_years_columns = []
+    continuous_years_info = []
+    for th in continuous_years_thead.find_all('th'):        
+        continuous_years_columns.append(th.text.strip())
 
+    for tr in continuous_years_tbody.find_all('tr'):
+        continuous_years_info.append([tr.find('th').text.strip()])
+        for td in tr.find_all('td'):
+            continuous_years_info[-1].append(td.text.strip())
+
+    result.update({'continuous_years': {'columns': continuous_years_columns, 'info': continuous_years_info}})
     return result
 
 def get_curriculum(url):
@@ -142,31 +179,49 @@ def get_curriculum(url):
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
-    fee_table = tables[1].find('tbody')
-    fee_column = ['fee_zero_child','fee_one_child','fee_two_child','fee_three_child','fee_four_child','fee_five_child']
-    for (idx,td) in enumerate(fee_table.find_all('td')):    
-        result.update({fee_column[idx]: td.text.strip()})
+    fee_thead = tables[1].find('thead')
+    fee_tbody = tables[1].find('tbody')
+    fee_columns = []
+    fee_info = []
 
-    other_fee_table = tables[2].find('tbody')
-    other_fee_column = ['item', 'defail_item', 'cost', 'cycle']
-    other_fee_list = []
-    for tr in other_fee_table.find_all('tr'):    
-        other_fee = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            other_fee.update({other_fee_column[idx]: td.text.strip()})
-        other_fee_list.append(other_fee)
-    result.update({'other_fee': other_fee_list})
+    for th in fee_thead.find_all('th'):        
+        fee_columns.append(th.text.strip())
 
-    activities_table = tables[3].find('tbody')
-    activities_column = ['category', 'program', 'company', 'per_week', 'operating_time', 'cost']
-    activities_list = []
-    for tr in activities_table.find_all('tr'):    
-        activities = {'age':tr.find('th').text.strip()}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            activities.update({activities_column[idx]: td.text.strip()})
-        activities_list.append(activities)
-    result.update({'activities': activities_list})
+    for tr in fee_tbody.find_all('tr'):
+        fee_info.append(tr.find('th').text.strip())
+        for td in tr.find_all('td'):
+            fee_info.append(td.text.strip())
+    result.update({'fee': {'columns': fee_columns, 'info': fee_info}})
 
+    other_fee_thead = tables[2].find('thead')
+    other_fee_tbody = tables[2].find('tbody')
+    other_fee_columns = []
+    other_fee_info = []
+
+    for th in other_fee_thead.find_all('th'):        
+        other_fee_columns.append(th.text.strip())
+
+    for tr in other_fee_tbody.find_all('tr'):
+        other_fee_info.append([])
+        for td in tr.find_all('td'):
+            other_fee_info[-1].append(td.text.strip())
+    result.update({'other_fee': {'columns': other_fee_columns, 'info': other_fee_info}})
+    
+    special_activity_thead = tables[3].find('thead')
+    special_activity_tbody = tables[3].find('tbody')
+    special_activity_columns = []
+    special_activity_info = []
+
+    for th in special_activity_thead.find_all('th'):        
+        special_activity_columns.append(th.text.strip())
+
+    for tr in special_activity_tbody.find_all('tr'):
+        if not tr.find('th'): break
+        special_activity_info.append([tr.find('th').text.strip()])
+        for td in tr.find_all('td'):
+            special_activity_info[-1].append(td.text.strip())
+    result.update({'special_activity': {'columns': special_activity_columns, 'info': special_activity_info}})
+    
     return result
 
 def get_health(url):
@@ -175,43 +230,60 @@ def get_health(url):
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
-    poisoning_table = tables[2].find('tbody')
-    poisoning_column = ['date', 'total_child', 'occur_child', 'contents']
-    poisoning_list = []
-    for tr in poisoning_table.find_all('tr'):    
-        poisoning = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            poisoning.update({poisoning_column[idx]: td.text.strip()})
-        poisoning_list.append(poisoning)
-    result.update({'poisoning': poisoning_list})
+    poisoning_thead = tables[2].find('thead')
+    poisoning_tbody = tables[2].find('tbody')
+    poisoning_columns = []
+    poisoning_info = []
 
-    air_quality_table = tables[3].find('tbody')
-    air_quality_column = ['target', 'date', 'result']
-    air_quality_list = []
-    for tr in air_quality_table.find_all('tr'):    
-        air_quality = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            air_quality.update({air_quality_column[idx]: td.text.strip()})
-        air_quality_list.append(air_quality)
-    result.update({'air_quality': air_quality_list})
+    for th in poisoning_thead.find_all('th'):        
+        poisoning_columns.append(th.text.strip())
 
-    disinfection_table = tables[4].find('tbody')
-    disinfection_column = ['target', 'date', 'result']
-    disinfection_list = []
-    for tr in disinfection_table.find_all('tr'):    
-        disinfection = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            disinfection.update({disinfection_column[idx]: td.text.strip()})
-        disinfection_list.append(disinfection)
-    result.update({'disinfection': disinfection_list})
+    for tr in poisoning_tbody.find_all('tr'):
+        poisoning_info.append([])
+        for td in tr.find_all('td'):
+            poisoning_info[-1].append(td.text.strip())
+    result.update({'poisoning': {'columns': poisoning_columns, 'info': poisoning_info}})
 
-    water_quality_table = tables[5].find('tbody')
-    water_quality_column = ['water_type','target','date','result']
-    water_quality = {}
-    for (idx,td) in enumerate(water_quality_table.find_all('td')):    
-        water_quality.update({water_quality_column[idx]: td.text.strip()})
-    result.update({'water_quality' : water_quality})
+    air_quality_thead = tables[3].find('thead')
+    air_quality_tbody = tables[3].find('tbody')
+    air_quality_columns = []
+    air_quality_info = []
 
+    for th in air_quality_thead.find_all('th'):        
+        air_quality_columns.append(th.text.strip())
+
+    for tr in air_quality_tbody.find_all('tr'):
+        air_quality_info.append([])
+        for td in tr.find_all('td'):
+            air_quality_info[-1].append(td.text.strip())
+    result.update({'air_quality': {'columns': air_quality_columns, 'info': air_quality_info}})
+
+    disinfection_thead = tables[4].find('thead')
+    disinfection_tbody = tables[4].find('tbody')
+    disinfection_columns = []
+    disinfection_info = []
+
+    for th in disinfection_thead.find_all('th'):        
+        disinfection_columns.append(th.text.strip())
+
+    for tr in disinfection_tbody.find_all('tr'):
+        disinfection_info.append([])
+        for td in tr.find_all('td'):
+            disinfection_info[-1].append(td.text.strip())
+    result.update({'disinfection': {'columns': disinfection_columns, 'info': disinfection_info}})
+
+    water_quality_tbody = tables[5].find('tbody')
+    water_quality_columns = []
+    water_quality_info = []
+
+    for th in water_quality_tbody.find_all('th'):        
+        water_quality_columns.append(th.text.strip())
+
+    for tr in water_quality_tbody.find_all('tr'):
+        for td in tr.find_all('td'):
+            water_quality_info.append(td.text.strip())
+    result.update({'water_quality': {'columns': water_quality_columns, 'info': water_quality_info}})
+   
     return result
 
 def get_grade(url):
@@ -219,31 +291,42 @@ def get_grade(url):
     req = requests.get(url)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
+    
+    if not tables[0].find_all('th')[1].text.strip():
+        url = url.replace('Grade', '')
+        req = requests.get(url)    
+        soup = BeautifulSoup(req.text, 'html.parser')
+        tables = soup.find_all('table',  {"class":"table_childcare2"})
 
-    rating_table = tables[0].find('tbody')
-    rating_column = ['interaction','safety','management','staff']
-    rating = {'grade': rating_table.find_all('th')[1].text.strip()}
-    for (idx,td) in enumerate(rating_table.find_all('td')):    
-        if idx % 2 == 0: continue
-        rating.update({rating_column[idx//2]: td.text.strip()})
-    result.update({'rating' : rating})
+        result.update({'grade': tables[0].find('td').text.strip()})
+    else:
+        result.update({'grade': tables[0].find_all('th')[1].text.strip()})
 
-    rating_info_table = tables[1].find('tbody')
-    rating_info_column = ['type','date','Validity']
-    rating_info = {}
-    for (idx,td) in enumerate(rating_info_table.find_all('td')):    
-        rating_info.update({rating_info_column[idx]: td.text.strip()})
-    result.update({'rating_info' : rating_info})
+    rating_certificate_tbody = tables[1].find('tbody')
+    rating_certificate_columns = []
+    rating_certificate_info = []
 
-    rating_history_table = tables[2].find('tbody')
-    rating_history_column = ['date', 'type']
-    rating_history_list = []
-    for tr in rating_history_table.find_all('tr'):    
-        rating_history = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            rating_history.update({rating_history_column[idx]: td.text.strip()})
-        rating_history_list.append(rating_history)
-    result.update({'rating_history': rating_history_list})
+    for th in rating_certificate_tbody.find_all('th'):        
+        rating_certificate_columns.append(th.text.strip())
+
+    for tr in rating_certificate_tbody.find_all('tr'):
+        for td in tr.find_all('td'):
+            rating_certificate_info.append(td.text.strip())
+    result.update({'rating_certificate': {'columns': rating_certificate_columns, 'info': rating_certificate_info}})
+    
+    rating_history_thead = tables[2].find('thead')
+    rating_history_tbody = tables[2].find('tbody')
+    rating_history_columns = []
+    rating_history_info = []
+
+    for th in rating_history_thead.find_all('th'):        
+        rating_history_columns.append(th.text.strip())
+
+    for tr in rating_history_tbody.find_all('tr'):
+        rating_history_info.append([])
+        for td in tr.find_all('td'):
+            rating_history_info[-1].append(td.text.strip())
+    result.update({'rating_history': {'columns': rating_history_columns, 'info': rating_history_info}})
     return result
 
 def get_extension(url):
@@ -251,20 +334,24 @@ def get_extension(url):
     req = requests.get(url)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
-
-    extension_class_status_table = tables[0].find('tbody')
-    extension_class_status_column = ['class_name', 'class_type', 'total_number', 'current_number', 'concurrent', 'staff']
-    extension_class_status_list = []
-    for tr in extension_class_status_table.find_all('tr'):    
-        extension_class_status = {}
-        for (idx,td) in enumerate(tr.find_all('td')):                
-            extension_class_status.update({extension_class_status_column[idx]: td.text.strip()})
-        extension_class_status_list.append(extension_class_status)
-    result.update({'extension_class_status': extension_class_status_list})
     
-    result.update({'extension_class_program': tables[2].find('tbody').find('td').text.strip()})
-    return result
+    extension_class_status_thead = tables[0].find('thead')
+    extension_class_status_tbody = tables[0].find('tbody')
+    extension_class_status_columns = []
+    extension_class_status_info = []
 
+    for th in extension_class_status_thead.find_all('th'):        
+        extension_class_status_columns.append(th.text.strip())
+
+    for tr in extension_class_status_tbody.find_all('tr'):
+        extension_class_status_info.append([])
+        for td in tr.find_all('td'):
+            extension_class_status_info[-1].append(td.text.strip())
+    result.update({'extension_class_status': {'columns': extension_class_status_columns, 'info': extension_class_status_info}})
+    
+
+    result.update({'extension_class_program': {'columns': tables[2].find('th').text.strip(),'info':tables[2].find('td').text.strip()}})   
+    return result
 
 def get_child_care_detail(code):
     base_url = child_care_detail_url
@@ -275,21 +362,20 @@ def get_child_care_detail(code):
         {'url':'/ChildCareCurriculumSlPu.jsp?flag=BB','get':get_curriculum},
         {'url':'/HealthSafetySlPu.jsp?flag=GA','get':get_health},
         {'url':'/AppraisaAuthenticationGradeSlPu.jsp?flag=PI','get':get_grade},
-        {'url':'/EtntctClassAdditionSlPu.jsp?flag=EN','get':get_extension}
+        {'url':'/EtntctClassAdditionSlPu.jsp?flag=EN','get':get_extension}        
     ]
     result = {}
     for category in categorys:
-        try:
-            result.update(category['get'](base_url + category['url'] + '&STCODE_POP={code}'.format(code=code)))
-        except Exception as e: 
-            raise Exception(category['url'])
+        result.update(category['get'](base_url + category['url'] + '&STCODE_POP={code}'.format(code=code)))
+        
     return result
 
 def get_child_care_list(sido_code, gugun_code):
-    result = []
+    global error_file
 
     base_url = child_care_url
     offset = 0
+    result = []
     while True:
         req = requests.get(base_url + '&ctprvn={sido_code}&signgu={gugun_code}&offset={offset}'.format(sido_code=sido_code, gugun_code=gugun_code,offset=offset))   
         soup = BeautifulSoup(req.text, 'html.parser')     
@@ -300,32 +386,35 @@ def get_child_care_list(sido_code, gugun_code):
         for ele in table.find_all('td', {'class':'lef'}):
             href = ele.find('a')['href']
             code = re.findall('[0-9]+', href)[0] 
-            result.append(get_child_care_detail(code))
-            print(code, )
-            if code == '11140000104':
-                raise Exception('예외 발생')
+            print(code)
+            try:
+                result.append(get_child_care_detail(code))
+                print('success')
+            except Exception as e: 
+                print(e)
+                error_file.write(code + '\n')
             
         offset+=10
         if offset >= total: break
     return result
 
 file_path = './data.json'
-error_path = './error.json'
-data = []
+error_path = './error.txt'
+
+error_file = open(error_path, 'a')
+file_list = set([file_name.split('.')[0] for file_name in os.listdir('./') if len(file_name.split('.')) > 1 and file_name.split('.')[1] == 'json'])
+
 
 sido_list = get_sido_code()
 for sido in sido_list:
     for gugun in sido['gugun']:
+        if gugun['gugun_code'] in file_list: continue
         try:
-            data.append(get_child_care_list(sido['sido_code'], gugun['gugun_code']))
+            print(gugun['gugun_code'])
+            data = get_child_care_list(sido['sido_code'], gugun['gugun_code'])            
+            with open("./{file_name}.json".format(file_name=gugun['gugun_code']), "w") as outfile:
+                json.dump(data, outfile)
         except Exception as e:    
             print(e)
-            with open(file_path, 'w') as outfile:
-                json.dump(data, outfile)
-            with open(error_path, 'w') as outfile:
-                json.dump({'sido':sido['sido_code'], 'gugun': gugun['gugun_code']}, outfile)
-            exit(0)
 
-
-with open(file_path, 'w') as outfile:
-    json.dump(data, outfile)
+error_file.close()
