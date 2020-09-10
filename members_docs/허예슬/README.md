@@ -114,3 +114,147 @@
        'rest_framework'
    ]
    ```
+
+
+
+## 요청과 응답
+
+### 요청(request)객체
+
+```python
+request.POST # 폼 데이터만 다루며, POST 메서드에서만 사용 가능
+request.data # 아무 데이터나 다룰 수 있고, POST뿐만 아니라, PUT, PATCH에서도 이용 가능
+```
+
+### 상태코드
+
+DRF는 `status` 객체를 제공한다
+
+```python
+return Response(status=status.HTTP_204_NO_CONTENT)
+```
+
+## Serializer
+
+github에서 `Serializer` 코드를 살펴보자.
+
+```python
+# rest_framework/serializers.py
+
+class BaseSerializer(Field):
+    def __init__(self, instance=None, data=empty, **kwargs):
+        # 생략
+        
+class Serializer(BaseSeializer):
+  # 생략
+```
+
+`Serializer` 는 `BaseSerializer` 를 상속 받고있다.
+
+따라서 instance가 먼저 나온다면 뒤에 data라는 keyword를 써줄 필요가 없지만, instance 없이 data를 파라미터로 넘기기 위해서는 keyword가 꼭 필요하다.
+
+```python
+serializer = PostSerializer(post)
+serializer = PostSerializer(data=request.data)
+serializer = PostSerializer(post, data=request.data)
+serializer = PostSerializer(post, request.data)
+serializer = PostSerializer(request.data) # 오류!
+```
+
+data에 파라미터가 주어지면 다음과 같은 과정을 거친다.
+
+1. serizlizer.is_valid() : data의 유효성 검사
+2. serializer.save() : 유효한 데이터 저장
+3. serializer.errors : 유효성 검사에서의 오류 저장
+4. serializer.data : 유효성 검사 후 인스턴스 값이 딕셔너리로 저장
+
+### serializer.save()
+
+```python
+def save(self, **kwargs):
+  pass
+```
+
+serializer.save() 는 다음과 같이 **kwargs 를 받는다.
+
+
+
+
+
+> DRF API 문서를 자동으로 만들어주는 패키지
+
+### 설치
+
+```python
+pip install -U drf-yasg
+```
+
+### 시작하기
+
+```python
+# settings.py
+
+INSTALLED_APPS = [
+   ...
+   'drf_yasg',
+   ...
+]
+from django.contrib import admin
+from django.urls import path, include
+from django.conf.urls import url
+
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_url_v1_patterns = [
+    path('v1/', include('musics.urls')),
+]
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="<https://www.google.com/policies/terms/>",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   validators=['flex'],
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+   patterns=schema_url_v1_patterns,
+)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('v1/', include('musics.urls')),
+
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+]
+```
+
+### API 설명 커스터마이징
+
+```python
+#views.py
+
+...
+@api_view(['GET'])
+def music_list(request):
+  """
+  음악 리스트를 저장하거나 불러오는 API
+
+  ---
+  # 내용
+    - id: pk
+    - title : 음악 제목
+    - artist_id : 작곡가 id
+  """
+  musics = Music.objects.all()
+  serializer = MusicSerializer(musics, many=True)
+  return Response(serializer.data)
+```
+
+- 타이틀을 쓰고 엔터를 한 다음 `---`을 써줘야 제대로 커스터마이징된다.
