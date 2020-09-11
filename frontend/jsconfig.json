@@ -6,7 +6,8 @@
       "@/*": ["./*"],
       "~~/*": ["./*"],
       "@@/*": ["./*"]
-    }
+    },
+    "forceConsistentCasingInFileNames": false
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }
