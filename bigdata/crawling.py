@@ -16,7 +16,7 @@ def get_gugun_code(code):
             'subArea': 'signgu',
             'ctprvn': code,
             'alltype': 'A'
-        }
+        },
     )
     soup = BeautifulSoup(req.text, 'html.parser')
 
@@ -26,7 +26,7 @@ def get_gugun_code(code):
     return result
 
 def get_sido_code():
-    req = requests.get(sido_url)    
+    req = requests.get(sido_url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     sido = soup.find('select',  {"name":"ctprvn"})
 
@@ -36,11 +36,16 @@ def get_sido_code():
     return result
 
 def get_summary(url):
-    req = requests.get(url)    
+    print('request')    
+    req = requests.get(url,timeout=5)    
+    print('response')    
     soup = BeautifulSoup(req.text, 'html.parser')
     table = soup.find('table',  {"class":"table_childcare2"})
+    script = table.find('script')
+    latlng = str(script).split('LatLng(')[1].split(')')[0]
+    
 
-    result = {}
+    result = {'lat': latlng.split(', ')[0], 'lng': latlng.split(', ')[1]}
     for tr in table.find_all('tr'):
         header = tr.find('th').text.strip()        
         if header == '기관명':
@@ -73,7 +78,7 @@ def get_summary(url):
 
 def get_basic(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
     
@@ -122,7 +127,7 @@ def get_basic(url):
 
 def get_staff(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
@@ -175,7 +180,7 @@ def get_staff(url):
 
 def get_curriculum(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
@@ -226,7 +231,7 @@ def get_curriculum(url):
 
 def get_health(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
 
@@ -288,13 +293,13 @@ def get_health(url):
 
 def get_grade(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url,timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
     
     if not tables[0].find_all('th')[1].text.strip():
         url = url.replace('Grade', '')
-        req = requests.get(url)    
+        req = requests.get(url,timeout=5)    
         soup = BeautifulSoup(req.text, 'html.parser')
         tables = soup.find_all('table',  {"class":"table_childcare2"})
 
@@ -331,7 +336,7 @@ def get_grade(url):
 
 def get_extension(url):
     result = {}
-    req = requests.get(url)    
+    req = requests.get(url, timeout=5)    
     soup = BeautifulSoup(req.text, 'html.parser')
     tables = soup.find_all('table',  {"class":"table_childcare2"})
     
@@ -364,14 +369,14 @@ def get_child_care_detail(code):
         {'url':'/AppraisaAuthenticationGradeSlPu.jsp?flag=PI','get':get_grade},
         {'url':'/EtntctClassAdditionSlPu.jsp?flag=EN','get':get_extension}        
     ]
-    result = {}
+    result = {'id': code}
     for category in categorys:
+        print(category['url'] )
         result.update(category['get'](base_url + category['url'] + '&STCODE_POP={code}'.format(code=code)))
         
     return result
 
 def get_child_care_list(sido_code, gugun_code):
-    global error_file
 
     base_url = child_care_url
     offset = 0
@@ -391,19 +396,16 @@ def get_child_care_list(sido_code, gugun_code):
                 result.append(get_child_care_detail(code))
                 print('success')
             except Exception as e: 
-                print(e)
-                error_file.write(code + '\n')
-            
+                print(code, ':', e)
+                with open('./error.txt', "a") as errorfile:
+                    errorfile.write(code + '\n')            
         offset+=10
+        print(offset, total)
         if offset >= total: break
     return result
 
 file_path = './data.json'
-error_path = './error.txt'
-
-error_file = open(error_path, 'a')
 file_list = set([file_name.split('.')[0] for file_name in os.listdir('./') if len(file_name.split('.')) > 1 and file_name.split('.')[1] == 'json'])
-
 
 sido_list = get_sido_code()
 for sido in sido_list:
@@ -416,5 +418,3 @@ for sido in sido_list:
                 json.dump(data, outfile)
         except Exception as e:    
             print(e)
-
-error_file.close()
