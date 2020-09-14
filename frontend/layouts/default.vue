@@ -1,7 +1,7 @@
 <template>
   <div>
     <common-header v-if="notMain" />
-    <Nuxt />
+    <Nuxt :class="{pt150 : notMain}" />
     <common-footer v-if="notMain" />
   </div>
 </template>
@@ -20,16 +20,10 @@ export default {
 </script>
 
 <style>
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+* { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif'; }
+
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -73,5 +67,9 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.pt150 {
+  padding-top: 150px;
 }
 </style>
