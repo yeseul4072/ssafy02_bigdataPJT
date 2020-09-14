@@ -1,8 +1,10 @@
 <template>
   <div>
-    <common-header v-if="notMain" />
-    <Nuxt :class="{pt150 : notMain}" />
-    <common-footer v-if="notMain" />
+    <v-app>
+      <common-header v-if="notMain" />
+      <Nuxt :class="{pt150 : notMain}" />
+      <common-footer v-if="notMain" />
+    </v-app>
   </div>
 </template>
 

@@ -35,7 +35,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '@/plugins/fontawesome.js'
+    '@/plugins/fontawesome.js',
+    '@/plugins/vuetify.js'
   ],
   /*
   ** Auto import components
@@ -46,9 +47,13 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxtjs/vuetify',
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module'
   ],
+  vuetify: {
+    /* module options */
+  },
   /*
   ** Nuxt.js modules
   */
