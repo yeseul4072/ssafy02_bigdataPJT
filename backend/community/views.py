@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Board, Favorite, Article, Comment
-from .serializers import BoardSerializer, ArticleSerializer, ArticleCreateSerializer
+from .serializers import BoardSerializer, ArticleSerializer
 
 # Create your views here.
 class Boards(APIView):

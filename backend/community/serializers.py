@@ -17,13 +17,6 @@ class ArticleSerializer(serializers.ModelSerializer):
     fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'board', 'user']
 
 
-class ArticleCreateSerializer(serializers.ModelSerializer):
-  user = serializers.IntegerField(source='user.id', required=False)
-  board = serializers.IntegerField(source='user.id', required=False)
-  class Meta:
-    model = Article
-    fields = '__all__'
-
 
 class CommentSerializer(serializers.ModelSerializer):
   user = serializers.IntegerField(source='user.id', required=False)
