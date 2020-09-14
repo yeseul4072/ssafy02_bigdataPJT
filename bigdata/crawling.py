@@ -404,17 +404,17 @@ def get_child_care_list(sido_code, gugun_code):
         if offset >= total: break
     return result
 
-file_path = './data.json'
-file_list = set([file_name.split('.')[0] for file_name in os.listdir('./') if len(file_name.split('.')) > 1 and file_name.split('.')[1] == 'json'])
+# file_path = './data.json'
+# file_list = set([file_name.split('.')[0] for file_name in os.listdir('./') if len(file_name.split('.')) > 1 and file_name.split('.')[1] == 'json'])
 
-sido_list = get_sido_code()
-for sido in sido_list:
-    for gugun in sido['gugun']:
-        if gugun['gugun_code'] in file_list: continue
-        try:
-            print(gugun['gugun_code'])
-            data = get_child_care_list(sido['sido_code'], gugun['gugun_code'])            
-            with open("./{file_name}.json".format(file_name=gugun['gugun_code']), "w") as outfile:
-                json.dump(data, outfile)
-        except Exception as e:    
-            print(e)
+# sido_list = get_sido_code()
+# for sido in sido_list:
+#     for gugun in sido['gugun']:
+#         if gugun['gugun_code'] in file_list: continue
+#         try:
+#             print(gugun['gugun_code'])
+#             data = get_child_care_list(sido['sido_code'], gugun['gugun_code'])            
+#             with open("./{file_name}.json".format(file_name=gugun['gugun_code']), "w") as outfile:
+#                 json.dump(data, outfile)
+#         except Exception as e:    
+#             print(e)
