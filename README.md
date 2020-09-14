@@ -1,3 +1,3 @@
-# (서비스 이름)
+# Children-ZIP
 
 readme init
