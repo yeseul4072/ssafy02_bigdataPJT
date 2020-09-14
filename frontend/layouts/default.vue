@@ -1,8 +1,23 @@
 <template>
   <div>
+    <common-header v-if="notMain" />
     <Nuxt />
+    <common-footer v-if="notMain" />
   </div>
 </template>
+
+<script>
+import CommonHeader from '@/components/Common/Header.vue'
+import CommonFooter from '@/components/Common/Footer.vue'
+export default {
+  components: { CommonHeader, CommonFooter },
+  computed: {
+    notMain () {
+      return this.$route.path !== '/'
+    }
+  }
+}
+</script>
 
 <style>
 html {
