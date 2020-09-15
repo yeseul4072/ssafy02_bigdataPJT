@@ -24,40 +24,9 @@
           <ul class="NavBarMenu">
             <v-col class="d-none d-md-block">
               <!-- 게시판 -->
-              <v-menu
-                key="Large"
-                rounded="lg"
-                offset-y
-              >
-                <template v-slot:activator="{ attrs, on }">
-                  <li type="button">
-                    <i
-                      v-bind="attrs"
-                      class="far fa-clipboard NavIcon"
-                      v-on="on"
-                    />
-                  </li>
-                </template>
-
-                <!-- <v-list>
-                  <v-list-item
-                    v-for="(item, index) in userTap"
-                    :key="index"
-                    link
-                  >
-                    <v-row>
-                      <v-col cols="3" align="center">
-                        <i :class="userIcon[index]" />
-                      </v-col>
-                      <v-col cols="2" align="center" />
-                      <v-col cols="7" align="left" class="tapFont">
-                        {{ item }}
-                      </v-col>
-                    </v-row>
-                  </v-list-item>
-                </v-list> -->
-                <nav-board />
-              </v-menu>
+              <li type="button" @click.stop="changeBoard()">
+                <i class="far fa-clipboard NavIcon" />
+              </li>
               <!-- 알림 -->
               <v-menu
                 rounded="lg"
@@ -134,83 +103,84 @@
         </div>
       </v-container>
     </div>
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      right
-      temporary
-    >
-      <v-list
-        nav
-        dense
+    <div v-show="drawer" style="float:right;">
+      <v-navigation-drawer
+        v-model="drawer"
+        absolute
+        right
+        temporary
       >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
+        <v-list
+          nav
+          dense
         >
-          <v-list-item>
-            <v-row>
-              <v-col cols="3" align="center">
-                <i class="far fa-clipboard MNavIcon" />
-              </v-col>
-              <v-col cols="9" align="center" class="MNavFont">
-                게시판
-              </v-col>
-            </v-row>
-          </v-list-item>
+          <v-list-item-group
+            v-model="group"
+            active-class="deep-purple--text text--accent-4"
+          >
+            <v-list-item>
+              <v-row>
+                <v-col cols="3" align="center">
+                  <i class="far fa-clipboard MNavIcon" />
+                </v-col>
+                <v-col cols="9" align="center" class="MNavFont">
+                  게시판
+                </v-col>
+              </v-row>
+            </v-list-item>
 
-          <v-list-item>
-            <v-row>
-              <v-col cols="3" align="center">
-                <template v-if="newNoti!=0">
-                  <v-badge color="red" :content="newNoti">
-                    <i class="far fa-bell MNavIcon" />
-                  </v-badge>
-                </template>
-                <i v-else class="far fa-bell MNavIcon" />
-              </v-col>
-              <v-col cols="9" align="center" class="MNavFont">
-                알림
-              </v-col>
-            </v-row>
-          </v-list-item>
+            <v-list-item>
+              <v-row>
+                <v-col cols="3" align="center">
+                  <template v-if="newNoti!=0">
+                    <v-badge color="red" :content="newNoti">
+                      <i class="far fa-bell MNavIcon" />
+                    </v-badge>
+                  </template>
+                  <i v-else class="far fa-bell MNavIcon" />
+                </v-col>
+                <v-col cols="9" align="center" class="MNavFont">
+                  알림
+                </v-col>
+              </v-row>
+            </v-list-item>
 
-          <v-list-item>
-            <v-row>
-              <v-col cols="3" align="center">
-                <i class="far fa-user MNavIcon" />
-              </v-col>
-              <v-col cols="9" align="center" class="MNavFont">
-                회원정보
-              </v-col>
-            </v-row>
-          </v-list-item>
+            <v-list-item>
+              <v-row>
+                <v-col cols="3" align="center">
+                  <i class="far fa-user MNavIcon" />
+                </v-col>
+                <v-col cols="9" align="center" class="MNavFont">
+                  회원정보
+                </v-col>
+              </v-row>
+            </v-list-item>
 
-          <v-list-item>
-            <v-row>
-              <v-col cols="3" align="center">
-                <i class="fas fa-power-off MNavIcon" />
-              </v-col>
-              <v-col cols="9" align="center" class="MNavFont">
-                로그아웃
-              </v-col>
-            </v-row>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-    <nav-board />
+            <v-list-item>
+              <v-row>
+                <v-col cols="3" align="center">
+                  <i class="fas fa-power-off MNavIcon" />
+                </v-col>
+                <v-col cols="9" align="center" class="MNavFont">
+                  로그아웃
+                </v-col>
+              </v-row>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
+    </div>
   </div>
 </template>
 
 <script scoped>
 import { mapGetters } from 'vuex'
 import LogoIcon from '@/components/Common/Header/Logo.vue'
-import NavBoard from '@/components/Common/Header/NavBoard.vue'
+// import NavBoard from '@/components/Common/Header/NavBoard.vue'
 export default {
   components: {
-    LogoIcon,
-    NavBoard
+    LogoIcon
+    // NavBoard
   },
   data () {
     return {
@@ -222,13 +192,13 @@ export default {
       group: null
     }
   },
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
   watch: {
     group () {
       this.drawer = false
     }
-  },
-  computed: {
-    ...mapGetters(['isLogin'])
   },
   methods: {
     goToRoot () {
@@ -236,6 +206,10 @@ export default {
     },
     goToHome () {
       this.$router.push('/home')
+    },
+    changeBoard () {
+      const cur = this.$store.state.Header.isBoard
+      this.$store.commit('setIsBoard', !cur)
     }
   }
 }
@@ -247,14 +221,14 @@ export default {
   height: 150px;
   position: fixed;
   top: 0px;
-  background: #fae57c;
+  /* background: #fae57c; */
   z-index: 3;
 }
 .HeaderGradient {
   width: 100%;
   height: 100%;
   opacity: 0.3;
-  background-image: linear-gradient(to bottom, #fdf4b3, #ffd400);
+  /* background-image: linear-gradient(to bottom, #fdf4b3, #ffd400); */
   position: absolute;
 }
 .cont {
@@ -275,7 +249,6 @@ export default {
   grid-area: logo;
   display: inline-flex;
   width: 350px;
-  height: 350px;
 }
 .LogoLeft {
   width: 33%;
@@ -336,4 +309,8 @@ export default {
   font-size: 1.0rem;
   font-weight: 800;
 }
+i:hover {
+  color : gray;
+}
+
 </style>
