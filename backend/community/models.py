@@ -5,7 +5,7 @@ from django.conf import settings
 class Board(models.Model):
   title = models.CharField(max_length=50)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-  # favorite_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Favorite', related_name='favorite_board')
+  favorite_user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Favorite', related_name='favorite_board')
 
 
 class Favorite(models.Model):

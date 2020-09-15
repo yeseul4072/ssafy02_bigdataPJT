@@ -130,8 +130,8 @@ def like_article(request, board_pk, article_pk):
 def favorite(request, board_pk):
   board = get_object_or_404(Board, pk=board_pk)
   # 이미 즐겨찾기 한 경우
-  if board in request.user.favorite_set.all():
-    request.user.favorite_set.remove(board)
+  if request.user in board.favorite_user.all():
+    board.favorite_user.remove(request.user)
   else:
-    request.user.favorite_set.add(board)
+    board.favorite_user.add(request.user)
   return Response(status=200)
