@@ -27,33 +27,33 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
-	user = UserSerializer(required=False)
-	board = BoardSerializer(required=False)
-	class Meta:
-		model = Article
-		fields = ['title', 'content', 'user', 'board']
+    user = UserSerializer(required=False)
+    board = BoardSerializer(required=False)
+    class Meta:
+        model = Article
+        fields = ['title', 'content', 'user', 'board']
 
 
 class ArticleCommentSerializer(serializers.ModelSerializer):
-	user = UserListSerializer(required=True)
-	class Meta:
-		model = Comment
-		fields = ['id', 'content', 'created_at', 'updated_at', 'user']
+    user = UserListSerializer(required=True)
+    class Meta:
+        model = Comment
+        fields = ['id', 'content', 'created_at', 'updated_at', 'user']
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
-	comment_set = ArticleCommentSerializer(many=True)
-	like_users_count = serializers.SerializerMethodField()
-	def get_like_users_count(self, obj):
-		return obj.like_users.count()
-	class Meta:
-		model = Article
-		fields = ['id','title', 'content', 'created_at', 'updated_at', 'like_users_count', 'comment_set']
+    comment_set = ArticleCommentSerializer(many=True)
+    like_users_count = serializers.SerializerMethodField()
+    def get_like_users_count(self, obj):
+        return obj.like_users.count()
+    class Meta:
+        model = Article
+        fields = ['id','title', 'content', 'created_at', 'updated_at', 'like_users_count', 'comment_set']
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
-	user = UserSerializer(required=False)
-	article = ArticleSerializer(required=False)
-	class Meta:
-		model = Comment
-		fields = '__all__'
+    user = UserSerializer(required=False)
+    article = ArticleSerializer(required=False)
+    class Meta:
+        model = Comment
+        fields = '__all__'
