@@ -2,7 +2,7 @@
   <div class="l2_main">
     <div
       align="center"
-      style="width=100%; padding-top:70px; font-size:2rem;"
+      style="width=100%; padding-top:70px; font-size:2rem; color: #F257A0;"
     >
       어린이ZIP은 지금?
     </div>
@@ -10,13 +10,13 @@
       align="center"
       style="width=100%; padding-top:30px; font-size:1rem;"
     >
-      <button @click="insertICountNumber(200000)">
+      <button class="l2_button" @click="test(123)">
         사용자 수
       </button>
-      <button @click="insertICountNumber(50000)">
+      <button class="l2_button" @click="test(50000)">
         국내 어린이집 수
       </button>
-      <button @click="insertICountNumber(12131231)">
+      <button class="l2_button" @click="test(12131231)">
         리뷰 수
       </button>
     </div>
@@ -26,11 +26,11 @@
       style="width=100%;"
     >
       <ICountUp
-        :start-val="startVal"
+        id="aaaa"
+        :delay="delay"
         :end-val="endVal"
-        :decimals="decimals"
-        :duration="duration"
         :options="options"
+        @ready="onReady"
       />
     </div>
   </div>
@@ -45,11 +45,11 @@ export default {
   },
   data () {
     return {
+      delay: 1000,
+      endVal: 120500,
       startVal: 0,
-      endVal: 0,
-      decimals: 0,
-      duration: 2.5,
       options: {
+        duration: 3,
         useEasing: true,
         useGrouping: true,
         separator: ',',
@@ -63,9 +63,13 @@ export default {
 
   },
   methods: {
-    insertICountNumber (count) {
-      this.decimals = 0
-      this.startVal = 0
+    onReady (instance, CountUp) {
+      const that = this
+      instance.frameVal = 0
+      instance.update(that.endVal)
+      instance.pauseResume()
+    },
+    test (count) {
       this.endVal = count
     }
   }
@@ -78,8 +82,13 @@ export default {
     height:500px;
 }
 .iCountUp {
-    font-size: 9em;
+    font-size: 8em;
     margin: 0;
-    color: #4d63bc;
-  }
+    color: #F257A0;
+}
+
+.l2_button{
+  margin-left: 10px;
+  margin-right: 10px;
+}
 </style>
