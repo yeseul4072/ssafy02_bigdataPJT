@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from .models import Board, Favorite, Article, Comment
 from .serializers import (BoardSerializer, ArticleSerializer, ArticleCreateSerializer, ArticleDetailSerializer,
 CommentCreateSerializer, ArticleCommentSerializer)
@@ -113,4 +114,24 @@ class CommentDetail(APIView):
     comment.delete()
     return Response(status=200)
 
-  
+@api_view(['GET'])
+def like_article(request, board_pk, article_pk):
+  article = get_object_or_404(Article, pk=article_pk)
+  # 이미 좋아요 한 경우
+  if request.user in article.like_user.all():
+    article.like_user.remove(request.user)
+    return Response(status=200)
+  else:
+    article.like_user.add(request.user)
+  return Response(status=200)
+
+
+@api_view(['GET'])
+def favorite(request, board_pk):
+  board = get_object_or_404(Board, pk=board_pk)
+  # 이미 즐겨찾기 한 경우
+  if board in request.user.favorite_set.all():
+    request.user.favorite_set.remove(board)
+  else:
+    request.user.favorite_set.add(board)
+  return Response(status=200)
