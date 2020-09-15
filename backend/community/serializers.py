@@ -17,13 +17,13 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-	user = UserListSerializer(required=False)
-	like_users_count = serializers.SerializerMethodField()
-	def get_like_users_count(self, obj):
-		return obj.like_users.count()
+    user = UserListSerializer(required=False)
+    like_users_count = serializers.SerializerMethodField()
+    def get_like_users_count(self, obj):
+        return obj.like_users.count()
 	class Meta:
-		model = Article
-		fields = ['id', 'user', 'title', 'content', 'created_at', 'updated_at', 'like_users_count']
+        model = Article
+        fields = ['id', 'user', 'title', 'content', 'created_at', 'updated_at', 'like_users_count']
 
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
