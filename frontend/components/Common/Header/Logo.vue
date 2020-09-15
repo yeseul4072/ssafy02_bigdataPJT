@@ -1,0 +1,89 @@
+<template>
+  <svg data-v-7b5d89eb="" data-v-e9c77314="" class="logoMob" style="" @click="goToRoot()"><line
+    data-v-7b5d89eb=""
+    x1="75.76570074356519"
+    y1="54.23429925643481"
+    x2="125"
+    y2="5"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="65"
+    y1="0"
+    x2="65"
+    y2="49.775"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="54.23429925643481"
+    y1="54.23429925643481"
+    x2="5"
+    y2="5"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="49.775"
+    y1="65"
+    x2="0"
+    y2="65"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="54.23429925643481"
+    y1="75.76570074356519"
+    x2="5"
+    y2="125"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="65"
+    y1="80.225"
+    x2="65"
+    y2="130"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="75.76570074356519"
+    y1="75.76570074356519"
+    x2="125"
+    y2="125"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /><line
+    data-v-7b5d89eb=""
+    x1="130"
+    y1="65"
+    x2="62.25"
+    y2="65"
+    stroke="black"
+    stroke-width="5.5"
+    class="logoMob__line"
+  /></svg>
+</template>
+
+<script>
+export default {
+  methods: {
+    goToRoot () {
+      this.$router.push('/')
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

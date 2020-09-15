@@ -22,8 +22,8 @@ export default {
 </script>
 
 <style>
-@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
-* { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif'; }
+@import url('https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.min.css');
+* { font-family: 'NanumSquareRound',sans-serif; }
 
 html {
   font-size: 16px;
