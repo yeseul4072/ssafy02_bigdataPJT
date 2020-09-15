@@ -1,21 +1,19 @@
 <template>
   <div>
     <v-app>
-      <common-header v-if="notMain" style="z-index:10;" />
+      <common-header v-if="notMain" />
       <v-expand-transition v-if="notMain">
         <nav-board
           v-show="isBoard"
           ref="test"
           :class="{pt150 : notMain}"
           :is-show="isBoard"
-          style="z-index:9;"
           @child-event="checkHeight"
         />
       </v-expand-transition>
-      <div :style="{'margin-top' : (boardHeight) + 'px' }" style="z-index:1;">
-        <Nuxt :class="{pt150 : notMain}" style="z-index:1;" />
-        <common-footer v-if="notMain" />
-      </div>
+      <div :style="{'height' : (boardHeight) + 'px' }" />
+      <Nuxt :class="{pt150 : notMain}" />
+      <common-footer v-if="notMain" />
     </v-app>
   </div>
 </template>
