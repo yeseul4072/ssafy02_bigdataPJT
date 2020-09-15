@@ -63,6 +63,9 @@ INSTALLED_APPS = [
     # CORS
     'corsheaders',
 
+    # swagger
+    'drf_yasg',
+
     # my apps
     'accounts',
     'community',
