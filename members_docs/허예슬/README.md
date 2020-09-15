@@ -11,7 +11,7 @@
 ㄴ images (이미지 관련 -> readme.md에 들어갈 폴더)
 ```
 
-
+.
 
 ## **가상환경 설정 및 django 프로젝트 생성 (REST API)**
 
