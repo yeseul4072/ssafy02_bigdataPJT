@@ -2,7 +2,7 @@
   <div class="l2_main">
     <div
       align="center"
-      style="width=100%; padding-top:70px; font-size:2rem; color: #F257A0;"
+      style="width=100%; padding-top:70px; font-size:2.2rem; font-weight:550; color: #F257A0;"
     >
       어린이ZIP은 지금?
     </div>

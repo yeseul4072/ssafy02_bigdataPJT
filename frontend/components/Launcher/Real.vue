@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .l3_main{
   display: flex;
   width:100%;
@@ -31,5 +31,13 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: #F2D5E5;
+}
+
+.dp-2{
+  color: #F257A0;
+}
+
+.dp-1{
+  font-size:17px;
 }
 </style>

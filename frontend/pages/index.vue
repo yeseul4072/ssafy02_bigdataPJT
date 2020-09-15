@@ -2,90 +2,37 @@
   <div class="body-container">
     <section class="section-main">
       <ul class="main-right-nav">
-        <li class="item item-we" data-scroll="main-we">
+        <li
+          v-for="(item, index) in indexList"
+          :key="index"
+        >
           <v-hover v-slot:default="{ hover }">
-            <v-tab @click="goto('#we')">
-              <v-tooltip left>
+            <v-tab
+              :ripple="false"
+              class="index-v-tab"
+              @click="goto(item.goto); selected=index"
+            >
+              <v-tooltip
+                left
+                color="#ff5faa"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <div
                     v-bind="attrs"
+                    style="height: 50px;
+                          display: flex;
+                          align-items: center;"
                     v-on="on"
                   >
-                    <v-icon v-show="hover">
-                      mdi-checkbox-marked-circle-outline
+                    <v-icon v-if="hover || selected == index" class="l1_icon_active">
+                      {{ item.indexLogo }}
                     </v-icon>
-                    <v-icon v-show="!hover">
+                    <v-icon v-else class="l1_icon_none">
                       mdi-circle
                     </v-icon>
                   </div>
                 </template>
-                <span>메인</span>
-              </v-tooltip>
-            </v-tab>
-          </v-hover>
-        </li>
-        <li class="item item-real" data-scroll="main-real">
-          <v-hover v-slot:default="{ hover }">
-            <v-tab @click="goto('#real')">
-              <v-tooltip left>
-                <template v-slot:activator="{ on, attrs }">
-                  <div
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-icon v-show="hover">
-                      mdi-checkbox-marked-circle-outline
-                    </v-icon>
-                    <v-icon v-show="!hover">
-                      mdi-circle
-                    </v-icon>
-                  </div>
-                </template>
-                <span>어린이ZIP은 지금</span>
-              </v-tooltip>
-            </v-tab>
-          </v-hover>
-        </li>
-        <li class="item item-review" data-scroll="main-review">
-          <v-hover v-slot:default="{ hover }">
-            <v-tab @click="goto('#review')">
-              <v-tooltip left>
-                <template v-slot:activator="{ on, attrs }">
-                  <div
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-icon v-show="hover">
-                      mdi-checkbox-marked-circle-outline
-                    </v-icon>
-                    <v-icon v-show="!hover">
-                      mdi-circle
-                    </v-icon>
-                  </div>
-                </template>
-                <span>리뷰</span>
-              </v-tooltip>
-            </v-tab>
-          </v-hover>
-        </li>
-        <li class="item item-main" data-scroll="main-main">
-          <v-hover v-slot:default="{ hover }">
-            <v-tab @click="goto('#main')">
-              <v-tooltip left>
-                <template v-slot:activator="{ on, attrs }">
-                  <div
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-icon v-show="hover">
-                      mdi-checkbox-marked-circle-outline
-                    </v-icon>
-                    <v-icon v-show="!hover">
-                      mdi-circle
-                    </v-icon>
-                  </div>
-                </template>
-                <span>메인 페이지</span>
+                <span>{{ item.text }}</span>
               </v-tooltip>
             </v-tab>
           </v-hover>
@@ -108,6 +55,22 @@
         </div>
       </v-flex>
     </div>
+    <div class="index-floting-button">
+      <transition name="fade">
+        <v-btn
+          v-if="hidden"
+          absolute
+          dark
+          fab
+          top
+          right
+          color="pink"
+          @click="goto('#we');"
+        >
+          <v-icon>mdi-arrow-up</v-icon>
+        </v-btn>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -120,19 +83,68 @@ import Main from '@/components/Launcher/Main.vue'
 
 export default {
   components: { We, UsePlatform, Real, Main },
+  data () {
+    return {
+      selected: 0,
+      hidden: false,
+      indexList: [
+        {
+          goto: '#we',
+          text: '메인',
+          indexLogo: 'mdi-home-variant-outline'
+        },
+        {
+          goto: '#real',
+          text: '어린이ZIP은 지금',
+          indexLogo: 'mdi-trophy-outline'
+        },
+        {
+          goto: '#review',
+          text: '리뷰',
+          indexLogo: 'mdi-comment-quote-outline'
+        },
+        {
+          goto: '#main',
+          text: '메인 페이지',
+          indexLogo: 'mdi-motion-play-outline'
+        }
+      ]
+    }
+  },
+  mounted () {
+    document.addEventListener('scroll', this.handleScroll)
+  },
   methods: {
     goto (target) {
       this.$vuetify.goTo(target, {
-        duration: 300,
+        duration: 1000,
         offset: 100,
         easing: 'easeInOutCubic'
       })
+    },
+    handleScroll () {
+      const allHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      const height = allHeight - clientHeight
+      const curPosition = window.scrollY
+
+      this.hidden = true
+      if (curPosition === 0) {
+        this.selected = 0
+        this.hidden = false
+      } else if (curPosition >= height) {
+        this.selected = 3
+      } else if (curPosition > height / 4 * 3) {
+        this.selected = 2
+      } else if (curPosition > height / 4 * 2) {
+        this.selected = 1
+      }
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -144,30 +156,44 @@ export default {
 
 .section-main{
   display: inline-block;
-  position: fixed;
+  position: fixed !important;
   z-index: 100;
   top: 40%;
   right: 0%;
 }
 
-.dp-2{
-  color: #F257A0;
-}
-
-.dp-1{
-  font-size:17px;
+.index-floting-button{
+  display: inline-block;
+  position: fixed !important;
+  z-index: 100;
+  top: 95%;
+  right: 0%;
 }
 
 ul{
    list-style:none;
 }
 
-li{
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
 .item{
   font-size: 12px !important;
+}
+
+.l1_icon_active{
+  padding-left: 10px;
+  font-size: 27px;
+  color: #ff5faa;
+}
+
+.l1_icon_none{
+  padding-left: 10px;
+  font-size: 6px;
+  color: #b9b9b9;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

@@ -32,12 +32,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .l4_main{
   display: flex;
   align-items: center;
   justify-content: center;
   width:100%;
   height:400px;
+}
+
+.dp-2{
+  color: #F257A0;
+}
+
+.dp-1{
+  font-size:17px;
 }
 </style>
