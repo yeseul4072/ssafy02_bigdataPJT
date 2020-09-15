@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="MainHeader">
+    <div class="MainHeader" style="background-color:white; ">
       <div class="HeaderGradient" />
       <v-container fluid class="cont">
         <div class="Logo">
@@ -218,7 +218,7 @@ export default {
 <style scoped>
 .MainHeader {
   width: 100%;
-  height: 150px;
+  height: 125px;
   position: fixed;
   top: 0px;
   /* background: #fae57c; */

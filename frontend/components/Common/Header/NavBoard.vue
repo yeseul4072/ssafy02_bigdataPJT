@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="cont" style="position: fixed;">
+  <v-container fluid class="cont" style="position: fixed; background-color:white;">
     <v-divider />
     <div ref="boardBox" class="wrap justify-center d-flex">
       <v-row class="w700">
@@ -15,6 +15,7 @@
               <v-list-item
                 v-for="(item, i) in items"
                 :key="i"
+                v-ripple="false"
               >
                 <v-list-item-content>
                   <v-col>
@@ -38,6 +39,7 @@
                   <v-list-item
                     v-for="(item, i) in items"
                     :key="i+'?'"
+                    v-ripple="false"
                   >
                     <v-list-item-content>
                       {{ item.title }}
@@ -52,6 +54,7 @@
                   <v-list-item
                     v-for="(item, i) in items"
                     :key="i"
+                    v-ripple="false"
                   >
                     <v-list-item-content>
                       {{ item.title }}
@@ -66,6 +69,7 @@
                   <v-list-item
                     v-for="(item, i) in items"
                     :key="i"
+                    v-ripple="false"
                   >
                     <v-list-item-content>
                       {{ item.title }}
@@ -82,7 +86,9 @@
         />
         <v-col cols="2" style="max-width: 230px">
           <v-subheader><h2>고객의 소리</h2></v-subheader>
-          <v-list flat>
+          <v-list
+            flat
+          >
             <v-list-item-group v-model="item">
               <v-list-item
                 v-for="(item, i) in items3"
