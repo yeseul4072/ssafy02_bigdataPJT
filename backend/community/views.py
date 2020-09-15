@@ -8,6 +8,7 @@ CommentCreateSerializer, ArticleCommentSerializer)
 
 # Create your views here.
 class Boards(APIView):
+  # 게시판 목록
   def get(self, request):
     boards = Board.objects.all()
     serializer = BoardSerializer(boards, many=True)
@@ -23,11 +24,13 @@ class Boards(APIView):
 
 
 class BoardDetail(APIView):
+  # 게시판 디테일 read
   def get(self, request, board_pk):
     board = Board.objects.get(pk=board_pk)
     serializer = BoardSerializer(board)
     return Response(serializer.data)
 
+  # 게시판 update
   def put(self, request, board_pk):
     board = Board.objects.get(pk=board_pk)
     serializer = BoardSerializer(board, data=request.data)
@@ -36,6 +39,7 @@ class BoardDetail(APIView):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+  # 게시판 delete
   def delete(self, request, board_pk):
       board = Board.objects.get(pk=board_pk)
       board.delete()
@@ -82,7 +86,7 @@ class ArticleDetail(APIView):
       article.delete()
       return Response(status=200)
 
-  # 댓글 create
+  # 댓글 create - params : content
   def post(self, request, board_pk, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     serializer = CommentCreateSerializer(data=request.data)
@@ -93,12 +97,13 @@ class ArticleDetail(APIView):
 
 
 class CommentDetail(APIView):
+  # 댓글 디테일 read
   def get(self, request, board_pk, article_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
     serializer = ArticleCommentSerializer(comment)
     return Response(serializer.data)
 
-
+  # 댓글 update
   def put(self, request, board_pk, article_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
     serializer = CommentCreateSerializer(comment, data=request.data)
@@ -108,11 +113,12 @@ class CommentDetail(APIView):
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+  # 댓글 delete
   def delete(self, request, board_pk, article_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
     comment.delete()
     return Response(status=200)
+
 
 @api_view(['GET'])
 def like_article(request, board_pk, article_pk):
