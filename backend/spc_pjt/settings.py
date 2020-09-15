@@ -155,3 +155,9 @@ SITE_ID = 1
 
 CORS_ORIGIN_ALLOW_ALL = True
 # 배포시 CORS_ORIGIN_WHITELIST 사용하기.
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly', 
+    )
+}

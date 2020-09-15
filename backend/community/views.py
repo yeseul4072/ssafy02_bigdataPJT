@@ -1,18 +1,21 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .models import Board, Favorite, Article, Comment
 from .serializers import (BoardSerializer, ArticleSerializer, ArticleCreateSerializer, ArticleDetailSerializer,
-CommentCreateSerializer, ArticleCommentSerializer)
+CommentCreateSerializer, ArticleCommentSerializer, BoardListSerializer)
 
 # Create your views here.
 class Boards(APIView):
+  permissions_classes = [IsAuthenticatedOrReadOnly]
+  
   # 게시판 목록
   def get(self, request):
     boards = Board.objects.all()
-    serializer = BoardSerializer(boards, many=True)
+    serializer = BoardListSerializer(boards, many=True)
     return Response(serializer.data)
 
   # 게시판 create - params : title
@@ -20,31 +23,25 @@ class Boards(APIView):
     serializer = BoardSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
       serializer.save(user=request.user)
-      return Response(serializer.data)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BoardDetail(APIView):
-  # 게시판 디테일 read
-  def get(self, request, board_pk):
-    board = Board.objects.get(pk=board_pk)
-    serializer = BoardSerializer(board)
-    return Response(serializer.data)
-
   # 게시판 update
   def put(self, request, board_pk):
     board = Board.objects.get(pk=board_pk)
     serializer = BoardSerializer(board, data=request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
   # 게시판 delete
   def delete(self, request, board_pk):
       board = Board.objects.get(pk=board_pk)
       board.delete()
-      return Response(status=200)
+      return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class Articles(APIView):
@@ -60,7 +57,7 @@ class Articles(APIView):
     board = Board.objects.get(pk=board_pk)
     if serializer.is_valid(raise_exception=True):
       serializer.save(user=request.user, board=board)
-      return Response(serializer.data)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -79,7 +76,7 @@ class ArticleDetail(APIView):
       serializer = ArticleCreateSerializer(article, data=request.data)
       if serializer.is_valid(raise_exception=True):
           serializer.save(user=request.user, board=board)
-          return Response(serializer.data)
+          return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
       return Response(status=status.HTTP_403_FORBIDDEN)
@@ -89,7 +86,7 @@ class ArticleDetail(APIView):
       article = Article.objects.get(pk=article_pk)
       if request.user == article.user:
         article.delete()
-        return Response(status=200)
+        return Response(status=status.HTTP_204_NO_CONTENT)
       else:
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -99,17 +96,11 @@ class ArticleDetail(APIView):
     serializer = CommentCreateSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
       serializer.save(user=request.user, article=article)
-      return Response(serializer.data)
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentDetail(APIView):
-  # 댓글 디테일 read
-  def get(self, request, board_pk, article_pk, comment_pk):
-    comment = get_object_or_404(Comment, pk=comment_pk)
-    serializer = ArticleCommentSerializer(comment)
-    return Response(serializer.data)
-
   # 댓글 update
   def put(self, request, board_pk, article_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
@@ -118,7 +109,7 @@ class CommentDetail(APIView):
       article = get_object_or_404(Article, pk=article_pk)
       if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user, article=article)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
       return Response(status=status.HTTP_403_FORBIDDEN)
@@ -128,7 +119,7 @@ class CommentDetail(APIView):
     comment = get_object_or_404(Comment, pk=comment_pk)
     if request.user == comment.user:
       comment.delete()
-      return Response(status=200)
+      return Response(status=status.HTTP_204_NO_CONTENT)
     else:
       return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -139,10 +130,9 @@ def like_article(request, board_pk, article_pk):
   # 이미 좋아요 한 경우
   if request.user in article.like_user.all():
     article.like_user.remove(request.user)
-    return Response(status=200)
   else:
     article.like_user.add(request.user)
-  return Response(status=200)
+  return Response()
 
 
 @api_view(['GET'])
@@ -153,4 +143,4 @@ def favorite(request, board_pk):
     board.favorite_user.remove(request.user)
   else:
     board.favorite_user.add(request.user)
-  return Response(status=200)
+  return Response()
