@@ -1,11 +1,12 @@
 import json
 import pandas as pd
 from collections import Counter
+from bisect import bisect_right
 
 with open('./data.json', encoding="utf-8") as f:
     datas = json.loads(f.read())
 
-services = {
+service_list = {
     '일반' :'general',
     '영아전담': 'infants',
     '장애아전문': 'disabled',
@@ -17,16 +18,43 @@ services = {
     '24시간': 'all_day',
     '시간제보육': 'part_time'
 }
+establishment_type_list = {
+    '직장': 'office', 
+    '국공립': 'public', 
+    '민간': 'private', 
+    '가정': 'family', 
+    '법인·단체등': 'corporate', 
+    '협동': 'cooperation', 
+    '사회복지법인': 'welfare'
+}
+
+program_list = {
+    '언어': 'language', 
+    '문화/예술': 'culture', 
+    '체육': 'sport',
+    '과학/창의': 'science', 
+    '': 'other'    
+}
+
+age_list = ['zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old']
+
+area_per_cctv_list = []
+child_per_staff_list = []
 
 for data in datas:
     t = data['operating_time'].split(':')
     data['start_time'] = int(t[1]) * 60 + int(t[2][:2])
     data['finish_time'] = int(t[2][-2:]) * 60 + int(t[3])
     
-    for service in services.values():
+    for service in service_list.values():
         data[service] = 0
     for service in data['services']:
-        data[services[service]] = 1
+        data[service_list[service]] = 1
+
+    for establishment_type in establishment_type_list.values():
+        data[establishment_type] = 0
+    
+    data[establishment_type_list[data['establishment_type']]] = 1
 
     data['school_bus'] = 1 if data['school_bus'] == '운영' else 0
 
@@ -40,7 +68,7 @@ for data in datas:
         try:
             data['grade'] = ['A','B','C','D'].index(data['grade']) + 1
         except ValueError as e: 
-            data['grade'] = 0            
+            data['grade'] = 5            
         data['score'] = 0
 
     data['area_columns'] = ','.join(data['area']['columns'])
@@ -54,10 +82,10 @@ for data in datas:
     area = float(data['area']['info'][1][:-2])    
 
     try:
-        data['cctv_per_area'] = cctv_count / area
+        data['area_per_cctv'] = area / cctv_count
     except ZeroDivisionError as e: 
-        data['cctv_per_area'] = cctv_count
-
+        data['area_per_cctv'] = area
+    area_per_cctv_list.append(data['area_per_cctv'])    
     
     data['age_by_class_columns'] = ','.join(data['age_by_class']['columns'])
     data['age_by_class_info'] = '|'.join([','.join(info) for info in data['age_by_class']['info']])    
@@ -69,6 +97,7 @@ for data in datas:
         data['child_per_staff'] = int(data['age_by_class']['info'][0][1]) / int(data['staff']['info'][0])
     except ZeroDivisionError as e: 
         data['child_per_staff'] = int(data['age_by_class']['info'][0][1])
+    child_per_staff_list.append(data['child_per_staff'])
 
     data['fee_columns'] = ','.join(data['fee']['columns'])
     data['fee_info'] = ','.join(data['fee']['info'])
@@ -90,7 +119,10 @@ for data in datas:
             other_fee += int(info[-2])
         elif info[-1] == '일단위':
             other_fee += int(info[-2])*20
+    
     data['monthly_fee'] = ','.join([str(int(round(i + other_fee,-1))) for i in fee])
+    for (idx,num) in enumerate(data['monthly_fee'].split(',')):
+        data[age_list[idx]] = num
 
     data['poisoning_columns'] = ','.join(data['poisoning']['columns'])
     data['poisoning_info'] = '|'.join([','.join(info) for info in data['poisoning']['info']])    
@@ -114,27 +146,51 @@ for data in datas:
     
     data['has_extension_class'] = 1 if len(data['extension_class_status_info']) != 0 else 0
 
-    del data['operating_time']
-    del data['services']
-    del data['area']
-    del data['building']
-    del data['cctv']
-    del data['age_by_class']
-    del data['staff']
-    del data['continuous_years']
-    del data['fee']
-    del data['other_fee']
-    del data['special_activity']
+    for program in program_list.values():
+        data[program] = 0
+    
+    program_by_age = []
+    for program in data['special_activity']['info']:        
+        data[program_list[program[1]]] = 1
+        program_by_age.append(program[0]+'&'+program[1])
+    data['program_by_age'] = ','.join(program_by_age)
 
-    del data['poisoning']
-    del data['air_quality']
-    del data['disinfection']
-    del data['water_quality']
-    del data['rating_certificate']
-    del data['rating_history']
-    del data['extension_class_status']
-    del data['extension_class_program']
+    del_columns = ['operating_time','services','area','building','cctv','age_by_class','staff','continuous_years','fee','other_fee','special_activity','poisoning','air_quality','disinfection','water_quality','rating_certificate','rating_history','extension_class_status','extension_class_program']
+    for column in del_columns:
+        del data[column]
 
+area_per_cctv_list.sort()
+child_per_staff_list.sort()
+total = len(datas)
+
+for data in datas:
+    cctv_rank = bisect_right(area_per_cctv_list, data['area_per_cctv']) / total
+    staff_rank = bisect_right(child_per_staff_list, data['child_per_staff']) / total
+    if cctv_rank <= 0.20:
+        data['cctv_grade'] = 1
+    elif cctv_rank <= 0.40:
+        data['cctv_grade'] = 2
+    elif cctv_rank <= 0.60:
+        data['cctv_grade'] = 3
+    elif cctv_rank <= 0.80:
+        data['cctv_grade'] = 4
+    else:
+        data['cctv_grade'] = 5
+
+    if staff_rank <= 0.20:
+        data['staff_grade'] = 1
+    elif staff_rank <= 0.40:
+        data['staff_grade'] = 2
+    elif staff_rank <= 0.60:
+        data['staff_grade'] = 3
+    elif staff_rank <= 0.80:
+        data['staff_grade'] = 4
+    else:
+        data['staff_grade'] = 5
+
+    
+    
+print(datas[3])
+    
 with open("./data2.json", "w") as outfile:
     json.dump(datas, outfile)
-
