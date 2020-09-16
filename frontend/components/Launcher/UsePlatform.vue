@@ -2,7 +2,7 @@
   <div class="l2_main">
     <div
       align="center"
-      style="width=100%; padding-top:70px; font-size:2rem; color: #F257A0;"
+      style="width=100%; padding-top:70px; font-size:2.2rem; font-weight:550; color: #F257A0;"
     >
       어린이ZIP은 지금?
     </div>
@@ -26,7 +26,6 @@
       style="width=100%;"
     >
       <ICountUp
-        id="aaaa"
         :delay="delay"
         :end-val="endVal"
         :options="options"
@@ -65,9 +64,7 @@ export default {
   methods: {
     onReady (instance, CountUp) {
       const that = this
-      instance.frameVal = 0
       instance.update(that.endVal)
-      instance.pauseResume()
     },
     test (count) {
       this.endVal = count
@@ -76,7 +73,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .l2_main{
     width:100%;
     height:500px;

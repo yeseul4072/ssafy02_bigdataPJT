@@ -2,6 +2,16 @@
   <div>
     <v-app>
       <common-header v-if="notMain" />
+      <v-expand-transition v-if="notMain">
+        <nav-board
+          v-show="isBoard"
+          ref="test"
+          :class="{pt150 : notMain}"
+          :is-show="isBoard"
+          @child-event="checkHeight"
+        />
+      </v-expand-transition>
+      <div :style="{'height' : (boardHeight) + 'px' }" />
       <Nuxt :class="{pt150 : notMain}" />
       <common-footer v-if="notMain" />
     </v-app>
@@ -9,14 +19,28 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import CommonHeader from '@/components/Common/Header.vue'
 import CommonFooter from '@/components/Common/Footer.vue'
+import NavBoard from '@/components/Common/Header/NavBoard.vue'
+
 export default {
-  components: { CommonHeader, CommonFooter },
+  components: { CommonHeader, CommonFooter, NavBoard },
+  data () {
+    return {
+      boardHeight: 0
+    }
+  },
   computed: {
     notMain () {
       // ignore = ['/', '/']
       return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path !== '/signup'
+    },
+    ...mapGetters(['isBoard'])
+  },
+  methods: {
+    checkHeight (height) {
+      this.boardHeight = height
     }
   }
 }
@@ -73,6 +97,8 @@ html {
 }
 
 .pt150 {
-  padding-top: 150px;
+  padding-top: 125px !important;
+  padding-left:0;
+  padding-right:0;
 }
 </style>
