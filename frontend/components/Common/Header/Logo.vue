@@ -78,6 +78,7 @@
 export default {
   methods: {
     goToRoot () {
+      this.$store.commit('setIsBoard', false)
       this.$router.push('/')
     }
   }
