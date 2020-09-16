@@ -2,7 +2,7 @@
   <v-row
     class="container"
     align="center"
-    justify="center"
+    justify="center1"
   />
 </template>
 
