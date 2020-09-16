@@ -20,6 +20,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rest-auth/', include('rest_auth.urls')), # rest_auth url 등록
+    path('rest-auth/', include('accounts.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')), # 회원가입
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # swagger
     path('community/', include('community.urls')),

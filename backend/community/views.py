@@ -52,7 +52,7 @@ class Boards(APIView):
         serializer = BoardSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -80,8 +80,8 @@ class BoardDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    # 삭제되었을 때 어떤 response 주는지 확인하고 swagger 수정 필요
-    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: 'Response'})
+
+    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: ''})
     def delete(self, request, board_pk):
         """
         게시판 삭제
@@ -92,7 +92,7 @@ class BoardDetail(APIView):
         """
         board = Board.objects.get(pk=board_pk)
         board.delete()
-        return Response(status=200)
+        return Response()
 
 
 class Articles(APIView):
@@ -129,7 +129,7 @@ class Articles(APIView):
         board = Board.objects.get(pk=board_pk)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, board=board)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -175,8 +175,8 @@ class ArticleDetail(APIView):
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-    # 삭제되었을 때 어떤 response 주는지 확인하고 swagger 수정 필요
-    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: 'Response'})
+
+    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: ''})
     def delete(self, request, board_pk, article_pk):
         """
         게시글 삭제
@@ -189,7 +189,7 @@ class ArticleDetail(APIView):
         article = Article.objects.get(pk=article_pk)
         if request.user == article.user:
             article.delete()
-            return Response(status=200)
+            return Response()
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -213,7 +213,7 @@ class ArticleDetail(APIView):
         serializer = CommentCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, article=article)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -246,8 +246,8 @@ class CommentDetail(APIView):
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-    # 삭제되었을 때 어떤 response 주는지 확인하고 swagger 수정 필요
-    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: 'Response'})
+
+    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: ''})
     def delete(self, request, board_pk, article_pk, comment_pk):
         """
         댓글 삭제
@@ -260,15 +260,15 @@ class CommentDetail(APIView):
         comment = get_object_or_404(Comment, pk=comment_pk)
         if request.user == comment.user:
             comment.delete()
-            return Response(status=200)
+            return Response()
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-# 어떤 response 주는지 확인하고 swagger 수정 필요
+
 @swagger_auto_schema(
     method='post',
     manual_parameters=[request_schemas.header], 
-    responses={200: 'Response'}
+    responses={200: ''}
 )
 @api_view(['POST'])
 def like_article(request, board_pk, article_pk):
@@ -282,18 +282,18 @@ def like_article(request, board_pk, article_pk):
     """
     article = get_object_or_404(Article, pk=article_pk)
     # 이미 좋아요 한 경우
-    if request.user in article.like_user.all():
-        article.like_user.remove(request.user)
+    if request.user in article.like_users.all():
+        article.like_users.remove(request.user)
         return Response(status=200)
     else:
-        article.like_user.add(request.user)
+        article.like_users.add(request.user)
     return Response(status=200)
 
-# 어떤 response 주는지 확인하고 swagger 수정 필요
+
 @swagger_auto_schema(
     method='post',
     manual_parameters=[request_schemas.header], 
-    responses={200: 'Response'}
+    responses={200: ''}
 )
 @api_view(['POST'])
 def favorite(request, board_pk):
@@ -307,8 +307,8 @@ def favorite(request, board_pk):
     """
     board = get_object_or_404(Board, pk=board_pk)
     # 이미 즐겨찾기 한 경우
-    if request.user in board.favorite_user.all():
-        board.favorite_user.remove(request.user)
+    if request.user in board.favorite_users.all():
+        board.favorite_users.remove(request.user)
     else:
-        board.favorite_user.add(request.user)
+        board.favorite_users.add(request.user)
     return Response(status=200)
