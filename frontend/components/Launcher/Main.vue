@@ -13,10 +13,9 @@
             :rounded="true"
             :outlined="true"
             :min-width="250"
+            to="/Home"
           >
-            <nuxt-link to="/Home" style="color:black; text-decoration: none;">
-              지금 시작해 보세요 :)
-            </nuxt-link>
+            지금 시작해 보세요 :)
           </v-btn>
         </div>
       </div>
@@ -43,6 +42,7 @@ export default {
 
 .dp-2{
   color: #F257A0;
+  font-weight: 700;
 }
 
 .dp-1{

@@ -26,7 +26,6 @@
       style="width=100%;"
     >
       <ICountUp
-        id="aaaa"
         :delay="delay"
         :end-val="endVal"
         :options="options"
@@ -65,9 +64,7 @@ export default {
   methods: {
     onReady (instance, CountUp) {
       const that = this
-      instance.frameVal = 0
       instance.update(that.endVal)
-      instance.pauseResume()
     },
     test (count) {
       this.endVal = count
@@ -76,7 +73,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .l2_main{
     width:100%;
     height:500px;

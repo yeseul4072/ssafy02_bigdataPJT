@@ -53,17 +53,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #launcher_sub_title1{
-  text-align: center;
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 15px;
+  text-align: center !important;
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 15px !important;
 }
 #launcher_sub_title2{
-  text-align: center;
-  font-weight: 100;
-  font-size: 1.3rem;
-  margin-top: 15px;
+  text-align: center !important;
+  font-weight: 100 !important;
+  font-size: 1.3rem !important;
+  margin-top: 15px !important;
 }
 </style>
