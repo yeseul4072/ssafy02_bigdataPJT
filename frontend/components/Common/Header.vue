@@ -102,6 +102,9 @@
           </ul>
         </div>
       </v-container>
+      <div style="padding-top:125px">
+        <v-divider />
+      </div>
     </div>
     <div v-show="drawer" style="float:right;">
       <v-navigation-drawer

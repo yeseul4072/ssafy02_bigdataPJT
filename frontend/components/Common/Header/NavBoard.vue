@@ -164,12 +164,15 @@ export default {
 
 <style scoped>
 .warp {
-    box-sizing: border-box;
-    font-size: 0;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    overflow-x: auto;
+  box-sizing: border-box;
+  font-size: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-x: auto;
+}
+.cont {
+  padding-bottom: 0;
 }
 .col {
   padding-top: 0 !important;
