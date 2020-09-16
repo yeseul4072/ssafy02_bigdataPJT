@@ -96,7 +96,7 @@ html {
 }
 
 .pt150 {
-  padding-top: 125px;
+  padding-top: 125px !important;
   padding-left:0;
   padding-right:0;
 }
