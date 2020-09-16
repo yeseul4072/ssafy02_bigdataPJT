@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 
 # DRF
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -14,7 +15,7 @@ from . import request_schemas
 # App - community
 from .models import Board, Favorite, Article, Comment
 from .serializers import (BoardSerializer, ArticleSerializer, ArticleCreateSerializer, ArticleDetailSerializer,
-CommentCreateSerializer, ArticleCommentSerializer)
+CommentCreateSerializer, ArticleCommentSerializer, BoardListSerializer)
 
 
 class Boards(APIView):
@@ -56,12 +57,6 @@ class Boards(APIView):
 
 
 class BoardDetail(APIView):
-
-  ################## 삭제해야할것
-    def get(self, request, board_pk):
-        board = Board.objects.get(pk=board_pk)
-        serializer = BoardSerializer(board)
-        return Response(serializer.data)
 
     @swagger_auto_schema(
         request_body=request_schemas.BoardCreateRequest,
@@ -223,12 +218,6 @@ class ArticleDetail(APIView):
 
 
 class CommentDetail(APIView):
-    # 댓글 디테일 read
-    def get(self, request, board_pk, article_pk, comment_pk):
-        comment = get_object_or_404(Comment, pk=comment_pk)
-        serializer = ArticleCommentSerializer(comment)
-        return Response(serializer.data)
-
     
     @swagger_auto_schema(
         request_body=request_schemas.CommentCreateRequest,
