@@ -180,11 +180,9 @@
 <script scoped>
 import { mapGetters } from 'vuex'
 import LogoIcon from '@/components/Common/Header/Logo.vue'
-// import NavBoard from '@/components/Common/Header/NavBoard.vue'
 export default {
   components: {
     LogoIcon
-    // NavBoard
   },
   data () {
     return {

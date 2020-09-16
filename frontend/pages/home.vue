@@ -1,21 +1,20 @@
 <template>
   <div class="HomeWrapper">
-    This is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is homeThis is home
-    <div @click="changelogin">
-      로그인상태변경
-    </div>
+    <search-bar />
     <div v-if="isLogin">
       로그인상태
-    </div>
-    <div v-else>
-      로그아웃상태
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import SearchBar from '@/components/Home/Search.vue'
+
 export default {
+  components: {
+    SearchBar
+  },
   data () {
     return {
 
@@ -38,6 +37,9 @@ export default {
 
 <style scoed>
 .HomeWrapper{
-  height:2000px;
-}
+  margin: 0 8vw;
+  min-height: 100vh;
+  font-weight: 600;
+  font-size: 1.2vw;
+  }
 </style>
