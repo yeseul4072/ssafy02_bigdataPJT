@@ -15,7 +15,8 @@ export default {
   components: { CommonHeader, CommonFooter },
   computed: {
     notMain () {
-      return this.$route.path !== '/'
+      // ignore = ['/', '/']
+      return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path !== '/signup'
     }
   }
 }
