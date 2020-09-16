@@ -13,10 +13,9 @@
             :rounded="true"
             :outlined="true"
             :min-width="250"
+            to="/Home"
           >
-            <nuxt-link to="/Home" style="color:black; text-decoration: none;">
-              지금 시작해 보세요 :)
-            </nuxt-link>
+            지금 시작해 보세요 :)
           </v-btn>
         </div>
       </div>
@@ -32,12 +31,21 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .l4_main{
   display: flex;
   align-items: center;
   justify-content: center;
   width:100%;
   height:400px;
+}
+
+.dp-2{
+  color: #F257A0;
+  font-weight: 700;
+}
+
+.dp-1{
+  font-size:17px;
 }
 </style>
