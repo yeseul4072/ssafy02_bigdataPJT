@@ -21,7 +21,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     like_users_count = serializers.SerializerMethodField()
     def get_like_users_count(self, obj):
         return obj.like_users.count()
-	class Meta:
+    class Meta:
         model = Article
         fields = ['id', 'user', 'title', 'content', 'created_at', 'updated_at', 'like_users_count']
 
