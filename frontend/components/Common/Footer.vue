@@ -1,11 +1,11 @@
 <template>
   <v-container class="justify-center wrap" fluid fill-height>
     <v-row fill-height>
-      <v-col cols="0.25" />
+      <v-col cols="1" />
       <v-col cols="1" align="center">
         <v-img :src="require('../../assets/logo_foot.png')" height="70px" width="70px" />
       </v-col>
-      <v-col cols="5">
+      <v-col cols="6">
         <v-row>
           <ul class="footLink">
             <li class="point br1" style="padding-left: 0;">
@@ -32,8 +32,8 @@
           Copyright © 2020 ChildrenZIP Inc. All rights reserved.
         </v-row>
       </v-col>
-      <v-col cols="2">
-        <ul class="sns">
+      <v-col cols="3" class="d-flex justify-center">
+        <ul class="sns" style="margin-top:15px;">
           <li class="icon">
             <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
           </li>
@@ -48,7 +48,7 @@
           </li>
         </ul>
       </v-col>
-      <v-col cols="0.25" />
+      <v-col cols="1" />
     </v-row>
   </v-container>
 </template>
@@ -65,6 +65,7 @@ export default {
   background-color:#333;
   font-weight: 600;
   color: #999 ;
+  font-size: 1vw;
 }
 ul{
   list-style: none;
@@ -73,7 +74,6 @@ ul{
 }
 li {
   display: list-item;
-  font-size: 14px;
   float: left;
   padding: 0 20px;
   margin-bottom: 15px;

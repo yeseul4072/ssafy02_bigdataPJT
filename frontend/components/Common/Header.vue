@@ -106,12 +106,13 @@
         <v-divider />
       </div>
     </div>
-    <div v-show="drawer" style="float:right;">
+    <div v-show="drawer">
       <v-navigation-drawer
         v-model="drawer"
         absolute
         right
         temporary
+        style="position:fixed"
       >
         <v-list
           nav
