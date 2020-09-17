@@ -221,3 +221,6 @@ pip-selfcheck.json
 
 # secret settings
 secrets.json
+
+# Databases
+my_settings.py
