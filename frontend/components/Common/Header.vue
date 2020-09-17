@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="MainHeader" style="background-color:white; ">
+    <div class="MainHeader" style="background-color:white; z-index:99; ">
       <div class="HeaderGradient" />
       <v-container fluid class="cont">
         <div class="Logo">
@@ -31,6 +31,7 @@
               <v-menu
                 rounded="lg"
                 offset-y
+                style="z-index:99;"
               >
                 <template v-slot:activator="{ attrs, on }">
                   <li type="button">
@@ -63,6 +64,7 @@
                 key="Large"
                 rounded="lg"
                 offset-y
+                style="z-index:99;"
               >
                 <template v-slot:activator="{ attrs, on }">
                   <li type="button">

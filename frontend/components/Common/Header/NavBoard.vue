@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="cont" style="position: fixed; background-color:white;">
+  <v-container fluid class="cont" style="position: fixed; z-index:98; background-color:white;">
     <v-divider />
     <div ref="boardBox" class="wrap justify-center d-flex">
       <v-row class="w700">
