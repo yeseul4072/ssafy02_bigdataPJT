@@ -1,56 +1,73 @@
 <template>
   <div class="wrap">
     <!-- <v-card color="red lighten-2" dark> -->
-    <v-row>
-      <v-col cols="12" style="padding-bottom:0;">
-        <p style="margin-bottom:0;">
-          지역
-        </p>
-      </v-col>
+    <v-row style="padding-top:15px;">
+      <div style="width:10%" />
+      <div style="width:88%; padding: 0 1%">
+        지역
+      </div>
     </v-row>
-    <v-row align:center>
-      <v-col
-        cols="12"
-        sm="4"
-        style="padding-top:0;"
-      >
+    <v-row>
+      <div style="width:10%" />
+      <div style="width:24.7%; padding: 0 1%">
         <v-overflow-btn
           v-model="selectedSi"
           :items="si"
           label="시/도"
         />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="4"
-        style="padding-top:0;"
-      >
+      </div>
+      <div style="width:24.7%; padding: 0 1%">
         <v-overflow-btn
           v-model="selectedGugun"
           :items="gugun"
           label="시/군/구"
         />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="4"
-        style="padding-top:0;"
-      >
+      </div>
+      <div style="width:24.7%; padding: 0 1%;">
         <v-overflow-btn
           v-model="selectedDong"
           :items="dong"
           label="읍/면/동"
         />
-      </v-col>
+      </div>
+
+      <div style="width:10%; padding-top: 10px;">
+        <v-btn
+          class="mx-2"
+          fab
+          dark
+          color="pink"
+          @click="searchValidation"
+        >
+          <v-icon>
+            fas fa-search
+          </v-icon>
+        </v-btn>
+      </div>
     </v-row>
     <v-row>
+      <v-col cols="4" />
+      <v-col cols="4">
+        <div v-show="err" style="color:red; text-align:center; padding-left:1.0vw">
+          {{ errMessage }}
+        </div>
+      </v-col>
+      <v-col cols="3" style="padding-left:3.8vw;">
+        <v-btn depressed color="pink" dark style="width:7.5vw;">
+          지도로 보기
+        </v-btn>
+      </v-col>
+      <v-col cols="1" />
+    </v-row>
+    <!-- 검색창 UI -->
+    <!-- <v-row>
       <v-col cols="12" style="padding-bottom:0;">
         <p style="margin-bottom:0;">
           어린이집 명
         </p>
       </v-col>
-    </v-row>
-    <v-row align:center>
+    </v-row> -->
+    <!-- <v-row align:center>
       <div style="width:96%">
         <v-autocomplete
           :items="items"
@@ -71,8 +88,9 @@
           fas fa-search
         </v-icon>
       </div>
-    </v-row>
+    </v-row> -->
     <!-- </v-card> -->
+    <div id="map" />
   </div>
 </template>
 
@@ -88,11 +106,12 @@ export default {
       selectedDong: '',
       kinderName: '',
       isLoading: false,
-      items: ['대봉어린이집', '기념어린이집', '우리어린이집'],
+      items: ['대봉어린이집', '기념어린이집', '우리어린이집', ''],
       err: false,
       errMessage: "'시/도'를 선택해 주세요."
     }
   },
+  mounted () { window.kakao && window.kakao.maps ? this.initMap() : this.addScript() },
   methods: {
     searchValidation () {
       if (this.selectedSi === '') {
@@ -111,11 +130,14 @@ export default {
         this.errMessage = ''
       }
     }
+
   }
+
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
 .wrap {
   margin: 0 8vw;
 }
