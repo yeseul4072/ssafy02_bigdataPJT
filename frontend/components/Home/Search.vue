@@ -90,16 +90,16 @@
       </div>
     </v-row> -->
     <!-- </v-card> -->
-    <v-dialog v-model="isMap" width="600px">
+    <v-dialog v-model="isMap">
       <v-card>
         <!-- kakao map -->
         <map-view />
         <v-card-actions>
           <v-spacer />
-          <v-btn color="pink darken-1" text @click="isMap = false">
+          <v-btn color="error darken-1" @click="isMap = false">
             취소
           </v-btn>
-          <v-btn color="primary darken-1" text @click="isMap = false">
+          <v-btn color="primary darken-1" @click="isMap = false">
             검색
           </v-btn>
         </v-card-actions>
@@ -128,15 +128,11 @@ export default {
       err: false,
       errMessage: "'시/도'를 선택해 주세요.",
       isMap: false,
-      kakao_API: '',
       map: null,
       mapOption: '',
       mapContainer: '',
       geocoder: ''
     }
-  },
-  mounted () {
-    window.kakao && window.kakao.maps ? this.initMap() : this.addScript()
   },
   methods: {
     searchValidation () {
@@ -155,21 +151,6 @@ export default {
     },
     openMap () {
       this.isMap = true
-    },
-    initMap () {
-      const container = document.getElementById('map')
-      console.log(container)
-      const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
-      const map = new kakao.maps.Map(container, options)
-      const marker = new kakao.maps.Marker({ position: map.getCenter() })
-      marker.setMap(map)
-    },
-    addScript () {
-      const script = document.createElement('script')
-      /* global kakao */
-      script.onload = () => kakao.maps.load(this.initMap)
-      script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=' + this.kakao_API + '&autoload=false'
-      document.head.appendChild(script)
     }
 
   }

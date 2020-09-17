@@ -70,7 +70,7 @@ export default {
 ul{
   list-style: none;
   display: block;
-  padding: 0;
+  padding: 0 !important;
 }
 li {
   display: list-item;
