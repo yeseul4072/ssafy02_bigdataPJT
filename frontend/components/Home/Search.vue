@@ -53,7 +53,7 @@
         </div>
       </v-col>
       <v-col cols="3" style="padding-left:3.8vw;">
-        <v-btn depressed color="pink" dark style="width:7.5vw;">
+        <v-btn depressed color="pink" dark style="width:7.5vw;" @click="openMap">
           지도로 보기
         </v-btn>
       </v-col>
@@ -90,12 +90,30 @@
       </div>
     </v-row> -->
     <!-- </v-card> -->
-    <div id="map" />
+    <v-dialog v-model="isMap" width="600px">
+      <v-card>
+        <!-- kakao map -->
+        <map-view />
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="pink darken-1" text @click="isMap = false">
+            취소
+          </v-btn>
+          <v-btn color="primary darken-1" text @click="isMap = false">
+            검색
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import MapView from '@/components/Home/Map.vue'
 export default {
+  components: {
+    MapView
+  },
   data () {
     return {
       si: ['서울특별시'],
@@ -108,27 +126,50 @@ export default {
       isLoading: false,
       items: ['대봉어린이집', '기념어린이집', '우리어린이집', ''],
       err: false,
-      errMessage: "'시/도'를 선택해 주세요."
+      errMessage: "'시/도'를 선택해 주세요.",
+      isMap: false,
+      kakao_API: '',
+      map: null,
+      mapOption: '',
+      mapContainer: '',
+      geocoder: ''
     }
   },
-  mounted () { window.kakao && window.kakao.maps ? this.initMap() : this.addScript() },
+  mounted () {
+    window.kakao && window.kakao.maps ? this.initMap() : this.addScript()
+  },
   methods: {
     searchValidation () {
       if (this.selectedSi === '') {
         this.err = true
         this.errMessage = "'시/도'를 선택해 주세요."
-        console.log(this.errMessage)
       } else if (this.selectedGugun === '') {
         this.errMessage = "'시/군/구'를 선택해 주세요."
         this.err = true
-        console.log(this.errMessage)
       } else if (this.selectedDong === '') {
         this.err = true
         this.errMessage = "'읍/면/동'을 선택해 주세요."
-        console.log(this.errMessage)
       } else {
         this.errMessage = ''
       }
+    },
+    openMap () {
+      this.isMap = true
+    },
+    initMap () {
+      const container = document.getElementById('map')
+      console.log(container)
+      const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
+      const map = new kakao.maps.Map(container, options)
+      const marker = new kakao.maps.Marker({ position: map.getCenter() })
+      marker.setMap(map)
+    },
+    addScript () {
+      const script = document.createElement('script')
+      /* global kakao */
+      script.onload = () => kakao.maps.load(this.initMap)
+      script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=' + this.kakao_API + '&autoload=false'
+      document.head.appendChild(script)
     }
 
   }
@@ -136,10 +177,10 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
+<style scoped>
 .wrap {
   margin: 0 8vw;
+  font-weight: 600;
 }
 .fas{
   font-size: 30px;
