@@ -1,37 +1,150 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        ZIP-Children
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
+  <div class="body-container">
+    <section class="section-main">
+      <ul class="main-right-nav">
+        <li
+          v-for="(item, index) in indexList"
+          :key="index"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
+          <v-hover v-slot:default="{ hover }">
+            <v-tab
+              :ripple="false"
+              class="index-v-tab"
+              @click="goto(item.goto); selected=index"
+            >
+              <v-tooltip
+                left
+                color="#ff5faa"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <div
+                    v-bind="attrs"
+                    style="height: 50px;
+                          display: flex;
+                          align-items: center;"
+                    v-on="on"
+                  >
+                    <v-icon v-if="hover || selected == index" class="l1_icon_active">
+                      {{ item.indexLogo }}
+                    </v-icon>
+                    <v-icon v-else class="l1_icon_none">
+                      mdi-circle
+                    </v-icon>
+                  </div>
+                </template>
+                <span>{{ item.text }}</span>
+              </v-tooltip>
+            </v-tab>
+          </v-hover>
+        </li>
+      </ul>
+    </section>
+    <div class="launcher_item">
+      <v-flex>
+        <div id="we">
+          <We />
+        </div>
+        <div id="real">
+          <UsePlatform />
+        </div>
+        <div id="review">
+          <Real />
+        </div>
+        <div id="main">
+          <Main />
+        </div>
+      </v-flex>
+    </div>
+    <div class="index-floting-button">
+      <transition name="fade">
+        <v-btn
+          v-if="hidden"
+          absolute
+          dark
+          fab
+          top
+          right
+          color="pink"
+          @click="goto('#we');"
         >
-          GitHub
-        </a>
-      </div>
+          <v-icon>mdi-arrow-up</v-icon>
+        </v-btn>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+
+import We from '@/components/Launcher/We.vue'
+import UsePlatform from '@/components/Launcher/UsePlatform.vue'
+import Real from '@/components/Launcher/Real.vue'
+import Main from '@/components/Launcher/Main.vue'
+
+export default {
+  components: { We, UsePlatform, Real, Main },
+  data () {
+    return {
+      selected: 0,
+      hidden: false,
+      indexList: [
+        {
+          goto: '#we',
+          text: '메인',
+          indexLogo: 'mdi-home-variant-outline'
+        },
+        {
+          goto: '#real',
+          text: '어린이ZIP은 지금',
+          indexLogo: 'mdi-trophy-outline'
+        },
+        {
+          goto: '#review',
+          text: '리뷰',
+          indexLogo: 'mdi-comment-quote-outline'
+        },
+        {
+          goto: '#main',
+          text: '메인 페이지',
+          indexLogo: 'mdi-motion-play-outline'
+        }
+      ]
+    }
+  },
+  mounted () {
+    document.addEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    goto (target) {
+      this.$vuetify.goTo(target, {
+        duration: 1000,
+        offset: 100,
+        easing: 'easeInOutCubic'
+      })
+    },
+    handleScroll () {
+      const allHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      const height = allHeight - clientHeight
+      const curPosition = window.scrollY
+
+      this.hidden = true
+      if (curPosition === 0) {
+        this.selected = 0
+        this.hidden = false
+      } else if (curPosition >= height) {
+        this.selected = 3
+      } else if (curPosition > height / 4 * 3) {
+        this.selected = 2
+      } else if (curPosition > height / 4 * 2) {
+        this.selected = 1
+      }
+    }
+  }
+}
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -41,33 +154,46 @@ export default {}
   text-align: center;
 }
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.section-main{
+  display: inline-block;
+  position: fixed !important;
+  z-index: 100;
+  top: 40%;
+  right: 0%;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.index-floting-button{
+  display: inline-block;
+  position: fixed !important;
+  z-index: 100;
+  top: 95%;
+  right: 0%;
 }
 
-.links {
-  padding-top: 15px;
+ul{
+   list-style:none;
+}
+
+.item{
+  font-size: 12px !important;
+}
+
+.l1_icon_active{
+  padding-left: 10px;
+  font-size: 27px;
+  color: #ff5faa;
+}
+
+.l1_icon_none{
+  padding-left: 10px;
+  font-size: 6px;
+  color: #b9b9b9;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

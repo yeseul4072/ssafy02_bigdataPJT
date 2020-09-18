@@ -1,20 +1,55 @@
 <template>
   <div>
-    <Nuxt />
+    <v-app>
+      <common-header v-if="notMain" />
+      <v-expand-transition v-if="notMain">
+        <nav-board
+          v-show="isBoard"
+          ref="test"
+          :class="{pt150 : notMain}"
+          :is-show="isBoard"
+          @child-event="checkHeight"
+        />
+      </v-expand-transition>
+      <div :style="{'height' : (boardHeight) + 'px' }" />
+      <Nuxt :class="{pt150 : notMain}" />
+      <common-footer v-if="notMain" />
+    </v-app>
   </div>
 </template>
 
+<script>
+import { mapGetters } from 'vuex'
+import CommonHeader from '@/components/Common/Header.vue'
+import CommonFooter from '@/components/Common/Footer.vue'
+import NavBoard from '@/components/Common/Header/NavBoard.vue'
+
+export default {
+  components: { CommonHeader, CommonFooter, NavBoard },
+  data () {
+    return {
+      boardHeight: 0
+    }
+  },
+  computed: {
+    notMain () {
+      return this.$route.path !== '/'
+    },
+    ...mapGetters(['isBoard'])
+  },
+  methods: {
+    checkHeight (height) {
+      this.boardHeight = height
+    }
+  }
+}
+</script>
+
 <style>
+@import url('https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.min.css');
+* { font-family: 'NanumSquareRound',sans-serif; }
+
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -58,5 +93,11 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.pt150 {
+  padding-top: 125px !important;
+  padding-left:0;
+  padding-right:0;
 }
 </style>
