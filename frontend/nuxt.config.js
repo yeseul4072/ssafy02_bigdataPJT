@@ -1,3 +1,4 @@
+import { faJoint } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   /*
@@ -35,6 +36,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    '@/plugins/fontawesome.js',
+    '@/plugins/vuetify.js'
   ],
   /*
   ** Auto import components
@@ -45,9 +48,14 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxtjs/vuetify',
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify'
   ],
+  vuetify: {
+    /* module options */
+  },
   /*
   ** Nuxt.js modules
   */
