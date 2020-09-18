@@ -55,22 +55,7 @@
         </div>
       </v-flex>
     </div>
-    <div class="index-floting-button">
-      <transition name="fade">
-        <v-btn
-          v-if="hidden"
-          absolute
-          dark
-          fab
-          top
-          right
-          color="pink"
-          @click="goto('#we');"
-        >
-          <v-icon>mdi-arrow-up</v-icon>
-        </v-btn>
-      </transition>
-    </div>
+    <ScrollUp :component-name="`#we`" />
   </div>
 </template>
 
@@ -80,9 +65,10 @@ import We from '@/components/Launcher/We.vue'
 import UsePlatform from '@/components/Launcher/UsePlatform.vue'
 import Real from '@/components/Launcher/Real.vue'
 import Main from '@/components/Launcher/Main.vue'
+import ScrollUp from '@/components/Common/Utils/ScrollUp.vue'
 
 export default {
-  components: { We, UsePlatform, Real, Main },
+  components: { We, UsePlatform, Real, Main, ScrollUp },
   data () {
     return {
       selected: 0,
@@ -115,23 +101,14 @@ export default {
     document.addEventListener('scroll', this.handleScroll)
   },
   methods: {
-    goto (target) {
-      this.$vuetify.goTo(target, {
-        duration: 1000,
-        offset: 100,
-        easing: 'easeInOutCubic'
-      })
-    },
     handleScroll () {
       const allHeight = document.documentElement.scrollHeight
       const clientHeight = document.documentElement.clientHeight
       const height = allHeight - clientHeight
       const curPosition = window.scrollY
 
-      this.hidden = true
       if (curPosition === 0) {
         this.selected = 0
-        this.hidden = false
       } else if (curPosition >= height) {
         this.selected = 3
       } else if (curPosition > height / 4 * 3) {
@@ -159,14 +136,6 @@ export default {
   position: fixed !important;
   z-index: 100;
   top: 40%;
-  right: 0%;
-}
-
-.index-floting-button{
-  display: inline-block;
-  position: fixed !important;
-  z-index: 100;
-  top: 95%;
   right: 0%;
 }
 

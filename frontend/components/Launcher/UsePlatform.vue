@@ -10,13 +10,13 @@
       align="center"
       style="width=100%; padding-top:30px; font-size:1rem;"
     >
-      <button class="l2_button" @click="test(123)">
+      <button class="l2_button" @click="updateCount(userCount)">
         사용자 수
       </button>
-      <button class="l2_button" @click="test(50000)">
+      <button class="l2_button" @click="updateCount(kindergardenCount)">
         국내 어린이집 수
       </button>
-      <button class="l2_button" @click="test(12131231)">
+      <button class="l2_button" @click="updateCount(reviewCount)">
         리뷰 수
       </button>
     </div>
@@ -44,8 +44,14 @@ export default {
   },
   data () {
     return {
+      // 사용자 수, 어린이집 수, 리뷰 수
+      userCount: 1234,
+      kindergardenCount: 4321,
+      reviewCount: 66666666,
+
+      // CountUp.js에서 쓸 데이터
       delay: 1000,
-      endVal: 120500,
+      endVal: 0,
       startVal: 0,
       options: {
         duration: 3,
@@ -59,14 +65,16 @@ export default {
     }
   },
   mounted () {
-
+    // 마운트 했을때, 사용자 수 국내 어린이집 수, 리뷰 수를 다 들고와서
+    // 데이터 저장해 놓아야 할 것 같다
+    this.endVal = this.userCount
   },
   methods: {
     onReady (instance, CountUp) {
       const that = this
       instance.update(that.endVal)
     },
-    test (count) {
+    updateCount (count) {
       this.endVal = count
     }
   }
