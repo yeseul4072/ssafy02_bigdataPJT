@@ -36,7 +36,7 @@
           class="mx-2"
           fab
           dark
-          color="pink"
+          color="#FA5882"
           @click="searchValidation"
         >
           <v-icon>
@@ -53,7 +53,7 @@
         </div>
       </v-col>
       <v-col cols="3" style="padding-left:3.8vw;">
-        <v-btn depressed color="pink" dark style="width:7.5vw;" @click="openMap">
+        <v-btn depressed color="#FA5882" dark style="width:7.5vw;" @click="openMap">
           지도로 보기
         </v-btn>
       </v-col>
