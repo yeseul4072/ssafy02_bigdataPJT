@@ -220,7 +220,4 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/python,django,venv
 
 # secret settings
-secrets.json
-
-# Databases
-my_settings.py
+secrets*.json
