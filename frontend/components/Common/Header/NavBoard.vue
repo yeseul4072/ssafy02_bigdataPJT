@@ -37,7 +37,7 @@
               <v-list flat>
                 <v-list-item-group v-model="item">
                   <v-list-item
-                    v-for="(item, i) in items"
+                    v-for="(item, i) in items2"
                     :key="i+'?'"
                     v-ripple="false"
                   >
@@ -52,7 +52,7 @@
               <v-list flat>
                 <v-list-item-group v-model="item">
                   <v-list-item
-                    v-for="(item, i) in items"
+                    v-for="(item, i) in items2"
                     :key="i"
                     v-ripple="false"
                   >
@@ -67,11 +67,11 @@
               <v-list flat>
                 <v-list-item-group v-model="item">
                   <v-list-item
-                    v-for="(item, i) in items"
+                    v-for="(item, i) in items3"
                     :key="i"
                     v-ripple="false"
                   >
-                    <v-list-item-content>
+                    <v-list-item-content :style="(i==lenItems3())?'color:red;':''">
                       {{ item.title }}
                     </v-list-item-content>
                   </v-list-item>
@@ -79,27 +79,6 @@
               </v-list>
             </v-col>
           </v-row>
-        </v-col>
-        <v-divider
-          class="mx-4"
-          vertical
-        />
-        <v-col cols="2" style="max-width: 230px">
-          <v-subheader><h2>고객의 소리</h2></v-subheader>
-          <v-list
-            flat
-          >
-            <v-list-item-group v-model="item">
-              <v-list-item
-                v-for="(item, i) in items3"
-                :key="i+'$'"
-              >
-                <v-list-item-content>
-                  {{ item.title }}
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
         </v-col>
         <v-divider
           class="mx-4"
@@ -124,6 +103,14 @@ export default {
           title: '공지사항'
         },
         {
+          title: 'FAQ'
+        },
+        {
+          title: '1:1문의'
+        }
+      ],
+      items2: [
+        {
           title: '수다게시판'
         },
         {
@@ -133,17 +120,32 @@ export default {
           title: '육아 질문'
         },
         {
-          title: '정보 공유'
+          title: '정보 공유/후기'
+        },
+        {
+          title: '같이해요/같이사요'
         }
       ],
       items3: [
         {
-          title: 'FAQ'
+          title: '수다게시판'
         },
         {
-          title: '1:1 문의'
+          title: '우리 아이'
+        },
+        {
+          title: '육아 질문'
+        },
+        {
+          title: '정보 공유/후기'
+        },
+        {
+          title: '게시판 찾기'
         }
-      ]
+      ],
+      lenItems3 () {
+        return this.items3.length - 1
+      }
     }
   },
   watch: {
