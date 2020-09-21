@@ -223,4 +223,5 @@ pip-selfcheck.json
 secrets*.json
 
 # data
-data*.json
+data.json
+data2.json
