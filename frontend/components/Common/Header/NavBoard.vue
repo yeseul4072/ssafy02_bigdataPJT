@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="cont" style="position: fixed; z-index:98; background-color:white;">
+  <v-container fluid class="cont" style="z-index:98; background-color:white;">
     <v-divider />
     <div ref="boardBox" class="wrap justify-center d-flex">
       <v-row class="w700">
@@ -10,21 +10,14 @@
         />
         <v-col cols="2" style="max-width: 230px">
           <v-subheader><h2>중요 게시판</h2></v-subheader>
-          <v-list flat>
-            <v-list-item-group v-model="item">
-              <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                v-ripple="false"
-              >
-                <v-list-item-content>
-                  <v-col>
-                    {{ item.title }}
-                  </v-col>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
+          <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+            v-ripple="false"
+            dense
+          >
+            {{ item.title }}
+          </v-list-item>
         </v-col>
         <v-divider
           class="mx-4"
@@ -34,49 +27,34 @@
           <v-subheader><h2>나만의 게시판</h2></v-subheader>
           <v-row>
             <v-col cols="4">
-              <v-list flat>
-                <v-list-item-group v-model="item">
-                  <v-list-item
-                    v-for="(item, i) in items2"
-                    :key="i+'?'"
-                    v-ripple="false"
-                  >
-                    <v-list-item-content>
-                      {{ item.title }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
+              <v-list-item
+                v-for="(item, i) in items2"
+                :key="i+'?'"
+                v-ripple="false"
+                dense
+              >
+                {{ item.title }}
+              </v-list-item>
             </v-col>
             <v-col cols="4">
-              <v-list flat>
-                <v-list-item-group v-model="item">
-                  <v-list-item
-                    v-for="(item, i) in items2"
-                    :key="i"
-                    v-ripple="false"
-                  >
-                    <v-list-item-content>
-                      {{ item.title }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
+              <v-list-item
+                v-for="(item, i) in items2"
+                :key="i"
+                v-ripple="false"
+                dense
+              >
+                {{ item.title }}
+              </v-list-item>
             </v-col>
             <v-col cols="4">
-              <v-list flat>
-                <v-list-item-group v-model="item">
-                  <v-list-item
-                    v-for="(item, i) in items3"
-                    :key="i"
-                    v-ripple="false"
-                  >
-                    <v-list-item-content :style="(i==lenItems3())?'color:red;':''">
-                      {{ item.title }}
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
+              <v-list-item
+                v-for="(item, i) in items2"
+                :key="i"
+                v-ripple="false"
+                dense
+              >
+                {{ item.title }}
+              </v-list-item>
             </v-col>
           </v-row>
         </v-col>
@@ -94,7 +72,7 @@
 
 <script>
 export default {
-  props: ['isShow'],
+  // props: ['is-show'],
   data () {
     return {
       item: 5,
@@ -149,9 +127,9 @@ export default {
     }
   },
   watch: {
-    isShow (val) {
-      if (val === true) { this.$emit('child-event', this.$refs.boardBox.clientHeight) } else { this.$emit('child-event', 0) }
-    }
+    // isShow (val) {
+    //   if (val === true) { this.$emit('child-event', this.$refs.boardBox.clientHeight) } else { this.$emit('child-event', 0) }
+    // }
   },
   mounted () {
   },
