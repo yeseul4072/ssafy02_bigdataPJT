@@ -223,5 +223,7 @@ pip-selfcheck.json
 secrets*.json
 
 # data
-data.json
+kindergartens/
 data2.json
+fixtures/
+data.json
