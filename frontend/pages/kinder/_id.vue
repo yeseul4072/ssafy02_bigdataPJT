@@ -2,90 +2,103 @@
   <div class="KinderWrapper">
     <v-container fluid>
       <v-row no-gutters style="height:150vh;">
-        <v-col cols="3">
-          <v-row style="width:100%;height:30%;">
-            <v-col cols="12" style="width:100%;height:100%">
-              <v-card>
-                <v-card-subtitle style="text-align:center;font-size:1.5vw;font-weight:700;">
-                  <v-img
-                    class="white--text align-end"
-                    height="270px"
-                    width="270px"
-                    :src="require('@/assets/lion.jpg')"
-                  />
-                  {{ info.name }}
-                </v-card-subtitle>
-
-                <v-card-text class="text--primary">
-                  <div>{{ info.address }}</div>
-                </v-card-text>
-              </v-card>
+        <v-col cols="3" style="padding-right:30px;">
+          <v-row style="width:100%;">
+            <v-col cols="12" class="card">
+              <v-img
+                class="white--text align-end"
+                height="270px"
+                width="270px"
+                :src="require('@/assets/lion.jpg')"
+              />
+              <div style="text-align:center;font-size:1.5vw;font-weight:800;">
+                {{ info.name }}
+              </div>
+              <div style="text-align:center;">
+                {{ info.address }}
+              </div>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:8%;">
-            <v-col cols="12">
+          <v-row style="width:100%;height:2%;" />
+          <v-row style="width:100%;">
+            <v-col cols="12" class="card">
               <v-row style="vertical-align:bottom;">
                 <v-col cols="12" style="text-align:center;">
-                  <v-card>
-                    <v-card-text class="text--primary">
-                      <span style="font-size:1.7vw;font-weight:800;">{{ info.stars }}</span>/5
-                      <v-rating
-                        :value="info.stars"
-                        color="orange"
-                        background-color="orange lighten-3"
-                        dense
-                        half-increments
-                        readonly
-                        size="2.0vw"
-                        style="display:inline-block;"
-                      />
-                    </v-card-text>
-                  </v-card>
+                  <span style="font-size:1.7vw;font-weight:800;">{{ info.stars }}</span>/5
+                  <v-rating
+                    :value="info.stars"
+                    color="orange"
+                    background-color="orange lighten-3"
+                    dense
+                    half-increments
+                    readonly
+                    size="2.0vw"
+                    style="display:inline-block;"
+                  />
                 </v-col>
               </v-row>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:24%;">
-            <v-col cols="12">
-              <v-card>
-                <v-card-subtitle style="text-align:center;font-size:1.2vw;font-weight:800;">
-                  <v-img
-                    class="white--text align-end"
-                    height="100%"
-                    width="100%"
-                    :src="require('@/assets/monitor.png')"
-                  />
-                  원격 상담
-                </v-card-subtitle>
-              </v-card>
+          <v-row style="width:100%;height:2%;" />
+          <v-row style="width:100%;">
+            <v-col cols="12" class="card">
+              <v-img
+                :src="require('@/assets/monitor.png')"
+              />
+              <div style="text-align:center;font-size:1.2vw;font-weight:800;">
+                원격 상담
+              </div>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:10%;">
-            <v-col cols="12">
-              <v-card>
-                <v-card-subtitle style="text-align:center;font-size:1.2vw;font-weight:800;">
-                  <v-icon color="red">
-                    fas fa-bullhorn
-                  </v-icon>&nbsp;잘못된 정보 신고
-                </v-card-subtitle>
-              </v-card>
+          <v-row style="width:100%;height:2%;" />
+          <v-row style="width:100%;">
+            <v-col cols="12" class="card">
+              <div style="text-align:center;font-size:1.2vw;font-weight:800;">
+                <v-icon color="red">
+                  fas fa-bullhorn
+                </v-icon>&nbsp;
+                잘못된 정보 신고
+              </div>
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="9" style="border:1px solid black;">
-          <v-row style="height:33.3%">
-            <v-col cols="12">
-              어린이집 정보
+        <v-col cols="9">
+          <v-row style="height:30%">
+            <v-col cols="12" class="cardRight">
+              <v-row style="height:15%">
+                <div style="font-size:2.0vw;font-weight:800;">
+                  어린이집 소개
+                </div>
+              </v-row>
+              <v-row style="height:85%">
+                정보 컴포넌트
+              </v-row>
             </v-col>
           </v-row>
-          <v-row style="height:33.3%">
-            <v-col cols="12">
-              어린이집 리뷰
+          <v-row style="height:3.3%" />
+          <v-row style="height:30%">
+            <v-col cols="12" class="cardRight">
+              <v-row style="height:15%;">
+                <div style="font-size:2.0vw;font-weight:800;">
+                  주변정보
+                </div>
+              </v-row>
+              <v-row style="height:85%;">
+                <map-view />
+              </v-row>
             </v-col>
           </v-row>
-          <v-row style="height:33.3%">
-            <v-col cols="12">
-              어린이집 지도
+          <v-row style="height:3.3%" />
+          <v-row style="height:30%">
+            <v-col cols="12" class="cardRight">
+              <v-row style="height:15%;">
+                <div style="font-size:2.0vw;font-weight:800;">
+                  <span style="color:#F5A9E1;">"ZIP"</span>&nbsp;리뷰
+                </div>
+              </v-row>
+              <v-row style="height:85%">
+                리뷰 컴포넌트
+              </v-row>
             </v-col>
           </v-row>
         </v-col>
@@ -95,7 +108,12 @@
 </template>
 
 <script>
+import MapView from '@/components/Kinder/Map.vue'
+
 export default {
+  components: {
+    MapView
+  },
   data () {
     return {
       id: this.$route.params.id,
@@ -116,4 +134,18 @@ export default {
   font-weight: 600;
   font-size: 1.2vw;
   }
+.card{
+    border-radius: 4px;
+    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    border-width: thin; */
+    padding: 15px;
+    border : thin solid #E6E6E6;
+}
+.cardRight{
+    border-radius: 4px;
+    /* box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    border-width: thin; */
+    padding: 30px;
+    border : thin solid #E6E6E6;
+}
 </style>
