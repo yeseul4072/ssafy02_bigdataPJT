@@ -1,7 +1,7 @@
 <template>
   <div class="HomeWrapper">
-    <search-bar />
     <v-container fluid>
+      <search-bar />
       <v-row no-gutters style="height:80vh;">
         <v-row style="width:100%;height:10%;">
           <v-col cols="12">

@@ -2,8 +2,8 @@
   <div class="wrap">
     <!-- <v-card color="red lighten-2" dark> -->
     <v-row style="padding-top:15px;">
-      <div style="width:10%" />
-      <div style="width:88%; padding: 0 1%">
+      <div style="width:10%;" />
+      <div style="width:90%; padding: 0 1%; font-size:1.5vw;">
         지역
       </div>
     </v-row>
@@ -31,16 +31,29 @@
         />
       </div>
 
-      <div style="width:10%; padding-top: 10px;">
+      <div style="width:13%; padding-top: 10px;">
         <v-btn
           class="mx-2"
           fab
           dark
           color="#FA5882"
+          style="margin:0px !important;"
           @click="searchValidation"
         >
           <v-icon>
             fas fa-search
+          </v-icon>
+        </v-btn>
+        <v-btn
+          class="mx-2"
+          fab
+          dark
+          color="#FA5882"
+          style="margin:0px !important;"
+          @click="openMap"
+        >
+          <v-icon>
+            fas fa-map
           </v-icon>
         </v-btn>
       </div>
@@ -52,12 +65,7 @@
           {{ errMessage }}
         </div>
       </v-col>
-      <v-col cols="3" style="padding-left:3.8vw;">
-        <v-btn depressed color="#FA5882" dark style="width:7.5vw;" @click="openMap">
-          지도로 보기
-        </v-btn>
-      </v-col>
-      <v-col cols="1" />
+      <v-col cols="4" />
     </v-row>
     <!-- 검색창 UI -->
     <!-- <v-row>
@@ -160,8 +168,8 @@ export default {
 
 <style scoped>
 .wrap {
-  margin: 0 8vw;
   font-weight: 600;
+  padding-top:50px;
 }
 .fas{
   font-size: 30px;
