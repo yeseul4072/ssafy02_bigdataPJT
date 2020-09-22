@@ -10,7 +10,7 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 export default {
-  props: ['title','number','name','color'],
+  props: ['title','number','name','color','unit'],
   components: {
     apexchart: VueApexCharts
   },
@@ -138,6 +138,13 @@ export default {
 
   },
   mounted() {
+    $('.apexcharts-pie-area').on('mouseover', (event) => {
+      $(`#${event.target.ownerSVGElement.id}`).find('.apexcharts-pie-area').attr('fill-opacity', 0.3);
+      $(`#${event.target.id}`).attr('fill-opacity', 1.0);
+    })
+    $('.apexcharts-pie-area').on('mouseleave', (event) => {
+      $(`#${event.target.ownerSVGElement.id}`).find('.apexcharts-pie-area').attr('fill-opacity', 1.0);
+    })
 
   }
 }
