@@ -1,7 +1,8 @@
 <template>
   <div class="KinderWrapper">
     <v-container fluid>
-      <v-row no-gutters style="height:150vh;">
+      <v-row no-gutters style="height:150vh;margin:40px 0px;">
+        <!-- 좌측 -->
         <v-col cols="3" style="padding-right:30px;">
           <v-row style="width:100%;">
             <v-col cols="12" class="card">
@@ -62,6 +63,7 @@
             </v-col>
           </v-row>
         </v-col>
+        <!-- 우측 -->
         <v-col cols="9">
           <v-row style="height:30%">
             <v-col cols="12" class="cardRight">
@@ -71,7 +73,7 @@
                 </div>
               </v-row>
               <v-row style="height:85%">
-                정보 컴포넌트
+                <kinder-chart title="교사대 아동비율" :number="[info.nteacher, info.nchildren]" :name="['교사','아동']" :color="color1" />
               </v-row>
             </v-col>
           </v-row>
@@ -109,10 +111,12 @@
 
 <script>
 import MapView from '@/components/Kinder/Map.vue'
-
+import KinderChart from '@/components/Kinder/PieChart.vue'
 export default {
   components: {
-    MapView
+    MapView,
+    KinderChart
+
   },
   data () {
     return {
@@ -121,9 +125,23 @@ export default {
         name: '대봉어린이집',
         address: '서울특별시 강남구 테헤란로 212 (역삼동 718-5번지)',
         stars: 4.3,
-        tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영']
-      }
+        tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
+        nteacher: 14,
+        nchildren: 46,
+        nOne: 20,
+        nTwo: 15,
+        nThree: 11,
+        yearInfo: [21.4, 28.6, 50, 0, 0]
+      },
+      color1: ['#e25668', '#e2cf56', '#69e256', '#56e2cf', '#5669e2', '#e256ae']
+
     }
+  },
+  method: {
+
+  },
+  mounted () {
+
   }
 }
 </script>
