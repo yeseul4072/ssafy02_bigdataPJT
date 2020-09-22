@@ -5,8 +5,8 @@ from django.conf import settings
 
 class Kindergarten(models.Model):
     id = models.CharField(max_length=100, primary_key=True)
-    lat = models.CharField(max_length=20)
-    lng = models.CharField(max_length=20)
+    lat = models.FloatField(null=True, blank=True, default=0.0)
+    lng = models.FloatField(null=True, blank=True, default=0.0)
     organization_name = models.CharField(max_length=100)
     director_name = models.CharField(max_length=50)
     establishment_type = models.CharField(max_length=50)
@@ -94,4 +94,4 @@ class Kindergarten(models.Model):
     cctv_grade = models.IntegerField()
     staff_grade = models.IntegerField()
 
-
+    

@@ -11,6 +11,10 @@ for kindergarten in kindergartens:
     for key, value in kindergarten.items():
         if key == 'after-school_inclusion':
             key = 'after_school_inclusion'
+        if (key == 'lat' or key == 'lng') and kindergarten[key] == '':
+            continue
+        if key == 'lat' or key == 'lng':
+            value = float(value)
         field[key] = value
         temp['fields'] = field
     jsondata.append(temp)
