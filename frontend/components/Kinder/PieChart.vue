@@ -1,0 +1,150 @@
+<template>
+  <div id="chart">
+    <v-row>
+      <apexchart type="donut" :options="chartOptions" :series="series" />
+    </v-row>
+  </div>
+</template>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<script>
+import VueApexCharts from 'vue-apexcharts'
+export default {
+  props: ['title','number','name','color'],
+  components: {
+    apexchart: VueApexCharts
+  },
+  data () {
+    return {
+      series: this.number,
+      chartOptions: {
+        chart: {
+          type: 'donut',
+          width: 500
+        },
+        dataLabels: {
+          enabled: true
+        },
+        colors: this.color,
+        labels: this.name,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 380
+            }
+          }
+        }],
+        legend: {
+          show: false,
+          position: 'right',
+          offsetY: 0,
+          onItemHover: {
+            highlightDataSeries: true
+          }
+        },
+        tooltip: {
+          enabled: true,
+          enabledOnSeries: undefined,
+          shared: true,
+          followCursor: false,
+          intersect: false,
+          inverseOrder: false,
+          custom: undefined,
+          fillSeriesColor: false,
+          theme: 'dark',
+          style: {
+            fontSize: '12px'
+          },
+          onDatasetHover: {
+            highlightDataSeries: true
+          },
+          x: {
+            show: false,
+            format: '',
+            formatter: undefined
+          },
+          y: {
+            formatter: function(value, series){
+              return ': ' +value+'%'
+            },
+            title: {
+              formatter: seriesName => seriesName
+            }
+          },
+          z: {
+            formatter: undefined,
+            title: 'Size: '
+          },
+          marker: {
+            show: true
+          },
+          fixed: {
+            enabled: false,
+            position: 'topRight',
+            offsetX: 0,
+            offsetY: 0
+          }
+        },
+        plotOptions: {
+          pie: {
+            expandOnClick: true,
+            donut: {
+              labels: {
+                value: {
+
+                }
+              }
+            }
+          }
+        },
+        states: {
+          hover: {
+            filter: {
+              type: 'none',
+              value: 0.15
+            }
+          },
+          active: {
+            allowMultipleDataPointsSelection: false,
+            filter: {
+              type: 'none',
+              value: 0.35
+            }
+          },
+          inactive: {
+            enabled: true
+          }
+        },
+        title: {
+            text: this.title,
+            align: 'center',
+            margin: 10,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize:  '18px',
+              fontWeight:  '800',
+              fontFamily:  'NanumSquareRound',
+              color:  '#263238'
+            },
+        }
+      }
+
+    }
+  },
+  methods: {
+
+  },
+  mounted() {
+
+  }
+}
+</script>
+
+<style scoped>
+.apexcharts-pie-series :hover{
+  background-color:black !important;
+}
+</style>
