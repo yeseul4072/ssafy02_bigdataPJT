@@ -68,7 +68,7 @@
           <v-row>
             <v-col cols="12" class="cardRight">
               <v-row>
-                <div style="font-size:2.0vw;font-weight:800;">
+                <div style="font-size:2.5vw;font-weight:800;">
                   어린이집 소개
                 </div>
               </v-row>
@@ -173,7 +173,7 @@
           <v-row style="height:20%">
             <v-col cols="12" class="cardRight">
               <v-row style="height:10%;">
-                <div style="font-size:2.0vw;font-weight:800;">
+                <div style="font-size:2.5vw;font-weight:800;">
                   주변정보
                 </div>
               </v-row>
@@ -186,7 +186,7 @@
           <v-row style="height:40%">
             <v-col cols="12" class="cardRight">
               <v-row style="height:10%;">
-                <div style="font-size:2.0vw;font-weight:800;">
+                <div style="font-size:2.5vw;font-weight:800;">
                   <span style="color:#F5A9E1;">"ZIP"</span>&nbsp;리뷰
                 </div>
               </v-row>
