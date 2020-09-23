@@ -65,7 +65,6 @@
               hide-default-footer="hide-default-footer"
               no-data-text="게시글이 존재하지 않습니다."
             >
-              <SearchBoardDetail />
               <template v-slot:default="props">
                 <v-col v-for="(item, index) in props.items" :key="index">
                   <SearchBoardDetail
