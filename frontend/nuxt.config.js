@@ -57,7 +57,6 @@ export default {
     '@nuxtjs/vuetify',
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
   ],
   vuetify: {
     /* module options */
@@ -79,5 +78,6 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    transpile: ['vue-clamp', 'resize-detector']
   }
 }

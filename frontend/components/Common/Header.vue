@@ -24,7 +24,7 @@
           <ul class="NavBarMenu">
             <v-col class="d-none d-md-block">
               <!-- 게시판 -->
-              <li type="button" @click.stop="changeBoard()">
+              <li type="button">
                 <i class="far fa-clipboard NavIcon" />
               </li>
               <!-- 알림 -->
@@ -210,11 +210,11 @@ export default {
     },
     goToHome () {
       this.$router.push('/home')
-    },
-    changeBoard () {
-      const cur = this.$store.state.Header.isBoard
-      this.$store.commit('setIsBoard', !cur)
     }
+    // changeBoard () {
+    //   const cur = this.$store.state.Header.isBoard
+    //   this.$store.commit('setIsBoard', !cur)
+    // }
   }
 }
 </script>
