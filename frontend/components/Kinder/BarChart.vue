@@ -11,6 +11,7 @@ export default {
   components: {
     apexchart: VueApexCharts
   },
+  props: ['title'],
   data () {
     return {
       series: [{
@@ -19,7 +20,10 @@ export default {
       chartOptions: {
         chart: {
           type: 'bar',
-          height: 380
+          height: 380,
+          toolbar: {
+            show: false
+          }
         },
         plotOptions: {
           bar: {
@@ -31,17 +35,19 @@ export default {
             }
           }
         },
-        colors: ['#FACC2E', '#BDBDBD'],
+        colors: ['#ffa219', '#BDBDBD'],
         dataLabels: {
           enabled: true,
-          textAnchor: 'start',
+          offsetY: 0,
+          formatter (val) {
+            return val + '명'
+          },
+          offsetX: 200,
           style: {
-            colors: ['#fff']
+            fontSize: '12px',
+            colors: ['#304758'],
+            fontFamily: 'NanumSquareRound'
           },
-          formatter (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex] + ':  ' + val
-          },
-          offsetX: 0,
           dropShadow: {
             enabled: true
           }
@@ -59,11 +65,21 @@ export default {
           }
         },
         title: {
-          text: '교사평균 근속연수',
+          text: this.title,
           align: 'center',
-          floating: true
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: '18px',
+            fontWeight: '800',
+            fontFamily: 'NanumSquareRound',
+            color: '#263238'
+          }
         },
         tooltip: {
+          enabled: false,
           theme: 'dark',
           x: {
             show: false
@@ -73,6 +89,21 @@ export default {
               formatter () {
                 return ''
               }
+            }
+          }
+        },
+        states: {
+          hover: {
+            filter: {
+              type: 'none',
+              value: 0.15
+            }
+          },
+          active: {
+            allowMultipleDataPointsSelection: false,
+            filter: {
+              type: 'none',
+              value: 0.35
             }
           }
         }

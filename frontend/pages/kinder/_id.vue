@@ -74,37 +74,76 @@
               </v-row>
               <v-row>
                 <v-col cols="12">
-                  내용
+                  <v-chip
+                    v-for="(tag, i) in info.tags"
+                    :key="i"
+                    class="ma-1 chip"
+                    color="#ff9800"
+                    text-color="#black"
+                    outlined
+                  >
+                    <v-icon left color="#ff9800">
+                      mdi-server-plus
+                    </v-icon>
+                    {{ tag }}
+                  </v-chip>
+                </v-col>
+                <v-col cols="12" />
+                <v-col cols="12">
+                  <v-icon style="padding:0px 25px 0px 20px;height:100%;width:0;">
+                    fas fa-home
+                  </v-icon><a :href="info.homepage">{{ info.homepage }}</a>
                 </v-col>
                 <v-col cols="12">
-                  내용
+                  <v-icon style="padding:0px 25px 0px 20px;height:100%;width:0;">
+                    fas fa-clock
+                  </v-icon><span>{{ info.operating_time }}</span>
                 </v-col>
                 <v-col cols="12">
-                  내용
+                  <v-icon style="padding:0px 25px 0px 20px;height:100%;width:0;">
+                    fas fa-phone-alt
+                  </v-icon><span>{{ info.tel }}</span>
                 </v-col>
                 <v-col cols="12">
-                  내용
+                  <v-icon style="padding:0px 25px 0px 20px;height:100%;width:0;">
+                    fas fa-user-tie
+                  </v-icon><span>{{ info.director_name }} 원장선생님</span>
                 </v-col>
+              </v-row>
+              <v-row>
                 <v-col cols="12">
-                  내용
-                </v-col>
-                <v-col cols="12">
-                  내용
-                </v-col>
-                <v-col cols="12">
-                  내용
+                  <div style="width:100%;text-align:right">
+                    <v-btn icon>
+                      <v-icon>fas fa-angle-left</v-icon>
+                    </v-btn>
+                    <v-btn icon>
+                      <v-icon>fas fa-angle-right</v-icon>
+                    </v-btn>
+                  </div>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="4">
-                  <kinder-chart
+                  <bar-chart title="교사평균 근속연수" />
+                </v-col>
+                <v-col cols="4">
+                  <bar-chart title="교사 1인당 유아 수" />
+                </v-col>
+                <v-col cols="4">
+                  <bar-chart title="100m²당 CCTV수" />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="2">
+                  <!-- <bar-chart-vertical title="교사대 아동비율" /> -->
+                  <!-- <kinder-chart
                     title="교사대 아동비율"
                     :number="[info.nteacher, info.nchildren]"
                     :name="['교사','아동']"
                     :color="color1"
                     :unit="unit1"
                     style="height:100%"
-                  />
+                  /> -->
                 </v-col>
                 <v-col cols="4">
                   <kinder-chart
@@ -126,32 +165,7 @@
                     style="height:100%"
                   />
                 </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <div style="width:100%;text-align:right">
-                    <v-btn icon>
-                      <v-icon>fas fa-angle-left</v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon>fas fa-angle-right</v-icon>
-                    </v-btn>
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="4">
-                  교사평균 근속연수
-                  <bar-chart />
-                </v-col>
-                <v-col cols="4">
-                  교사 1인당 유아 수
-                  <bar-chart />
-                </v-col>
-                <v-col cols="4">
-                  100m²당 CCTV수
-                  <bar-chart />
-                </v-col>
+                <v-col cols="2" />
               </v-row>
             </v-col>
           </v-row>
@@ -191,11 +205,13 @@
 import MapView from '@/components/Kinder/Map.vue'
 import KinderChart from '@/components/Kinder/PieChart.vue'
 import BarChart from '@/components/Kinder/BarChart.vue'
+// import BarChartVertical from '@/components/Kinder/BarChartVertical.vue'
 export default {
   components: {
     MapView,
     KinderChart,
     BarChart
+    // BarChartVertical
 
   },
   data () {
@@ -223,8 +239,8 @@ export default {
         grade: 'A' // 어린이집의 등급 또는 종합 평점
       },
       color1: ['#e25668', '#e2cf56', '#69e256', '#56e2cf', '#5669e2', '#e256ae'],
-      color2: ['#69e256', '#56e2cf', '#5669e2', '#e256ae', '#e25668', '#e2cf56'],
-      color3: ['#5669e2', '#e256ae', '#e25668', '#69e256', '#56e2cf', '#e2cf56'],
+      color2: ['#6cd3c7', '#e2cf56', '#fd8c63', '#e256ae', '#e25668', '#e2cf56'],
+      color3: ['#6cd3c7', '#ff789c', '#63fda6', '#e2cf56', '#fd8c63', '#78acff'],
       unit1: '명',
       unit2: '%'
     }
@@ -257,5 +273,8 @@ export default {
     border-width: thin; */
     padding: 30px;
     border : thin solid #E6E6E6;
+}
+.chip{
+
 }
 </style>

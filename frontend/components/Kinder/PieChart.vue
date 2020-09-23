@@ -23,7 +23,15 @@ export default {
           width: 500
         },
         dataLabels: {
-          enabled: true
+          enabled: true,
+          formatter (val) {
+            return val + '%'
+          },
+          style: {
+            fontSize: '12px',
+            colors: ['#304758'],
+            fontFamily: 'NanumSquareRound'
+          }
         },
         colors: this.color,
         labels: this.name,
@@ -88,7 +96,7 @@ export default {
         },
         plotOptions: {
           pie: {
-            expandOnClick: true,
+            expandOnClick: false,
             donut: {
               labels: {
                 value: {
@@ -111,9 +119,6 @@ export default {
               type: 'none',
               value: 0.35
             }
-          },
-          inactive: {
-            enabled: true
           }
         },
         title: {
