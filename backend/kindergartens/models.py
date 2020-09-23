@@ -84,7 +84,7 @@ class Kindergarten(models.Model):
     extension_class_status_info = models.TextField()
     extension_class_program_columns = models.CharField(max_length=255)
     extension_class_program_info = models.TextField()
-    has_extension_class = models.CharField(max_length=255)
+    has_extension_class = models.SmallIntegerField()
     language = models.SmallIntegerField()
     culture = models.SmallIntegerField()
     sport = models.SmallIntegerField()
@@ -95,3 +95,7 @@ class Kindergarten(models.Model):
     staff_grade = models.IntegerField()
 
     
+class Weight(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    kindergarten = models.ForeignKey(Kindergarten, on_delete=models.CASCADE)
+    weight = models.IntegerField()
