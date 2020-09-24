@@ -12,6 +12,9 @@ secrets = Secrets(secret_file)
 
 DATABASES = secrets.get_secret('DATABASES')
 
+log_file_path = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'django-dev-log')
+log_file_name = f'{date.today().isoformat()}-django.log'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -23,7 +26,7 @@ LOGGING = {
     'handlers': {
         'file': {  
             'class': 'logging.FileHandler',
-            'filename': os.path.join(os.path.join(os.path.dirname(BASE_DIR), 'django-dev-log'), f'{date.today().isoformat()}-django.log'),  
+            'filename': os.path.join(log_file_path, log_file_name),  
             'formatter': 'standard'
         },
     },
