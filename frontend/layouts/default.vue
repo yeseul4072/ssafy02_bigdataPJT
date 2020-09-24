@@ -2,17 +2,16 @@
   <div>
     <v-app>
       <common-header v-if="notMain" />
-      <v-expand-transition v-if="notMain">
-        <nav-board
-          v-show="isBoard"
-          ref="test"
-          :class="{pt150 : notMain}"
-          :is-show="isBoard"
-          @child-event="checkHeight"
-        />
-      </v-expand-transition>
+      <!-- <v-expand-transition > -->
+      <nav-board
+        v-if="notMain"
+        ref="test"
+        :class="{pt150 : notMain}"
+        @child-event="checkHeight"
+      />
+      <!-- </v-expand-transition> -->
       <div :style="{'height' : (boardHeight) + 'px' }" />
-      <Nuxt :class="{pt150 : notMain}" />
+      <Nuxt />
       <common-footer v-if="notMain" />
     </v-app>
   </div>

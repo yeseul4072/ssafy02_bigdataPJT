@@ -220,4 +220,7 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/python,django,venv
 
 # secret settings
-secrets.json
+secrets*.json
+
+# docker compose (because of database password)
+docker-compose.yml
