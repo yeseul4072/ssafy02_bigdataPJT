@@ -1,6 +1,8 @@
 from .base import *
 import os
 from datetime import date
+import logging
+import requests
 
 
 DEBUG = True
@@ -12,25 +14,62 @@ secrets = Secrets(secret_file)
 
 DATABASES = secrets.get_secret('DATABASES')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'standard': {
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        },
-    },
-    'handlers': {
+class MattermostRequestsHandler(logging.Handler):
+        
+    def emit(self, record):
+        log_entry = self.format(record)
+        return requests.post(
+            url=secrets.get_secret('MATTERMOST_URL'),
+            data=log_entry.encode('utf-8'),
+            headers={'Content-type': 'application/json'}
+        )
+
+log_file_path = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'django-dev-log')
+log_file_name = f'django-dev.log.{date.today().isoformat()}'
+
+LOGGING['handlers'] = {
         'file': {  
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(os.path.join(os.path.dirname(BASE_DIR), 'django-dev-log'), f'{date.today().isoformat()}-django.log'),  
-            'formatter': 'standard'
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(log_file_path, log_file_name),
+            'when': 'midnight',
+            'backupCount': 100,
+            'formatter': 'standard',
         },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],  
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-        },
-    },
-}
+        'http': {
+            'class': 'spc_pjt.settings.development.MattermostRequestsHandler',
+            'formatter': 'json'
+        }
+    }
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': True,
+#     'formatters': {
+#         'standard': {
+#             'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+#         },
+#         'json': {
+#             'format': '{"text": "%(asctime)s %(name)s %(levelname)s %(message)s"}'
+#         }
+#     },
+#     'handlers': {
+#         'file': {  
+#             'class': 'logging.handlers.TimedRotatingFileHandler',
+#             'filename': os.path.join(log_file_path, log_file_name),
+#             'when': 'midnight',
+#             'backupCount': 100,
+#             'formatter': 'standard',
+#         },
+#         'http': {
+#             'class': 'spc_pjt.settings.development.MattermostRequestsHandler',
+#             'formatter': 'json'
+#         }
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file', 'http'],  
+#             'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+#             'propagate': False
+#         },
+#     },
+# }
