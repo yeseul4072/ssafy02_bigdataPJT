@@ -17,11 +17,12 @@
               v-for="(tag, i) in review.tags"
               :key="i"
               class="ma-1"
-              color="#F781F3"
+              color="#ff9800"
+              text-color="#black"
               outlined
               small
             >
-              <v-icon left x-small>
+              <v-icon color="#ff9800" left x-small>
                 mdi-server-plus
               </v-icon>
               {{ tag }}
