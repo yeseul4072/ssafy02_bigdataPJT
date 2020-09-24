@@ -26,6 +26,10 @@ export default {
       {
         src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js',
         type: 'text/javascript'
+      },
+      {
+        src: 'http://dmaps.daum.net/map_js_init/postcode.v2.js',
+        type: 'text/javascript'
       }
     ],
     link: [
@@ -56,7 +60,7 @@ export default {
   buildModules: [
     '@nuxtjs/vuetify',
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
+    '@nuxtjs/eslint-module'
   ],
   vuetify: {
     /* module options */

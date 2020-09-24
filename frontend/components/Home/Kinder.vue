@@ -4,7 +4,6 @@
     hide-delimiters
     show-arrows-on-hover
     delimiter-icon="mdi-minus"
-    style="height:100%;"
   >
     <v-carousel-item
       v-for="(kinder, i) in kinders"
@@ -13,7 +12,6 @@
       <v-sheet
         color="white"
         light
-        height="100%"
       >
         <div style="font-size:1.5vw">
           <v-btn
@@ -35,7 +33,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row>
-                  <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
+                  <v-img style="border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
                 </v-row>
                 <v-row>
                   <div style="width:100%;font-size:2vh;padding-left:6px;margin-top:15px; margin-bottom:5px;">
@@ -64,7 +62,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row>
-                  <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
+                  <v-img style="max-width:50%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
                 </v-row>
                 <v-row>
                   <div style="width:100%;font-size:2vh;padding-left:6px;margin-top:15px; margin-bottom:5px;">
