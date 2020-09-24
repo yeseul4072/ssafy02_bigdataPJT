@@ -1,0 +1,5 @@
+# 공개된 git의 경우 nginx.conf는 올리지 않는 것이 좋을 것.
+/nginx
+
+# docker compose (because of database password)
+docker-compose*.yml
