@@ -4,7 +4,7 @@
     hide-delimiters
     show-arrows-on-hover
     delimiter-icon="mdi-minus"
-    style="height:90%;"
+    style="height:95%;"
   >
     <v-carousel-item
       v-for="(kinder, i) in kinders"
@@ -34,7 +34,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row style="height:60%">
-                  <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
+                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" @click="linkKinder" />
                 </v-row>
                 <v-row :align="center">
                   <span style="font-size:1.8vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
@@ -48,7 +48,7 @@
                     <span> {{ kinder.distance }} </span> Km
                     <i style="color:#DEDEDE" class="fas fa-ellipsis-v" />
 
-                    <a>전체리뷰 <span>{{ kinder.review_cnt }}</span></a>
+                    <nuxt-link :to="'/kinder/'+1">전체리뷰 <span>{{ kinder.review_cnt }}</span></nuxt-link>
                     <!-- <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="8"
@@ -91,7 +91,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row style="height:60%">
-                  <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" />
+                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.url)" @click="linkKinder" />
                 </v-row>
                 <v-row :align="center">
                   <span style="font-size:1.8vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
@@ -172,7 +172,9 @@ export default {
     }
   },
   methods: {
-
+    linkKinder () {
+      this.$router.push('/kinder/' + 1)
+    }
   }
 }
 </script>
@@ -187,5 +189,11 @@ export default {
 .aW-AU {
     fill: #2adba3;
     margin-left: 5px;
+}
+.cursor {
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
 }
 </style>
