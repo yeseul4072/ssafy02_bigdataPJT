@@ -274,7 +274,4 @@ export default {
     padding: 30px;
     border : thin solid #E6E6E6;
 }
-.chip{
-
-}
 </style>
