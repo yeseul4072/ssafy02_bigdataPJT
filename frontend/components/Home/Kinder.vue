@@ -4,7 +4,6 @@
     hide-delimiters
     show-arrows-on-hover
     delimiter-icon="mdi-minus"
-    style="height:100%;"
   >
     <v-carousel-item
       v-for="(kinder, i) in kinders"
@@ -13,7 +12,6 @@
       <v-sheet
         color="white"
         light
-        height="100%"
       >
         <div style="font-size:1.5vw">
           <v-btn
