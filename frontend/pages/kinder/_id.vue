@@ -172,18 +172,18 @@
           <v-row style="height:3.3%" />
           <v-row style="height:20%">
             <v-col cols="12" class="cardRight">
-              <v-row style="height:10%;">
+              <v-row style="height:15%;">
                 <div style="font-size:2.5vw;font-weight:800;">
                   주변정보
                 </div>
               </v-row>
-              <v-row style="height:90%;">
+              <v-row style="height:85%;">
                 <map-view />
               </v-row>
             </v-col>
           </v-row>
           <v-row style="height:3.3%" />
-          <v-row style="height:40%">
+          <v-row style="height:38%">
             <v-col cols="12" class="cardRight">
               <v-row style="height:10%;">
                 <div style="font-size:2.5vw;font-weight:800;">

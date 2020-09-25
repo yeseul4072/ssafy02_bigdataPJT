@@ -7,7 +7,7 @@
       <v-card-title style="height:40%">
         <v-row style="width:100%;height:90%">
           <v-col cols="6">
-            <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
+            <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
           </v-col>
           <v-col cols="6" style="padding-left:0">
             <v-row>
@@ -91,6 +91,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.cursor{
+  cursor: pointer;
+}
 </style>
