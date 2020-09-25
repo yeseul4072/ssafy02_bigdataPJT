@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 타이틀 바 -->
-    <v-col
+    <!-- <v-col
       class="pa-0"
       align="center"
     >
@@ -12,7 +12,6 @@
           <v-col
             :cols="3"
           >
-            <!-- 세로 -->
             <v-row
               align="center"
             >
@@ -63,13 +62,13 @@
           </v-col>
         </v-row>
       </div>
-      <!-- 배너 사진 -->
-      <BannerImage />
-      <!-- 리스트 내용물 -->
-      <div>
-        <BoardComponent :board-type="index" :title="title[index-1]" />
-      </div>
-    </v-col>
+    </v-col> -->
+    <!-- 배너 사진 -->
+    <BannerImage />
+    <!-- 리스트 내용물 -->
+    <div>
+      <BoardComponent :board-type="index" :title="title[index-1]" />
+    </div>
   </div>
 </template>
 
