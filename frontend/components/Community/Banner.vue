@@ -2,7 +2,6 @@
   <div>
     <v-img
       :src="require('../../assets/banner.png')"
-      height="120"
     />
   </div>
 </template>
