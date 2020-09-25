@@ -1,36 +1,68 @@
 <template>
-  <div class="body-container">
+  <div>
     <!-- 타이틀 바 -->
-    <v-row
+    <!-- <v-col
+      class="pa-0"
       align="center"
-      style="margin-left:5px;"
     >
-      <v-col
-        :cols="2"
-      >
-        <!-- 세로 -->
+      <div class="body-container">
         <v-row
           align="center"
         >
-          <span style="font-size:1.5rem; font-weight:800;">커뮤니티</span>
-        </v-row>
-      </v-col>
-      <v-col>
-        <ul>
-          <li
-            v-for="i in tabs"
-            :key="i"
-            @click="changeTab(i)"
+          <v-col
+            :cols="3"
           >
-            <div
-              class="index-hover"
+            <v-row
+              align="center"
             >
-              {{ title[i-1] }}<div />
-            </div>
-          </li>
-        </ul>
-      </v-col>
-    </v-row>
+              <v-icon style="margin-right:10px;">
+                mdi-charity
+              </v-icon>
+              <span style="font-size:1.5rem; font-weight:800;">커뮤니티</span>
+            </v-row>
+          </v-col>
+
+          <v-col
+            :cols="8"
+          >
+            <v-row>
+              <v-col
+                v-for="i in tabs"
+                :key="i"
+                class="pa-0"
+                align="center"
+                :cols="2"
+                @click="changeTab(i)"
+              >
+                <div
+                  class="index-hover"
+                >
+                  {{ title[i-1] }}<div />
+                </div>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col
+            class="pa-0"
+            align="end"
+            :cols="1"
+          >
+            <v-btn
+              class="cm-bc-icon"
+              depressed
+              fab
+              dark
+              small
+              color="primary"
+            >
+              <v-icon>
+                mdi-magnify
+              </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </v-col> -->
     <!-- 배너 사진 -->
     <BannerImage />
     <!-- 리스트 내용물 -->
@@ -63,10 +95,8 @@ export default {
 
 <style scoped>
 .body-container{
-    background-color: #f3f3f3;
-  margin-top: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+  width: 70%;
+  margin-top: 5px;
   min-width: 500px;
 }
 ul {
@@ -77,21 +107,13 @@ ul {
   font-size: 17px;
 }
 
-li {
-  margin: 0;
-  padding: 0;
-  border : 0;
-  float: left;
-}
 .index-hover{
   margin-right:20px;
   font-size: 1rem;
   font-weight: 600;
 }
 .index-hover:hover{
-  color: #ff5faa;
+  border-bottom: 1px solid #ff5faa;
   cursor: pointer;
-  text-decoration: underline;
 }
-
 </style>
