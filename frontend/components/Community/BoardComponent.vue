@@ -1,58 +1,53 @@
 <template>
   <div class="board-component-body">
-    <!-- 상단 title -->
-    <div class="divider">
-      <v-row
-        align="center"
-        class="cm-bc-t1"
-      >
-        <v-col
-          class="pa-0"
-          md="3"
-          offset-md="1"
-        >
-          {{ title }}
-          <v-icon
-            class="cm-bc-icon"
-          >
-            mdi-star-outline
-          </v-icon>
-          <v-btn
-            class="cm-bc-icon"
-            depressed
-            fab
-            dark
-            x-small
-            color="success"
-          >
-            <v-icon>
-              mdi-pencil
-            </v-icon>
-          </v-btn>
-        </v-col>
-        <v-col
-          class="pa-0"
-          md="8"
-          align="end"
-          justify="end"
-        >
-          <v-text-field
-            v-model="text"
-            outlined
-            dense
-            style="width:98%; padding-top:20px;"
-            label="검색"
-          />
-        </v-col>
-      </v-row>
-    </div>
     <!-- 리스트 뿌리기 -->
     <div class="bc-list-body">
       <div
         v-if="boardList.length > 0"
       >
-        <div style="font-size:1rem; color:#555555; margin-bottom:15px; margin-left:15%;">
-          검색 결과 {{ count }}개
+        <!-- 상단 title -->
+        <div class="divider">
+          <v-row
+            align="center"
+            class="cm-bc-t1"
+          >
+            <v-col
+              align="start"
+              class="pa-0"
+            >
+              {{ title }}
+              <v-icon
+                class="cm-bc-icon"
+              >
+                mdi-star-outline
+              </v-icon>
+              <v-btn
+                class="cm-bc-icon"
+                depressed
+                fab
+                dark
+                x-small
+                color="success"
+              >
+                <v-icon>
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+            </v-col>
+            <v-col
+              class="pa-0"
+              md="5"
+              align="end"
+            >
+              <v-text-field
+                v-model="text"
+                outlined
+                dense
+                style="width:98%; padding-top:20px;"
+                label="검색"
+              />
+            </v-col>
+          </v-row>
         </div>
         <v-data-iterator
           :items="boardList"
@@ -67,7 +62,7 @@
             <v-card
               rounded="0"
               outlined
-              style="width:70%"
+              style="width:80%"
             >
               <v-col
                 v-for="(item, index) in props.items"
@@ -79,6 +74,13 @@
             </v-card>
           </template>
         </v-data-iterator>
+        <v-container>
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-pagination v-model="page" class="my-4" :length="pageCnt" />
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
       <div v-else>
         <v-row style="width:100%;">
@@ -107,9 +109,9 @@ export default {
   props: ['boardType', 'title'],
   data () {
     return {
-      count: 0,
+      page: 1,
       pageCnt: 10,
-      itemsPerPage: 5,
+      itemsPerPage: 15,
       boardList: [
         {
           id: 1,
@@ -182,7 +184,6 @@ export default {
 
 <style scoped>
 .board-component-body{
-  background-color: #f3f3f3;
   padding-bottom: 20px;
   margin-bottom:20px;
 }
@@ -200,16 +201,12 @@ export default {
 
 .divider {
   margin:auto;
-  border-bottom:1px solid #000000;
-  width: 70%;
-  border-width: 1px;
-  border-radius: 2px;
+  width: 78%;
 }
 
 .bc-list-body{
-  margin-top: 50px;
   margin-left: 50px;
   margin-right: 50px;
-  margin-bottom: 10px;
 }
+
 </style>

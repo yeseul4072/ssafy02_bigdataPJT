@@ -1,51 +1,54 @@
 <template>
   <div class="bd-body-container">
-    <v-row>
-      <v-col
-        class="py-1"
-        :cols="12"
-        align="start"
-      >
-        <h3>
-          <v-clamp
-            autoresize
-            :max-lines="1"
-            ellipsis="..."
+    <v-list three-line>
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img
+            :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+          />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-col
+            class="px-3 py-0"
+            :cols="12"
+            align="start"
           >
-            {{ board.title }}
-          </v-clamp>
-        </h3>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col
-        class="py-0"
-        :cols="1"
-      >
-        {{ board.dateTime | diffDate }}
-      </v-col>
-      <v-col
-        class="py-0"
-        align="start"
-        :cols="2"
-      >
-        <v-icon class="vd-icon" color="blue">
-          mdi-comment-text-outline
-        </v-icon>
-        {{ board.boardCount }}
-        <v-icon class="vd-icon" color="pink">
-          mdi-thumb-up-outline
-        </v-icon>
-        {{ board.boardCount }}
-      </v-col>
-      <v-col
-        class="py-0"
-        :cols="9"
-        align="end"
-      >
-        {{ board.writer | filterWriter }}
-      </v-col>
-    </v-row>
+            <h3>
+              <v-clamp
+                :max-lines="1"
+                ellipsis="..."
+              >
+                {{ board.title }}
+              </v-clamp>
+            </h3>
+          </v-col>
+          <v-list-item-subtitle>
+            <v-col
+              class="px-3 py-0"
+              :cols="12"
+              align="start"
+            >
+              <span>
+                {{ board.writer | filterWriter }}
+              </span>
+              <span style="margin-left:10px;">
+                <v-icon class="vd-icon" color="blue">
+                  mdi-comment-text-outline
+                </v-icon>
+                {{ board.boardCount }}
+                <v-icon class="vd-icon" color="pink">
+                  mdi-thumb-up-outline
+                </v-icon>
+                {{ board.boardCount }}
+              </span>
+              <span style="margin-left:10px;">
+                {{ board.dateTime | diffDate }}
+              </span>
+            </v-col>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
     <div class="divider" />
   </div>
 </template>
@@ -88,13 +91,16 @@ export default {
 
 <style scoped>
 .bd-body-container{
-  padding-top: 20px;
+  padding-top: 4px;
   padding-left:20px;
   padding-right: 20px;
 }
+.bd-body-container:hover {
+  box-shadow: 0 3px 8px 0 rgba(0,0,0,.08), 0 0 1px 0 rgba(0,0,0,.44);
+  cursor:pointer;
+}
 .divider {
-  margin-top: 20px;
-  border-bottom:1px solid #f5f5f5;
+  border-bottom:2px solid #f5f5f5;
   width: 100%;
   border-width: 1px;
 }

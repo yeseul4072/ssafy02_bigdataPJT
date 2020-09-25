@@ -13,7 +13,6 @@
       <v-sheet
         color="white"
         light
-        height="100%"
       >
         <div style="font-size:1.5vw">
           <v-btn

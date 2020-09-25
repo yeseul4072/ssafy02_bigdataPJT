@@ -77,6 +77,13 @@
                 </v-col>
               </template>
             </v-data-iterator>
+            <v-container>
+              <v-row justify="center">
+                <v-col cols="8">
+                  <v-pagination v-model="page" class="my-4" :length="pageCnt" />
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
           <div v-else>
             <v-row style="width:100%;">
@@ -94,13 +101,6 @@
               </v-col>
             </v-row>
           </div>
-          <v-container>
-            <v-row justify="center">
-              <v-col cols="8">
-                <v-pagination v-model="page" class="my-4" :length="pageCnt" />
-              </v-col>
-            </v-row>
-          </v-container>
         </div>
       </div>
     </div>
