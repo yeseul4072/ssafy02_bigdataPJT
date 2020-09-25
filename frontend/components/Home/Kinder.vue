@@ -4,7 +4,7 @@
     hide-delimiters
     show-arrows-on-hover
     delimiter-icon="mdi-minus"
-    style="height:100%;"
+    style="height:90%;"
   >
     <v-carousel-item
       v-for="(kinder, i) in kinders"
@@ -43,20 +43,10 @@
                   </span>
                   &nbsp;&nbsp;
                   <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
-                    <span> {{ kinder.distance }} </span> Km
+                    <i style="color:orange" class="fas fa-star" />
+                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.stars }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
-
-                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.stars }}</span>/5
-                    <v-rating
-                      :value="kinder.stars"
-                      color="orange"
-                      background-color="orange lighten-3"
-                      dense
-                      half-increments
-                      readonly
-                      size="1.0vw"
-                      style="display:inline-block;"
-                    />
+                    <span> {{ kinder.distance }} </span> Km
                     <i style="color:#DEDEDE" class="fas fa-ellipsis-v" />
 
                     <a>전체리뷰 <span>{{ kinder.review_cnt }}</span></a>
@@ -110,20 +100,10 @@
                   </span>
                   &nbsp;&nbsp;
                   <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
-                    <span> {{ kinder.distance }} </span> Km
+                    <i style="color:orange" class="fas fa-star" />
+                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.stars }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
-
-                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.stars }}</span>/5
-                    <v-rating
-                      :value="kinder.stars"
-                      color="orange"
-                      background-color="orange lighten-3"
-                      dense
-                      half-increments
-                      readonly
-                      size="1.0vw"
-                      style="display:inline-block;"
-                    />
+                    <span> {{ kinder.distance }} </span> Km
                     <i style="color:#DEDEDE" class="fas fa-ellipsis-v" />
 
                     <a>전체리뷰 <span>{{ kinder.review_cnt }}</span></a>
