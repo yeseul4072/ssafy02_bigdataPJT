@@ -223,4 +223,4 @@ pip-selfcheck.json
 secrets*.json
 
 # docker compose (because of database password)
-docker-compose.yml
+docker-compose*.yml
