@@ -92,7 +92,7 @@ export default {
 </script>
 
 <style scoped>
-.cursor{
+.cursor {
   cursor: pointer;
 }
 </style>
