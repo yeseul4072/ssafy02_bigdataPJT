@@ -10,12 +10,12 @@
             </div>
           </v-col>
         </v-row>
-        <v-row style="width:100%;height:500px;margin-bottom:50px;">
+        <v-row style="width:100%;margin-bottom:50px;">
           <v-col cols="12">
             <kinder-box :kinders="kinders1" class="card" title="천사동에 3~4살 아이가 가장 많은 어린이집" />
           </v-col>
         </v-row>
-        <v-row style="width:100%;height:500px;">
+        <v-row style="width:100%;">
           <v-col cols="12">
             <kinder-box :kinders="kinders1" class="card" title="천사동에 야간운영을 하는 어린이집" />
           </v-col>

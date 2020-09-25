@@ -10,8 +10,8 @@
         <div class="divider" />
 
         <div class="form">
-          <v-text-field outlined color="success" label="아이디" />
-          <v-text-field outlined color="#0CC476" label="비밀번호" hide-details />
+          <v-text-field v-model="id" outlined color="success" label="아이디" />
+          <v-text-field v-model="password" outlined color="#0CC476" label="비밀번호" hide-details />
           <v-list-item style="padding:0;margin-top:30px;">
             <v-list-item-content style="padding:0">
               <v-checkbox label="아이디 저장" color="success" dense style="margin:0px" />
@@ -24,11 +24,21 @@
             align="center"
             justify="center"
           >
-            <v-btn color="#0dCA78" rounded x-large dark style="margin-top:10px; width:90%;">
+            <v-btn
+              color="#0dCA78"
+              rounded
+              x-large
+              dark
+              style="margin-top:10px; width:90%;"
+              @click="login"
+            >
               <span style="font-size:20px">로그인</span>
             </v-btn>
             <div class="add-option">
-              <a href="#" @click="moveJoin">회원가입</a>
+              <nuxt-link to="/signup">
+                회원가입
+              </nuxt-link>
+
               <span class="bar" aria-hidden="true">|</span>
               <a href="#">아이디 찾기</a>
               <span class="bar" aria-hidden="true">|</span>
@@ -56,7 +66,19 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script>
+import http from "@/util/http_common.js"
+import { mapGetters } from 'vuex'
+
 export default {
+  data () {
+    return {
+        id:'',
+        password:'',
+    }
+  },
+  computed: {
+    ...mapGetters(['isLogin','getToken'])
+  },
   methods: {
     switchButton (e) {
       const kakaoIcon = $('._kakao')
@@ -67,7 +89,17 @@ export default {
       const targetIcon = $(`.${className}`)
       kakaoIcon.attr('class',`${className} _serviceIcon`);
       targetIcon.attr('class',`_kakao _serviceIcon`);
-
+    },
+    login() {
+      http.axios.post('/rest-auth/login/', {
+        'username':this.id,
+        'password':this.password,
+      }).then( ({data}) => {
+        console.log(this.$router)
+        this.$router.app.$store.commit('setIsLogin', true)
+        this.$router.app.$store.commit('setToken', `Token ${data.key}`)
+        this.$router.push('/home')
+      })
     }
   }
 }
