@@ -24,6 +24,15 @@
           justify="center"
           style="margin-top:20px;"
         >
+          <input
+            v-show="false"
+            id="file"
+            ref="file"
+            type="file"
+            accept="image/png, image/jpeg, image/bmp"
+            @change="changeImg"
+          >
+
           <v-badge
             color="transparent"
             bottom
@@ -31,7 +40,14 @@
             offset-y="65"
           >
             <template v-slot:badge>
-              <v-btn fab depressed color="#e4e4e4" outlined style="background-color:white;">
+              <v-btn
+                fab
+                depressed
+                color="#e4e4e4"
+                outlined
+                style="background-color:white;"
+                @click="clickImg()"
+              >
                 <v-icon color="#e4e4e4">
                   mdi-camera
                 </v-icon>
@@ -166,6 +182,8 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<!--<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>-->
+<!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>-->
 <script>
 import http from "@/util/http_common.js"
 export default {
@@ -176,22 +194,57 @@ export default {
         re_password:'',
         nickname:'',
         email:'',
-
         address: '',
+        lat: '',
+        lng: '',
     }
   },
   methods: {
+    clickImg() {
+        $("#file").click();
+    },
+    changeImg(e){
+      // var frm = new FormData();
+      // frm.append("file", document.getElementById("file").files[0]);
+
+      // axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
+      //   headers: {
+      //     'accept': '*/*',
+      //     'X-AUTH-TOKEN': store.state.token,
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // }).then(({data}) => {
+      //   this.thumbnailUrl = data.result;
+      //   this.changeForm(true);
+      // }).catch((error) => {
+      //   console.dir(error)
+      // }).finally(()=>{
+
+      // })
+      // this.$refs.file.value = ''
+    },
+
     openDaumZipAddress() {
         var setAddress = this.setAddress;
         new daum.Postcode({
             oncomplete(data) {
-                setAddress(data.address)
+                var geocoder = new kakao.maps.services.Geocoder();
+
+                var callback = function(result, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        setAddress(data.address, result[0].x, result[0].y);
+                    }
+                };
+                geocoder.addressSearch(data.address, callback);
             }
         }).open();
     },
 
-    setAddress(address) {
+    setAddress(address, lng, lat) {
+        console.log(address, lng, lng)
         this.address = address
+        this.lng = lng
+        this.lat = lat
     },
     signup() {
       http.axios.post('/rest-auth/registration/', {

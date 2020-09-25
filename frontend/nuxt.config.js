@@ -30,6 +30,14 @@ export default {
       {
         src: 'http://dmaps.daum.net/map_js_init/postcode.v2.js',
         type: 'text/javascript'
+      },
+      {
+        src: 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false',
+        type: 'text/javascript'
+      },
+      {
+        src: 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services',
+        type: 'text/javascript'
       }
     ],
     link: [
