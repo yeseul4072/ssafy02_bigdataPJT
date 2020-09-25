@@ -90,32 +90,62 @@ export default {
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 1.5
         },
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 2.2
         },
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 3.3
         },
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 1.2
         },
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 1.5
         },
         {
           name: '대봉어린이집',
           tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg'
+          url: 'kinder_temp.jpg',
+          tel: '(02)3789-5971',
+          stars: 4.3,
+          grade: 'A',
+          review_cnt: 120,
+          distance: 1.7
         }
       ],
       kinders2: [
