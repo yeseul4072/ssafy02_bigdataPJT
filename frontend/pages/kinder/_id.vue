@@ -183,15 +183,23 @@
             </v-col>
           </v-row>
           <v-row style="height:3.3%" />
-          <v-row style="height:38%">
+          <v-row>
             <v-col cols="12" class="cardRight">
-              <v-row style="height:10%;">
+              <v-row>
                 <div style="font-size:2.5vw;font-weight:800;">
                   <span style="color:#F5A9E1;">"ZIP"</span>&nbsp;리뷰
                 </div>
               </v-row>
-              <v-row style="height:85%">
-                리뷰 컴포넌트
+              <v-row style="height:95%">
+                <v-col cols="12">
+                  <kinder-review />
+                </v-col>
+                <v-col cols="12">
+                  <kinder-review />
+                </v-col>
+                <!-- <v-col cols="12">
+                  <kinder-review />
+                </v-col> -->
               </v-row>
             </v-col>
           </v-row>
@@ -205,12 +213,14 @@
 import MapView from '@/components/Kinder/Map.vue'
 import KinderChart from '@/components/Kinder/PieChart.vue'
 import BarChart from '@/components/Kinder/BarChart.vue'
+import KinderReview from '@/components/Kinder/KinderReview.vue'
 // import BarChartVertical from '@/components/Kinder/BarChartVertical.vue'
 export default {
   components: {
     MapView,
     KinderChart,
-    BarChart
+    BarChart,
+    KinderReview
     // BarChartVertical
 
   },
