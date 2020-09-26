@@ -18,6 +18,8 @@ def load_from_data(file_path):
 
 
 """
+weight 테이블을 유저-어린이집 가중치 행렬로 변환
+
 parse_user_data(columns, users)
     parameter:
         users:                        # 추천 유저의 주변에 사는 유저 목록
@@ -50,6 +52,8 @@ def parse_user_data(users, columns):
 
 
 """
+유저-어린이집 가중치 행렬을 통해  유저-어린이집 피쳐 선호도 행렬 반환
+
 get_preference(kindergarten_df, user_df):
     parameter:
         kindergarten_df:
@@ -86,6 +90,8 @@ def get_preference(kindergarten_df, user_df):
 
 
 """
+어린이집 테이블과, 유저-어린이집 피쳐 선호도 행렬을 통해 유사도 높은 어린이집 id n개를 반환
+
 recommend(kindergarten,preference,n):
     parameter:
         kindergarten:                   # kindergarten_df에는 모든 어린이집 정보가 아닌, 유저의 주소 근처 어린이집 또는 검색 시 입력한 주소 근처 어린이집만 저장
@@ -116,6 +122,9 @@ def recommend(kindergarten,preference,n):
 
 
 """
+유저-어린이집 가중치 행렬을 통해 추천 유저와 유사한 유저를 구하고
+유사한 유저와 추천 유저의 가중치 차이가 높은 어린이집 id 목록을 n개 반환
+
 user_based_collaborative_filtering(users, user, n):
     parameter:
         users:                          # 추천 유저의 주변에 사는 유저 목록
@@ -139,10 +148,13 @@ def user_based_collaborative_filtering(users, user, n):
     data = list(*cosine_similarity(user,users))    
     df = pd.DataFrame(data=[data], columns=users.index)
     df[df[df.keys()] > 0.99] = 0.0
-    df = pd.DataFrame([[*sorted(data, reverse=True)]], columns=sorted(users.index, key=lambda x: df[x][0],reverse=True))        
+    df = pd.DataFrame([[*sorted(*df.values, reverse=True)]], columns=sorted(users.index, key=lambda x: df[x][0],reverse=True))        
     result = []
     for idx in df.keys()[:n]:
-        result.append((user - users.loc[idx,]).idxmin(axis=1)[0])
+        # result.append((user - users.loc[idx,]).idxmin(axis=1).values[0])
+        cha = (user - users.loc[idx,]).idxmin(axis=1)
+        users[cha.values[0]] = -1
+        result.append(cha.values[0])
     return result
 
 
@@ -150,15 +162,19 @@ def user_based_collaborative_filtering(users, user, n):
 """
     Test Code
 """
-kindergarten_df = load_from_data('./bigdata/data/data2.json')
-users_data = [[1+(j == i) if j == i or j==i+1 else 0 for j in range(len(kindergarten_df))] for i in range(10)]
-users_df = pd.DataFrame(users_data, columns=kindergarten_df.index)
-preference_df = get_preference(kindergarten_df,users_df.iloc[0,:])
-contents_recommend_df = recommend(kindergarten_df,preference_df,10)
+# kindergarten_df = load_from_data('./data/data2.json')
+# users_data = [[1+(j == i) if j == i or j==i+1 else 0 for j in range(len(kindergarten_df))] for i in range(10)]
+# users_df = pd.DataFrame(users_data, columns=kindergarten_df.index)
+# preference_df = get_preference(kindergarten_df,users_df.iloc[0,:])
+# # print(kindergarten_df)
+# # print(preference_df)
+# # contents_recommend_df = recommend(kindergarten_df,preference_df,10)
 
-print(contents_recommend_df)
-print(user_based_collaborative_filtering(users_df, users_df.iloc[[0],:], 10))
-# parse_user_data(['11110','11111','11112'], pd.DataFrame(
+# # print(contents_recommend_df)
+# print(users_df)
+# print(users_df.iloc[[0],:])
+# print(user_based_collaborative_filtering(users_df, users_df.iloc[[0],:], 10))
+# users_weight = parse_user_data(pd.DataFrame(
 #         [
 #             {'user_id': 1, 'kindergarten_id': '11110', 'weight':3 }, 
 #             {'user_id': 1, 'kindergarten_id': '11110', 'weight':4 },
@@ -166,5 +182,6 @@ print(user_based_collaborative_filtering(users_df, users_df.iloc[[0],:], 10))
 #             {'user_id': 1, 'kindergarten_id': '11112', 'weight':6 },
 #             {'user_id': 2, 'kindergarten_id': '11112', 'weight':7 },
 #         ]
-#     )
+#     ), ['11110','11111','11112']
 # )
+# print(users_weight)

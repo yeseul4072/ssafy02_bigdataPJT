@@ -224,3 +224,6 @@ secrets*.json
 
 # docker compose (because of database password)
 docker-compose*.yml
+
+# data
+*.json
