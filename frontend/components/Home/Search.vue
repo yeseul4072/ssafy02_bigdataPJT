@@ -1,14 +1,12 @@
 <template>
   <div class="wrap">
     <!-- <v-card color="red lighten-2" dark> -->
-    <v-row style="padding-top:15px;">
-      <div style="width:10%;" />
+    <v-row style="padding-top:15px;padding-left:8vw;">
       <div style="width:90%; padding: 0 1%; font-size:1.5vw;">
         지역
       </div>
     </v-row>
-    <v-row>
-      <div style="width:10%" />
+    <v-row style="padding-left:8vw;">
       <div style="width:24.7%; padding: 0 1%">
         <v-overflow-btn
           v-model="selectedSi"
@@ -31,7 +29,7 @@
         />
       </div>
 
-      <div style="width:13%; padding-top: 10px;">
+      <div style="padding-top: 10px;">
         <v-btn
           class="mx-2"
           fab
