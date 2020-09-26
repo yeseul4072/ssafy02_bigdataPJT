@@ -12,9 +12,6 @@ from rest_framework.decorators import api_view
 # App - community
 from .models import Kindergarten, Weight
 
-# data analysis
-import pandas as pd
-
 # recommendation algorithm
 import os
 import sys
