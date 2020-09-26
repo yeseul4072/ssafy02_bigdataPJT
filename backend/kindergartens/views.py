@@ -47,10 +47,11 @@ class Recommend(APIView):
         User = get_user_model()
         for q in Weight.objects.all():
             user = User.objects.get(pk=q.user_id)
-            if haversine(user_position, (user.latitude, user.longitude)) <= 5:
+            if haversine(user_position, (user.latitude, user.longitude)) <= 5 and q.kindergarten_id in near_kindergartens_id:
                 near_users_id.append(q.id)
         near_users = pd.DataFrame(Weight.objects.filter(id__in=near_users_id).values('user_id', 'kindergarten_id', 'weight'))
         # print(near_users)
+
         # 유저-어린이집 가중치 행렬
         users_weight = recommend.parse_user_data(near_users, near_kindergartens_id)
         # print(users_weight)
@@ -59,12 +60,11 @@ class Recommend(APIView):
         # 유저-어린이집feature 행렬
         preference_df = recommend.get_preference(kindergarten_df, user_df)
         # content-based 추천
-        contents_recommend_df = recommend.recommend(kindergarten_df, preference_df, 10)
+        contents_recommend = recommend.recommend(kindergarten_df, preference_df, 10)
         # print(contents_recommend_df)
         # collaborative 추천
         user_df2 = users_weight.loc[[request.user.id],:]
-        print(user_df2)
-        print(users_weight)
         collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df2, 10)
-        print(collabo_recommend)
 
+        recommend_kindergartens = collabo_recommend + list(contents_recommend)
+        return Response(recommend_kindergartens[:10])
