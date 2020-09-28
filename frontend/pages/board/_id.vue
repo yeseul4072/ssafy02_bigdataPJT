@@ -168,9 +168,7 @@
               height="100"
               label="이 곳에 작성해주세요 :D"
               hide-details
-            >
-              <template v-slot:label />
-            </v-textarea>
+            />
             <v-list-item class="px-8">
               <span
                 style="color:orange;"
