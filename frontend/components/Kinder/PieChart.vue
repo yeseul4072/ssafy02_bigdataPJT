@@ -20,12 +20,13 @@ export default {
       chartOptions: {
         chart: {
           type: 'donut',
-          width: 500
+          width: 500,
+          unit: this.unit
         },
         dataLabels: {
           enabled: true,
-          formatter (val) {
-            return val + '%'
+          formatter (val, { seriesIndex, dataPointIndex, w }) {
+            return w.config.series[seriesIndex] + w.config.chart.unit
           },
           style: {
             fontSize: '12px',
@@ -58,7 +59,6 @@ export default {
           followCursor: false,
           intersect: false,
           inverseOrder: false,
-          custom: undefined,
           fillSeriesColor: false,
           theme: 'dark',
           style: {
@@ -73,11 +73,8 @@ export default {
             formatter: undefined
           },
           y: {
-            formatter: function(value, series){
-              return ': ' +value+'%'
-            },
-            title: {
-              formatter: seriesName => seriesName
+              formatter: function(value, w){
+                return value + w.config.chart.unit;
             }
           },
           z: {
@@ -150,7 +147,6 @@ export default {
     $('.apexcharts-pie-area').on('mouseleave', (event) => {
       $(`#${event.target.ownerSVGElement.id}`).find('.apexcharts-pie-area').attr('fill-opacity', 1.0);
     })
-
   }
 }
 </script>
