@@ -4,6 +4,7 @@
     absolute
     right
     temporary
+    style="z-index:100;"
   >
     <v-list
       nav

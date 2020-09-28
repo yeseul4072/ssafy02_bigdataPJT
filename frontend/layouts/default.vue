@@ -33,7 +33,7 @@ export default {
   computed: {
     notMain () {
       // ignore = ['/', '/']
-      return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path !== '/signup'
+      return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path.indexOf('/signup')
     },
     ...mapGetters(['isBoard'])
   },

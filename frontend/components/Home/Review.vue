@@ -7,7 +7,7 @@
       <v-card-title style="height:40%">
         <v-row style="width:100%;height:90%">
           <v-col cols="6">
-            <v-img style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" />
+            <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
           </v-col>
           <v-col cols="6" style="padding-left:0">
             <v-row>
@@ -17,11 +17,12 @@
               v-for="(tag, i) in review.tags"
               :key="i"
               class="ma-1"
-              color="#F781F3"
+              color="#ff9800"
+              text-color="#black"
               outlined
               small
             >
-              <v-icon left x-small>
+              <v-icon color="#ff9800" left x-small>
                 mdi-server-plus
               </v-icon>
               {{ tag }}
@@ -81,10 +82,17 @@ export default {
   },
   data: () => ({
 
-  })
+  }),
+  methods: {
+    linkKinder () {
+      this.$router.push('/kinder/' + 1)
+    }
+  }
 }
 </script>
 
-<style>
-
+<style scoped>
+.cursor {
+  cursor: pointer;
+}
 </style>

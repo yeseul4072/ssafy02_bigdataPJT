@@ -40,36 +40,3 @@ LOGGING['handlers'] = {
             'formatter': 'json'
         }
     }
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': True,
-#     'formatters': {
-#         'standard': {
-#             'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-#         },
-#         'json': {
-#             'format': '{"text": "%(asctime)s %(name)s %(levelname)s %(message)s"}'
-#         }
-#     },
-#     'handlers': {
-#         'file': {  
-#             'class': 'logging.handlers.TimedRotatingFileHandler',
-#             'filename': os.path.join(log_file_path, log_file_name),
-#             'when': 'midnight',
-#             'backupCount': 100,
-#             'formatter': 'standard',
-#         },
-#         'http': {
-#             'class': 'spc_pjt.settings.development.MattermostRequestsHandler',
-#             'formatter': 'json'
-#         }
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file', 'http'],  
-#             'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-#             'propagate': False
-#         },
-#     },
-# }
