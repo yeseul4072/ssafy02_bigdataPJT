@@ -1,11 +1,11 @@
 <template>
   <div class="KinderWrapper">
     <v-container fluid>
-      <v-row no-gutters style="height:300vh;margin:40px 0px;">
+      <v-row no-gutters style="margin:40px 0px;">
         <!-- 좌측 -->
         <v-col cols="3" style="padding-right:30px;">
           <v-row style="width:100%;">
-            <v-col cols="12" class="card">
+            <v-col cols="12" class="mb-8 card">
               <v-img
                 class="white--text align-end"
                 height="270px"
@@ -20,9 +20,8 @@
               </div>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:2%;" />
           <v-row style="width:100%;">
-            <v-col cols="12" class="card">
+            <v-col cols="12" class="mb-8 card">
               <v-row style="vertical-align:bottom;">
                 <v-col cols="12" style="text-align:center;">
                   <span style="font-size:1.7vw;font-weight:800;">{{ info.stars }}</span>/5
@@ -40,9 +39,8 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:2%;" />
           <v-row style="width:100%;">
-            <v-col cols="12" class="card">
+            <v-col cols="12" class="mb-8 card">
               <v-img
                 :src="require('@/assets/monitor.png')"
               />
@@ -51,9 +49,8 @@
               </div>
             </v-col>
           </v-row>
-          <v-row style="width:100%;height:2%;" />
           <v-row style="width:100%;">
-            <v-col cols="12" class="card">
+            <v-col cols="12" class="mb-8 card">
               <div style="text-align:center;font-size:1.2vw;font-weight:800;">
                 <v-icon color="red">
                   fas fa-bullhorn
@@ -65,7 +62,7 @@
         </v-col>
         <!-- 우측 -->
         <v-col cols="9">
-          <v-row>
+          <v-row class="pb-8">
             <v-col cols="12" class="cardRight">
               <v-row>
                 <div style="font-size:2.5vw;font-weight:800;">
@@ -169,8 +166,7 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row style="height:3.3%" />
-          <v-row style="height:20%">
+          <v-row class="mb-8" style="height:50vh">
             <v-col cols="12" class="cardRight">
               <v-row style="height:15%;">
                 <div style="font-size:2.5vw;font-weight:800;">
@@ -182,7 +178,6 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row style="height:3.3%" />
           <v-row>
             <v-col cols="12" class="cardRight">
               <v-row>
@@ -191,15 +186,13 @@
                 </div>
               </v-row>
               <v-row style="height:95%">
-                <v-col cols="12">
-                  <kinder-review />
+                <v-col
+                  v-for="(review, i) in reviews"
+                  :key="i"
+                  cols="12"
+                >
+                  <kinder-review :review="review" />
                 </v-col>
-                <v-col cols="12">
-                  <kinder-review />
-                </v-col>
-                <!-- <v-col cols="12">
-                  <kinder-review />
-                </v-col> -->
               </v-row>
             </v-col>
           </v-row>
@@ -252,14 +245,68 @@ export default {
       color2: ['#6cd3c7', '#e2cf56', '#fd8c63', '#e256ae', '#e25668', '#e2cf56'],
       color3: ['#6cd3c7', '#ff789c', '#63fda6', '#e2cf56', '#fd8c63', '#78acff'],
       unit1: '명',
-      unit2: '%'
+      unit2: '%',
+      reviews: [
+        {
+          name: '대봉어린이집',
+          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
+          url: 'kinder_temp.jpg',
+          title: '믿고 맡길 수 있는 어린이집',
+          stars: 5,
+          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
+          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
+        },
+        {
+          name: '대봉어린이집',
+          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
+          url: 'kinder_temp.jpg',
+          title: '믿고 맡길 수 있는 어린이집',
+          stars: 5,
+          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
+          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
+        },
+        {
+          name: '대봉어린이집',
+          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
+          url: 'kinder_temp.jpg',
+          title: '믿고 맡길 수 있는 어린이집',
+          stars: 5,
+          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
+          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
+        }
+      ]
     }
   },
-  method: {
-
-  },
   mounted () {
-
+    const self = this
+    window.addEventListener('scroll', self.scroll)
+  },
+  beforeDestroy () {
+    const self = this
+    window.removeEventListener('scroll', self.scroll)
+  },
+  methods: {
+    scroll (e) {
+      // if(flag) return
+      const scrollH = e.target.scrollingElement.scrollHeight
+      const scrollT = e.target.scrollingElement.scrollTop
+      const clientH = e.target.scrollingElement.clientHeight
+      if (scrollT + clientH >= scrollH) {
+        // axios들어갈 때 flag하나 세워주고 finally해야지 바꿔줘서 다른작업 들어오지못하게 막는다.
+        const data = {
+          name: '대봉어린이집',
+          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
+          url: 'kinder_temp.jpg',
+          title: '믿고 맡길 수 있는 어린이집',
+          stars: 5,
+          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
+          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
+        }
+        for (let i = 0; i < 3; i++) {
+          this.reviews.push(data)
+        }
+      }
+    }
   }
 }
 </script>
