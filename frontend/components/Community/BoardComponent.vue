@@ -68,6 +68,7 @@
                 v-for="(item, index) in props.items"
                 :key="index"
                 class="pa-0"
+                @click="goToBoardDetail(item.id)"
               >
                 <BoardDetail :board="item" />
               </v-col>
@@ -178,10 +179,14 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    goToBoardDetail (id) {
+      this.$router.push(`/board/${id}`)
+    }
   }
 }
 </script>
-
 <style scoped>
 .board-component-body{
   padding-bottom: 20px;

@@ -33,7 +33,12 @@
                 class="pr-3"
               >
                 <div>
-                  게시판 글쓰기 버튼 들어갈 자리
+                  <v-btn
+                    color="primary"
+                    depressed
+                  >
+                    글쓰기
+                  </v-btn>
                 </div>
               </v-row>
             </v-col>
@@ -55,7 +60,7 @@
             <v-list-item-title>유저 이름</v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="pr-1">
-            조회 7 | 추천 | 2020.09.28 05:07
+            조회 7 | 추천 10 | 2020.09.28 05:07
           </v-list-item-icon>
         </v-list-item>
         <v-row>
@@ -78,6 +83,7 @@
             outlined
             color="rgb(236, 236, 236)"
             dark
+            @click="goToBack"
           >
             <span
               style="color:#212121;"
@@ -203,8 +209,12 @@ import BannerImage from '@/components/Community/Banner.vue'
 import Review from '@/components/Community/Review.vue'
 
 export default {
-  components: { BannerImage, Review }
-
+  components: { BannerImage, Review },
+  methods: {
+    goToBack () {
+      this.$router.go(-1)
+    }
+  }
 }
 </script>
 
