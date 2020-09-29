@@ -140,23 +140,3 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'standard': {
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        },
-        'json': {
-            'format': '{"text": "#### %(asctime)s %(name)s %(levelname)s \n##### %(message)s"}'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'http'],  
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-            'propagate': False
-        },
-    },
-}
