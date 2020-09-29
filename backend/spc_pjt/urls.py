@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from allauth.account.views import confirm_email
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -22,6 +23,8 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')), # rest_auth url 등록
     path('rest-auth/', include('accounts.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')), # 회원가입
+    path('account/', include('allauth.urls')), # 회원가입 email
+    path('accounts-rest/registration/account-confirm-email/<str:key>/', confirm_email, name='account_confirm_email'), # 회원가입 email verification
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # swagger
     path('community/', include('community.urls')),
     path('', include('kindergartens.urls')),

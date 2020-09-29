@@ -1,0 +1,9 @@
+{% load account %}{% user_display user as user_display %}{% load i18n %}{% autoescape off %}{% blocktrans with site_name="어린이ZIP" site_domain="http://childrenzip.site/" %}{{ site_name }}에 회원가입하려 합니다!
+
+{{ user_display }} 라는 아이디로 어린이ZIP에 가입하시겠습니까?
+
+회원가입을 완료하시려면 아래 주소를 클릭하세요!
+{{ activate_url }}
+{% endblocktrans %}
+
+{% endautoescape %}
