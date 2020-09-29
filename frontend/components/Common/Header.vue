@@ -24,9 +24,20 @@
           <ul class="NavBarMenu">
             <v-col class="d-none d-md-block">
               <!-- 게시판 -->
-              <li type="button">
-                <i class="far fa-clipboard NavIcon" />
-              </li>
+              <v-tooltip bottom style="z-index:99;">
+                <template v-slot:activator="{ on, attrs }">
+                  <li
+                    type="button"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <nuxt-link to="/searchboard">
+                      <i class="mdi mdi-text-box-search-outline NavIcon" />
+                    </nuxt-link>
+                  </li>
+                </template>
+                <span>게시판 검색</span>
+              </v-tooltip>
               <!-- 알림 -->
               <v-menu
                 rounded="lg"
@@ -39,12 +50,12 @@
                       <v-badge color="red" :content="newNoti">
                         <i
                           v-bind="attrs"
-                          class="far fa-bell NavIcon"
+                          class="mdi mdi-bell-outline NavIcon"
                           v-on="on"
                         />
                       </v-badge>
                     </template>
-                    <i v-else class="far fa-bell NavIcon" />
+                    <i v-else class="mdi mdi-bell-outline NavIcon" />
                   </li>
                 </template>
 
@@ -70,7 +81,7 @@
                   <li type="button">
                     <i
                       v-bind="attrs"
-                      class="far fa-user-circle NavIcon"
+                      class="mdi mdi-account-circle-outline NavIcon"
                       v-on="on"
                     />
                   </li>

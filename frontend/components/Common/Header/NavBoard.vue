@@ -15,6 +15,7 @@
             :key="i"
             v-ripple="false"
             dense
+            @click="moveToCommunity(1)"
           >
             {{ item.title }}
           </v-list-item>
@@ -29,9 +30,10 @@
             <v-col cols="4">
               <v-list-item
                 v-for="(item, i) in items2"
-                :key="i+'?'"
+                :key="i"
                 v-ripple="false"
                 dense
+                @click="moveToCommunity(1)"
               >
                 {{ item.title }}
               </v-list-item>
@@ -42,6 +44,7 @@
                 :key="i"
                 v-ripple="false"
                 dense
+                @click="moveToCommunity(1)"
               >
                 {{ item.title }}
               </v-list-item>
@@ -52,6 +55,7 @@
                 :key="i"
                 v-ripple="false"
                 dense
+                @click="moveToCommunity(1)"
               >
                 {{ item.title }}
               </v-list-item>
@@ -136,6 +140,9 @@ export default {
   methods: {
     validation () {
       this.dialog = true
+    },
+    moveToCommunity (id) {
+      this.$router.push(`/community/${id}`)
     }
   }
 
@@ -160,6 +167,9 @@ export default {
 }
 .w700{
   font-weight: 700;
+}
+.v-list-item{
+  cursor: pointer;
 }
 .v-list-item:hover{
   background-color: #D8D8D8;
