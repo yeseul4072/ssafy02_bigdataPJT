@@ -10,7 +10,7 @@
             <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
           </v-col>
           <v-col cols="6" style="padding-left:0">
-            <v-row>
+            <v-row style="font-weight:800;">
               &nbsp;&nbsp;&nbsp;{{ review.name }}
             </v-row>
             <v-chip
@@ -29,7 +29,7 @@
             </v-chip>
           </v-col>
         </v-row>
-        <v-row style="width:100%;height:10%">
+        <v-row style="width:100%;height:10%;font-weight:800;">
           &nbsp;"{{ review.title }}"
           &nbsp;
           <v-rating
@@ -47,7 +47,7 @@
       <v-divider />
 
       <v-card-title style="height:10%">
-        <v-chip class="pink white--text">
+        <v-chip class="success white--text">
           장점
         </v-chip>
       </v-card-title>
