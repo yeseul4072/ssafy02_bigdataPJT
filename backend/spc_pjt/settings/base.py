@@ -157,3 +157,11 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secrets.get_secret('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = secrets.get_secret('EMAIL_HOST_PASSWORD')
+
+# rest auth registration template (for swagger)
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer'
+}
+
+# custom registration adapter
+ACCOUNT_ADAPTER = 'accounts.adapter.CustomUserAccountAdapter'
