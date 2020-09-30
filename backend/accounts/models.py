@@ -9,7 +9,9 @@ class User(AbstractUser):
     longitude = models.FloatField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     nickname = models.CharField(max_length=50)
-
+    type = models.BooleanField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
+    
 
 class Child(models.Model):
     age = models.IntegerField()

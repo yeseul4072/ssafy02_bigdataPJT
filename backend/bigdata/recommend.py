@@ -80,8 +80,8 @@ get_preference(kindergarten_df, user_df):
 def get_preference(kindergarten_df, user_df):
     data = [0] * len(kindergarten_df.keys())
     for i,key in enumerate(kindergarten_df):
-        for j,value in enumerate(kindergarten_df[key]):            
-            data[i] += value * user_df[j]
+        for j,value in enumerate(kindergarten_df[key]):          
+            data[i] += value * user_df.iloc[0,j]
     return pd.DataFrame(columns=list(kindergarten_df.keys()), data=[data])
 
 
