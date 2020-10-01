@@ -12,7 +12,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=50)
     is_director = models.BooleanField()
     kindergarten_id = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0)])
-
+    profile_image = models.ImageField(upload_to="profile/%Y/%m/%d", null=True)
 
 class Child(models.Model):
     age = models.IntegerField()

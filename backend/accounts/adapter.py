@@ -42,5 +42,6 @@ class CustomUserAccountAdapter(DefaultAccountAdapter):
         custom_user_field(user, 'nickname', request.data.get('nickname', ''))
         custom_user_field(user, 'is_director', request.data.get('is_director', False))
         custom_user_field(user, 'kindergarten_id', request.data.get('kindergarten_id', 1))
+        custom_user_field(user, 'profile_image', request.data.get('profile_image', None))
         user.save()
         return user

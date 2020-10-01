@@ -21,7 +21,7 @@ class CustomRegisterSerializer(serializers.ModelSerializer, RegisterSerializer):
         model = User
         fields = [
             'username', 'email', 'password1', 'password2', 'latitude', 'longitude',
-            'address', 'nickname', 'is_director', 'kindergarten_id'
+            'address', 'nickname', 'is_director', 'kindergarten_id', 'profile_image'
         ]
 
     def save(self, request):
