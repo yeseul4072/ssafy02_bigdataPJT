@@ -23,7 +23,7 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')), # rest_auth url 등록
     path('rest-auth/', include('accounts.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')), # 회원가입
-    path('account/', include('allauth.urls')), # 회원가입 email
+    path('accounts/', include('allauth.urls')), # 회원가입 email
     path('accounts-rest/registration/account-confirm-email/<str:key>/', confirm_email, name='account_confirm_email'), # 회원가입 email verification
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # swagger
     path('community/', include('community.urls')),

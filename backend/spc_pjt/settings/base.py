@@ -44,6 +44,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # to fix deleting user issue
     'rest_auth.registration',
 
+    # kakao social login
+    'allauth.socialaccount.providers.kakao',
+
+    # google social login
+    'allauth.socialaccount.providers.google',
+
     # CORS
     'corsheaders',
 
@@ -165,3 +171,11 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 # custom registration adapter
 ACCOUNT_ADAPTER = 'accounts.adapter.CustomUserAccountAdapter'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
