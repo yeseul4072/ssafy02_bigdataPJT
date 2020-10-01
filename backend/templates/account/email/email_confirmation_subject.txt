@@ -1,0 +1,1 @@
+{% load i18n %}{% autoescape off %}어린이ZIP 가입 확인 메일입니다. {% endautoescape %}

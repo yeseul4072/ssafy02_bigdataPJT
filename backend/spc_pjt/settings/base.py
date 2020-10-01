@@ -44,6 +44,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # to fix deleting user issue
     'rest_auth.registration',
 
+    # kakao social login
+    'allauth.socialaccount.providers.kakao',
+
+    # google social login
+    'allauth.socialaccount.providers.google',
+
     # CORS
     'corsheaders',
 
@@ -72,7 +78,9 @@ ROOT_URLCONF = 'spc_pjt.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +135,7 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-SITE_ID = 1
+SITE_ID = 2
 
 CORS_ORIGIN_ALLOW_ALL = True
 # 배포시 CORS_ORIGIN_WHITELIST 사용하기.
@@ -138,5 +146,40 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
 }
+
+# email verification
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'http://childrenzip.site'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://childrenzip.site'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = secrets.get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = secrets.get_secret('EMAIL_HOST_PASSWORD')
+
+# rest auth registration template (for swagger)
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer'
+}
+
+# custom registration adapter
+ACCOUNT_ADAPTER = 'accounts.adapter.CustomUserAccountAdapter'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# for image upload
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
