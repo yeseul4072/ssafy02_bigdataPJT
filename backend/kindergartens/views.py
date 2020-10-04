@@ -173,7 +173,8 @@ class KindergartenDetail(APIView):
 
 class Pagination(PageNumberPagination):
     page_size = 5
-
+    page_query_param = 'page_size'
+    
 
 class Reviews(APIView):
     pagination_class = Pagination

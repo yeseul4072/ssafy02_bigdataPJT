@@ -140,3 +140,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+# media 파일에 관한 요청을 해당 url로 받겠다는 뜻이다. 
+MEDIA_URL = '/media/' 
+# 편한 대로 설정한 후 해당 경로에 'media'라는 디렉토리를 생성한다.  
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 

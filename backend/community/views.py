@@ -1,5 +1,6 @@
 # django
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
 # DRF
 from rest_framework.response import Response
@@ -7,6 +8,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
+from rest_framework.pagination import PageNumberPagination
 
 # swagger
 from drf_yasg.utils import swagger_auto_schema
@@ -14,12 +16,42 @@ from . import request_schemas
 
 # App - community
 from .models import Board, Favorite, Article, Comment
-from .serializers import (BoardSerializer, ArticleSerializer, ArticleCreateSerializer, ArticleDetailSerializer,
-CommentCreateSerializer, ArticleCommentSerializer, BoardListSerializer)
+from .serializers import (BoardSerializer, BoardListSerializer, BoardDetailSerializer, ArticleSerializer, 
+ArticleCreateSerializer, ArticleDetailSerializer,CommentCreateSerializer, ArticleCommentSerializer)
+
+
+class Pagination(PageNumberPagination):
+    page_size = 10
+    page_query_param = 'page'
+    max_page_size = 100
 
 
 class Boards(APIView):
+    pagination_class = Pagination
+    serializer_class = BoardListSerializer
+    
+    @property
+    def paginator(self):
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        else:
+            pass
+        return self._paginator
 
+    def paginate_queryset(self, queryset):
+        
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset,
+                   self.request, view=self)
+
+    def get_paginated_response(self, data):
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+    
     @swagger_auto_schema(responses={200: BoardSerializer})
     def get(self, request):
         """
@@ -27,9 +59,21 @@ class Boards(APIView):
 
         ## 게시판 목록 조회
         - 게시판 list를 불러옵니다.
+        - params로 page, title, content를 보냅니다. 
         """
-        boards = Board.objects.all()
-        serializer = BoardSerializer(boards, many=True)
+        title = request.GET.get('title', None)
+        content = request.GET.get('content', None)
+        if title:
+            instance = Board.objects.filter(title__contains=title)
+        elif content:
+            instance = Board.objects.filter(content__contains=content)
+        else:
+            instance = Board.objects.all()
+        page = self.paginate_queryset(instance)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, context={'request': request}, many=True).data)
+        else:
+            serializer = self.serializer_class(instance, context={'request': request}, many=True)
         return Response(serializer.data)
 
     
@@ -57,6 +101,17 @@ class Boards(APIView):
 
 
 class BoardDetail(APIView):
+    def get(self, request, board_pk):
+        """
+        게시판 조회
+
+        ## 게시판 조회
+        - 해당 게시판의 자세한 정보를 조회
+        """
+        board = Board.objects.get(pk=board_pk)
+        serializer = BoardDetailSerializer(board, context={'request': request})
+        return Response(serializer.data)
+
 
     @swagger_auto_schema(
         request_body=request_schemas.BoardCreateRequest,
@@ -95,8 +150,44 @@ class BoardDetail(APIView):
         return Response()
 
 
-class Articles(APIView):
+@api_view(['GET'])
+def MainArticles(request, board_pk):
+    """
+    메인페이지 게시글 목록 조회
 
+    ## 메인페이지 게시글 목록 조회
+    - 메인페이지에 들어갈 게시글 목록 5개를 불러옵니다.
+    """
+    board = get_object_or_404(Board, pk=board_pk)
+    articles = board.article_set.all().order_by('-created_at')[:5]
+    serializer = ArticleSerializer(articles, many=True, context={'request': request})
+    return Response(serializer.data)
+
+
+class Articles(APIView):
+    pagination_class = Pagination
+    @property
+    def paginator(self):
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        else:
+            pass
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset,
+                   self.request, view=self)
+
+    def get_paginated_response(self, data):
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+    
     @swagger_auto_schema(responses={200: ArticleSerializer})
     def get(self, request, board_pk):
         """
@@ -104,10 +195,43 @@ class Articles(APIView):
 
         ## 게시글 목록 조회
         - 게시글 list를 불러옵니다.
+        - 페이지 
+        - params : 유저(user=id)로 검색, 제목(title=id)으로 검색, 내용(content=id)으로 검색 
+        - params : 정렬 방법(기본-최신순/댓글 많은 순(order=comments)/좋아요 많은 순(oder=likes))
         """
-        articles = Article.objects.filter(board=board_pk)
-        serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
+        user = request.GET.get('user', None)
+        title = request.GET.get('title', None)
+        content = request.GET.get('content', None)
+        order = request.GET.get('order', None)
+
+        if user:
+            articles = Article.objects.filter(board=board_pk, user=user)
+        elif title:
+            articles = Article.objects.filter(board=board_pk, title__contains=title)
+        elif content:
+            articles = Article.objects.filter(board=board_pk, content__contains=content)
+        else:
+            articles = Article.objects.filter(board=board_pk)
+        if order == 'comments':
+            articles = articles.filter(board=board_pk).annotate(comments=Count('comment')).order_by('-comments')
+        elif order == 'likes':
+            articles = articles.filter(board=board_pk).annotate(likes=Count('like_users')).order_by('-likes')
+        else:
+            articles = articles.filter(board=board_pk).order_by('-created_at')
+        page = self.paginate_queryset(articles)
+        serializer_class = ArticleSerializer
+        if page:
+            serializer_articles = self.get_paginated_response(serializer_class(page, context={'request': request}, many=True).data)
+        else:
+            serializer_articles = serializer_class(articles, context={'request': request}, many=True)
+        board = get_object_or_404(Board, pk=board_pk)
+        serializer_board = BoardDetailSerializer(board)
+
+        return Response({
+            'board': serializer_board.data,
+            'articles': serializer_articles.data
+        })
+
 
     # 게시물 create - params : title, content
     @swagger_auto_schema(
@@ -144,7 +268,7 @@ class ArticleDetail(APIView):
         - 게시글 list를 불러옵니다.
         """
         article = Article.objects.get(pk=article_pk)
-        serializer = ArticleDetailSerializer(article)
+        serializer = ArticleDetailSerializer(article, context={'request': request})
         return Response(serializer.data)
 
     # 게시물 update - params : title, content
@@ -271,7 +395,7 @@ class CommentDetail(APIView):
     responses={200: ''}
 )
 @api_view(['POST'])
-def like_article(request, board_pk, article_pk):
+def like_article(request, article_pk):
     """
     게시글 좋아요
 
