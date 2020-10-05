@@ -115,7 +115,6 @@ class Review(models.Model):
     score_teacher = models.IntegerField()
     score_director = models.IntegerField()
     score_environment = models.IntegerField()
-    content = models.TextField()
     pros = models.TextField()
     cons = models.TextField()
 

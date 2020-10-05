@@ -67,7 +67,7 @@ class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = KindergartenListSerializer()
     class Meta:
         model = Review
-        fields = ['title', 'score', 'content', 'pros', 'cons', 'kindergarten']
+        fields = ['title', 'score', 'pros', 'cons', 'kindergarten']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
