@@ -7,14 +7,16 @@ from allauth.account.utils import setup_user_email
 
 User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField()
     class Meta:
         model = User
         exclude = ['password']
 
 class UserListSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField()
     class Meta:
         model = User
-        fields = ['id', 'username', 'nickname']
+        fields = ['id', 'username', 'nickname', 'profile_image']
 
 class CustomRegisterSerializer(serializers.ModelSerializer, RegisterSerializer):
     class Meta:

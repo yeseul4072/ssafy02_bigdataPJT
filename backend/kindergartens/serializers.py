@@ -75,7 +75,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
         if obj.like_users.all():
-            if request.user.id in obj.like_users.all():
+            if request.user.id in list(obj.like_users.all().values_list('id', flat=True)):
                 return 1
         return 0
         

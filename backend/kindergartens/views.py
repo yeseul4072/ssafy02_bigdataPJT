@@ -2,9 +2,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http.response import JsonResponse
-from django.db.models import Avg
-from django.db.models import Count
-from django.db.models import Q
+from django.db.models import Avg, Count, Q
 
 # DRF
 from rest_framework.response import Response
@@ -36,8 +34,9 @@ from . import request_schemas
 
 """
 런처 페이지
-
 """
+
+@swagger_auto_schema(method='get', responses={200: 'OK'})
 @api_view(['GET'])
 def Count(request):
     """
@@ -50,7 +49,7 @@ def Count(request):
     users = User.objects.all()
     kindergartens = Kindergarten.objects.all()
     reviews = Review.objects.all()
-    return JsonResponse([{'kindergartena': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count() }], safe=False)
+    return JsonResponse([{'kindergartens': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count()}], safe=False)
 
 
 """
@@ -60,12 +59,14 @@ class FBasedRecommend(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: KindergartenListSerializer})
     def get(self, request):
         """
         메인페이지 어린이집 추천
 
         ## 메인페이지 어린이집 추천
-        - 유저가 선호하는 feature와 해당하는 어린이집 정보 조회
+        - 유저가 선호하는 feature에 해당하는 어린이집 정보 조회
+        - 유저의 활동에 따라 response가 변함
         """
         latitude = request.user.latitude
         longitude = request.user.longitude
@@ -135,14 +136,17 @@ class FBasedRecommend(APIView):
 
 
 class ReviewActivated(APIView):
+    @swagger_auto_schema(responses={200: ActivatedReviewSerializer})
     def get(self, request):
         """
         뜨는 리뷰 조회
 
         ## 뜨는 리뷰를 조회합니다.
+        - 리뷰를 최신순으로 정렬하여 5개 보여줍니다.
         """
-        # 좋아요, 최신술 정렬
-        review_list = Review.objects.annotate(count=Count('like_users')).order_by('-count', '-created_at')[:5]
+        # 좋아요, 최신순 정렬
+        # review_list = Review.objects.annotate(like_count=Count('like_users')).order_by('-count', '-created_at')[:5]
+        review_list = Review.objects.order_by('-created_at')[:5]
         serializer = ActivatedReviewSerializer(review_list, many=True)
         return Response(serializer.data)
 
@@ -150,38 +154,35 @@ class ReviewActivated(APIView):
 어린이집 조회 페이지
 """
 class KindergartenDetail(APIView):
+    @swagger_auto_schema(responses={200: KindergartenDetailSerializer})
     def get(self, request, kindergarten_pk):
         """
         어린이집 디테일 조회
 
         ## 어린이집 디테일 조회
         - 어린이집 디테일 페이지에서 필요한 어린이집 데이터를 조회합니다.
+        - 인증된 유저는 어린이집 가중치가 더해집니다.
         """
         kindergarten = Kindergarten.objects.get(pk=kindergarten_pk)
         serializer = KindergartenDetailSerializer(kindergarten, context={'request': request})
         # 가중치 더하기
         if request.user.is_authenticated:
-            weight = Weight.objects.get(user=request.user, kindergarten=kindergarten)
-            if weight:
+            try:
+                weight = Weight.objects.get(user=request.user, kindergarten=kindergarten)
                 weight.weight += 1
                 weight.save()
-            else:
-                weight = Weight(user=request.user, kindergarten=kindergarten, weight=1)
-                weight.save()
+            except:
+                weight = Weight.objects.create(user=request.user, kindergarten=kindergarten, weight=1)
         return Response(serializer.data)
 
 
 class Pagination(PageNumberPagination):
     page_size = 5
-
+    page_query_param = 'page'
 
 class Reviews(APIView):
     pagination_class = Pagination
     serializer_class = ReviewSerializer
-    # def get(self, request, kindergarten_pk):
-    #     reviews = Review.objects.filter(kindergarten=kindergarten_pk)
-    #     serializer = ReviewSerializer(reviews, many=True)
-    #     pagination_class = Pagination
    
     @property
     def paginator(self):
@@ -195,7 +196,6 @@ class Reviews(APIView):
         return self._paginator
 
     def paginate_queryset(self, queryset):
-        
         if self.paginator is None:
             return None
         return self.paginator.paginate_queryset(queryset,
@@ -205,6 +205,7 @@ class Reviews(APIView):
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
+    @swagger_auto_schema(responses={200: ReviewSerializer})
     def get(self, request, kindergarten_pk):
         """ 
         어린이집 리뷰 리스트 조회
@@ -221,11 +222,41 @@ class Reviews(APIView):
             serializer = self.serializer_class(instance, context={'request': request}, many=True)
         return Response(serializer.data)
 
-
 """
 어린이집 리스트 페이지
 """
 class Kindergartens(APIView):
+    pagination_class = Pagination
+    serializer_class = KindergartenListSerializer
+   
+    @property
+    def paginator(self):
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        else:
+            pass
+        return self._paginator
+
+    def paginate_queryset(self, queryset):
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset,
+                   self.request, view=self)
+
+    def get_paginated_response(self, data):
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            request_schemas.latitude,
+            request_schemas.longitude
+        ],
+        responses={200: ReviewSerializer}
+    )
     def get(self, request):
         """ 
         검색 어린이집 리스트 조회
@@ -242,10 +273,13 @@ class Kindergartens(APIView):
         condition2 = (
             Q(lng__range = (lng - 0.015, lng + 0.015))
         )
-        kindergartens = Kindergarten.objects.filter(condition1 & condition2)
-        serializer = KindergartenListSerializer(kindergartens, many=True)
+        instance = Kindergarten.objects.filter(condition1 & condition2)
+        page = self.paginate_queryset(instance)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
+        else:
+            serializer = self.serializer_class(instance, many=True)
         return Response(serializer.data)
-    
 
 class Recommend(APIView):
     permission_classes = [
@@ -254,7 +288,7 @@ class Recommend(APIView):
 
     def get(self, request):
         """ 
-        추천 어린이집 조회
+        추천 어린이집 조회 (수정 필요)
 
         ## 추천 어린이집 조회
         - 사용자 위치와 가중치 값을 이용해 추천된 어린이집을 조회합니다.
@@ -309,6 +343,7 @@ class Recommend(APIView):
 """
 어린이집 찜
 """
+@swagger_auto_schema(method='post', manual_parameters=[request_schemas.header], responses={200: 'OK'})
 @api_view(['POST'])
 def WishList(request, kindergarten_pk):    
     """ 
@@ -320,8 +355,11 @@ def WishList(request, kindergarten_pk):
     - 로그인한 사용자만 요청할 수 있습니다.
     """
     kindergarten = get_object_or_404(Kindergarten, pk=kindergarten_pk)
-    weight = Weight.objects.get(user=request.user, kindergarten=kindergarten)
-    if request.user in kindergarten.wish_users.all():
+    try:
+        weight = Weight.objects.get(user=request.user, kindergarten=kindergarten)
+    except:
+        weight = Weight.objects.create(user=request.user, kindergarten=kindergarten, weight=0)
+    if kindergarten.wish_users.filter(id=request.user.id).exists():
         kindergarten.wish_users.remove(request.user)
         # 가중치 빼기
         weight.weight -= 5
@@ -329,11 +367,7 @@ def WishList(request, kindergarten_pk):
     else:
         kindergarten.wish_users.add(request.user)
         # 가중치 더하기
-        if weight:
-            weight.weight += 5
-            weight.save()
-        else:
-            weight = Weight(user=request.user, kindergarten=kindergarten, weight=5)
-            weight.save()
-    return Response()
+        weight.weight += 5
+        weight.save()
+    return Response(status=200)
 

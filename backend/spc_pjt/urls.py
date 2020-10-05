@@ -7,6 +7,10 @@ from allauth.account.views import confirm_email
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.conf import settings  
+from django.conf.urls.static import static  
+
+
 schema_view = get_schema_view(
     openapi.Info(
         title='어린이ZIP API',

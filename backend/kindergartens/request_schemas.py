@@ -9,3 +9,16 @@ header = openapi.Parameter(
     type=openapi.TYPE_STRING
 )
 
+latitude = openapi.Parameter(
+    'lat',
+    openapi.IN_QUERY,
+    description='위도를 입력하세요.',
+    type=openapi.TYPE_NUMBER
+)
+
+longitude = openapi.Parameter(
+    'lng',
+    openapi.IN_QUERY,
+    description='경도를 입력하세요.',
+    type=openapi.TYPE_NUMBER
+)
