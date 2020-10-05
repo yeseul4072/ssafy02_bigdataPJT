@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Kindergarten, Weight, Review
 from accounts.serializers import UserSerializer, UserListSerializer
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 
 
 class KindergartenListSerializer(serializers.ModelSerializer):
@@ -12,7 +12,11 @@ class KindergartenListSerializer(serializers.ModelSerializer):
     def get_reviews_count(self, obj):
         return obj.review_set.count()
     def get_score_avg(self, obj):
-        return obj.review_set.aggregate(Avg('score'))
+        count_all = obj.review_set.count() * 3
+        scores_teacher = obj.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+        scores_director = obj.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+        scores_environment = obj.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+        return (scores_teacher + scores_director + scores_environment) / count_all
     def get_features(self, obj):
         features = {
             'school_bus': obj.school_bus,
@@ -65,20 +69,30 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
 
 class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = KindergartenListSerializer()
+    avg_score = serializers.SerializerMethodField()
+
+    def get_avg_score(self, obj):
+        return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
+
     class Meta:
         model = Review
-        fields = ['title', 'score', 'pros', 'cons', 'kindergarten']
+        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     like_yn = serializers.SerializerMethodField()
+    avg_score = serializers.SerializerMethodField()
+
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
         if obj.like_users.all():
             if request.user.id in list(obj.like_users.all().values_list('id', flat=True)):
                 return 1
         return 0
-        
+
+    def get_avg_score(self, obj):
+        return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
+
     class Meta:
         model = Review
         exclude = ['like_users', 'kindergarten']

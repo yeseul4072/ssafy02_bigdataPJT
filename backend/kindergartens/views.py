@@ -144,8 +144,22 @@ class ReviewActivated(APIView):
         ## 뜨는 리뷰를 조회합니다.
         - 리뷰를 최신순으로 정렬하여 5개 보여줍니다.
         """
-        # 좋아요, 최신순 정렬
+        # 좋아요, 최신순 정렬 select like_users
         # review_list = Review.objects.annotate(like_count=Count('like_users')).order_by('-count', '-created_at')[:5]
+        # review_list = Review.objects.raw("""
+        # select kr.*, ifnull(kr_like.like_count, 0) as like_count
+        #   from kindergartens_review kr
+		# 	   left outer join
+		# 	   (
+        #        select count(1) as like_count, review_id
+        #          from kindergartens_review_like_users
+		# 	 group by review_id
+        #        )kr_like
+        #        on
+        #        kr.id = kr_like.review_id
+        # order by like_count, created_at desc
+        # limit 5;
+        # """)
         review_list = Review.objects.order_by('-created_at')[:5]
         serializer = ActivatedReviewSerializer(review_list, many=True)
         return Response(serializer.data)

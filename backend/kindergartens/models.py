@@ -111,7 +111,6 @@ class Review(models.Model):
     title = models.CharField(max_length=50)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-    score = models.IntegerField()
     score_teacher = models.IntegerField()
     score_director = models.IntegerField()
     score_environment = models.IntegerField()
