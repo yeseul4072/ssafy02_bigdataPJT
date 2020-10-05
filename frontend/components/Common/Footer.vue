@@ -35,16 +35,16 @@
       <v-col cols="3" class="d-flex justify-center">
         <ul class="sns" style="margin-top:15px;">
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
+            <a href="https://www.facebook.com/"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
+            <a href="https://section.blog.naver.com/BlogHome.nhn?directoryNo=0&currentPage=1&groupId=0"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
+            <a href="https://www.instagram.com/?hl=ko"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
+            <a href="https://www.youtube.com/"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
           </li>
         </ul>
       </v-col>
