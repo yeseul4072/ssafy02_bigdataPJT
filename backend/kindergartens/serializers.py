@@ -64,7 +64,7 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
                 return 1
         return 0
     class Meta(KindergartenListSerializer.Meta):
-        fields = KindergartenListSerializer.Meta.fields + ['wishlist_yn', 'director_name', 'establishment_type', 'created_date', 'agency', 'tel', 'homepage', 'address', 'score', 'area_columns', 'area_info', 'building_columns', 'building_info', 'cctv_columns', 'cctv_info', 
+        fields = KindergartenListSerializer.Meta.fields + ['wishlist_yn', 'director_name', 'establishment_type', 'created_date', 'agency', 'tel', 'homepage', 'address', 'grade', 'score', 'area_columns', 'area_info', 'building_columns', 'building_info', 'cctv_columns', 'cctv_info', 
         'area_per_cctv', 'age_by_class_columns', 'age_by_class_info', 'staff_columns', 'staff_info', 'continuous_columns', 'continuous_info', 'child_per_staff', 'fee_columns', 'fee_info', 'other_fee_columns', 'other_fee_info', 'special_activity_columns', 'special_activity_info',
         'monthly_fee', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'poisoning_columns', 'poisoning_info', 'air_quality_columns', 'air_quality_info', 'disinfection_columns', 'disinfection_info', 'water_quality_columns', 'water_quality_info',
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
