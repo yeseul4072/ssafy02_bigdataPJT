@@ -211,11 +211,30 @@
           <v-row>
             <v-col cols="12" class="cardRight">
               <v-row>
-                <div style="font-size:2.5vw;font-weight:800;">
-                  <span style="color:#F5A9E1;">"ZIP"</span>&nbsp;리뷰
-                </div>
+                <v-col cols="6">
+                  <div style="font-size:2.5vw;font-weight:800;">
+                    <span style="color:#F5A9E1;">"ZIP"</span>&nbsp;리뷰
+                  </div>
+                </v-col>
+                <v-col cols="6" align-self="center" style="text-align:right;">
+                  <v-btn
+                    rounded
+                    outlined
+                    color="rgb(236, 236, 236)"
+                    dark
+                    @click="changeReview"
+                  >
+                    <span style="color:orange;">글쓰기</span>
+                  </v-btn>
+                </v-col>
               </v-row>
               <v-row style="height:95%">
+                <v-col
+                  v-if="reviewFlag"
+                  cols="12"
+                >
+                  <write-review />
+                </v-col>
                 <v-col
                   v-for="(review, i) in reviews"
                   :key="i"
@@ -237,13 +256,15 @@ import MapView from '@/components/Kinder/Map.vue'
 import KinderChart from '@/components/Kinder/PieChart.vue'
 import BarChart from '@/components/Kinder/BarChart.vue'
 import KinderReview from '@/components/Kinder/KinderReview.vue'
+import WriteReview from '@/components/Kinder/WriteReview.vue'
 // import BarChartVertical from '@/components/Kinder/BarChartVertical.vue'
 export default {
   components: {
     MapView,
     KinderChart,
     BarChart,
-    KinderReview
+    KinderReview,
+    WriteReview
     // BarChartVertical
 
   },
@@ -323,7 +344,8 @@ export default {
           pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
           cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
         }
-      ]
+      ],
+      reviewFlag: false
     }
   },
   mounted () {
@@ -361,6 +383,9 @@ export default {
     },
     callBar (num) {
       return this.bar[num]
+    },
+    changeReview () {
+      this.reviewFlag = !this.reviewFlag
     }
   }
 }
