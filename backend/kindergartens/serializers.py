@@ -12,11 +12,14 @@ class KindergartenListSerializer(serializers.ModelSerializer):
     def get_reviews_count(self, obj):
         return obj.review_set.count()
     def get_score_avg(self, obj):
-        count_all = obj.review_set.count() * 3
-        scores_teacher = obj.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
-        scores_director = obj.review_set.aggregate(Sum('score_director')).get('score_director__sum')
-        scores_environment = obj.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
-        return (scores_teacher + scores_director + scores_environment) / count_all
+        if obj.review_set.all().exists():
+            count_all = obj.review_set.count() * 3
+            scores_teacher = obj.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+            scores_director = obj.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+            scores_environment = obj.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+            return (scores_teacher + scores_director + scores_environment) / count_all
+        else:
+            return 0
     def get_features(self, obj):
         features = {
             'school_bus': obj.school_bus,

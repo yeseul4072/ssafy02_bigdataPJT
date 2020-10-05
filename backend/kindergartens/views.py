@@ -80,11 +80,13 @@ class FBasedRecommend(APIView):
         
         if len(request.user.weight_kindergartens.all()):
             # 유저-어린이집 가중치 행렬
-            user = pd.DataFrame(Weight.objects.filter(user=request.user).values('user_id', 'kindergarten_id', 'weight'))
+            user = pd.DataFrame(Weight.objects.filter(user=request.user, kindergarten_id__in=near_kindergartens_id).values('user_id', 'kindergarten_id', 'weight'))
             user_df = recommend.parse_user_data(user, near_kindergartens_id)
             # 유저-어린이집feature 행렬
             df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
             kindergarten_df = df.set_index('id')
+            print(kindergarten_df)
+            print(list(user_df.columns)==list(kindergarten_df.index))
             preference_df = recommend.get_preference(kindergarten_df, user_df)
             # request 유저가 선호하는 feature 1, 2, 3위
             preference_df = preference_df.transpose()
@@ -101,13 +103,21 @@ class FBasedRecommend(APIView):
 
             data = []
             for k in kindergartens1:
+                if k.review_set.all().exists():
+                    count_all = k.review_set.count() * 3
+                    scores_teacher = k.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+                    scores_director = k.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+                    scores_environment = k.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+                    score_avg = (scores_teacher + scores_director + scores_environment) / count_all
+                else:
+                    score_avg = 0
                 data.append({
                     'feature': f1,
                     'lat': k.lat,
                     'lng': k.lng,
                     'organization_name': k.organization_name,
                     'reviews_count': k.review_set.count(),
-                    'score_avg': k.review_set.aggregate(Avg('score')),
+                    'score_avg': score_avg,
                     'features': {
                         'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
                         'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
@@ -115,13 +125,21 @@ class FBasedRecommend(APIView):
                     }
                 })
             for kindergarten in kindergartens2:
+                if k.review_set.all().exists():
+                    count_all = k.review_set.count() * 3
+                    scores_teacher = k.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+                    scores_director = k.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+                    scores_environment = k.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+                    score_avg = (scores_teacher + scores_director + scores_environment) / count_all
+                else:
+                    score_avg = 0
                 data.append({
                     'feature': f2,
                     'lat': kindergarten.lat,
                     'lng': kindergarten.lng,
                     'organization_name': kindergarten.organization_name,
                     'reviews_count': kindergarten.review_set.count(),
-                    'score_avg': kindergarten.review_set.aggregate(Avg('score')),
+                    'score_avg': score_avg,
                     'features': {
                         'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
                         'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
