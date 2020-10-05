@@ -1,94 +1,44 @@
 <template>
   <div>
-    <!-- 타이틀 바 -->
-    <!-- <v-col
-      class="pa-0"
-      align="center"
-    >
-      <div class="body-container">
-        <v-row
-          align="center"
-        >
-          <v-col
-            :cols="3"
-          >
-            <v-row
-              align="center"
-            >
-              <v-icon style="margin-right:10px;">
-                mdi-charity
-              </v-icon>
-              <span style="font-size:1.5rem; font-weight:800;">커뮤니티</span>
-            </v-row>
-          </v-col>
-
-          <v-col
-            :cols="8"
-          >
-            <v-row>
-              <v-col
-                v-for="i in tabs"
-                :key="i"
-                class="pa-0"
-                align="center"
-                :cols="2"
-                @click="changeTab(i)"
-              >
-                <div
-                  class="index-hover"
-                >
-                  {{ title[i-1] }}<div />
-                </div>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col
-            class="pa-0"
-            align="end"
-            :cols="1"
-          >
-            <v-btn
-              class="cm-bc-icon"
-              depressed
-              fab
-              dark
-              small
-              color="primary"
-            >
-              <v-icon>
-                mdi-magnify
-              </v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
-    </v-col> -->
     <!-- 배너 사진 -->
     <BannerImage />
     <!-- 리스트 내용물 -->
     <div>
-      <BoardComponent :board-type="index" :title="title[index-1]" />
+      <BoardComponent :board-type="index" :title="title" :articles="articles" />
     </div>
   </div>
 </template>
 
 <script>
+import http from '@/util/http_common.js'
 import BannerImage from '@/components/Community/Banner.vue'
 import BoardComponent from '@/components/Community/BoardComponent.vue'
 export default {
   components: { BoardComponent, BannerImage },
+  asyncData ({ params }) {
+    return http.axios.get(`/community/${params.id}/article/`)
+      .then(({ data }) => {
+        console.log(data)
+        return {
+          index: 10,
+          title: '게시물 이름',
+          articles: data
+        }
+      })
+  },
+  validate ({ params }) {
+    // validation 체크 파라미터 값이 숫자가 아니면 page falut 에러 반환하게
+    return /^\d+$/.test(params.id)
+  },
   data () {
     return {
-      tab: null,
-      tabs: 4,
-      title: ['전체글보기', '공지사항', 'FAQ', '1:1 문의'],
-      index: 1
     }
   },
+  mounted () {
+
+  },
   methods: {
-    changeTab (type) {
-      this.index = type
-    }
+
   }
 }
 </script>
