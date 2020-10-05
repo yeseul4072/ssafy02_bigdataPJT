@@ -75,8 +75,9 @@ class KindergartenListSerializer(serializers.ModelSerializer):
         if request:
             lat = request.query_params.get('lat', None)
             lng = request.query_params.get('lng', None)
-            position = (float(lat), float(lng))
-            return haversine(position, (obj.lat, obj.lng))
+            if lat and lng:
+                position = (float(lat), float(lng))
+                return haversine(position, (obj.lat, obj.lng))
         return 0
 
     class Meta:
