@@ -81,33 +81,25 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     user = UserListSerializer()
     like_count = serializers.SerializerMethodField()
     like_yn = serializers.SerializerMethodField()
-    review_count = serializers.SerializerMethodField()
-    review_yn = serializers.SerializerMethodField()
-    reviews = ArticleCommentSerializer(source='comment_set', many=True)
+    comment_count = serializers.SerializerMethodField()
+    comments = ArticleCommentSerializer(source='comment_set', many=True)
     def get_like_count(self, obj):
         return obj.like_users.count()
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
-        if obj.like_users.all():
-            if request.user.id in list(obj.like_users.all().values_list('id', flat=True)):
-                return 1
+        if obj.like_users.filter(id=request.user.id).exists():
+            return 1
         return 0
-    def get_review_count(self, obj):
+    def get_comment_count(self, obj):
         return obj.comment_set.count()
-    def get_review_yn(self, obj):
-        request = self.context.get('request', None)
-        if obj.comment_set.values('user'):
-            if request.user.id in list(obj.comment_set.values_list('id', flat=True)):
-                return 1
-        return 0
     class Meta:
         model = Article
-        fields = ['board_id', 'board_name', 'user', 'id', 'title', 'content', 'created_at', 'updated_at', 'like_yn', 'like_count', 'review_count', 'review_yn', 'reviews']
+        fields = ['board_id', 'board_name', 'user', 'id', 'title', 'content', 'created_at', 'updated_at', 'like_yn', 'like_count', 'comment_count', 'comments']
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
-    article = ArticleSerializer(required=False)
+    user = UserListSerializer(required=False)
+    article = ArticleCommentSerializer(required=False)
     class Meta:
         model = Comment
         fields = '__all__'
