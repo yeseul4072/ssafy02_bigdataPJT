@@ -235,7 +235,7 @@ class Articles(APIView):
         else:
             serializer_articles = serializer_class(articles, context={'request': request}, many=True)
         board = get_object_or_404(Board, pk=board_pk)
-        serializer_board = BoardDetailSerializer(board)
+        serializer_board = BoardDetailSerializer(board, context={'request': request})
 
         return Response({
             'board': serializer_board.data,

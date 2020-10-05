@@ -2,12 +2,32 @@ from rest_framework import serializers
 from .models import Kindergarten, Weight, Review
 from accounts.serializers import UserSerializer, UserListSerializer
 from django.db.models import Avg, Sum
+from haversine import haversine
 
 
 class KindergartenListSerializer(serializers.ModelSerializer):
     reviews_count = serializers.SerializerMethodField()
     score_avg = serializers.SerializerMethodField()
     features = serializers.SerializerMethodField()
+    distance = serializers.SerializerMethodField()
+    zero_year_old = serializers.SerializerMethodField()
+    one_year_old = serializers.SerializerMethodField()
+    two_year_old = serializers.SerializerMethodField()
+    three_year_old = serializers.SerializerMethodField()
+    four_year_old = serializers.SerializerMethodField()
+    five_year_old = serializers.SerializerMethodField()
+    def get_zero_year_old(self, obj):
+        return int(obj.zero_year_old)
+    def get_one_year_old(self, obj):
+        return int(obj.one_year_old)
+    def get_two_year_old(self, obj):
+        return int(obj.two_year_old)
+    def get_three_year_old(self, obj):
+        return int(obj.three_year_old)
+    def get_four_year_old(self, obj):
+        return int(obj.four_year_old)
+    def get_five_year_old(self, obj):
+        return int(obj.five_year_old)
     # image 추가 필요
     def get_reviews_count(self, obj):
         return obj.review_set.count()
@@ -50,9 +70,18 @@ class KindergartenListSerializer(serializers.ModelSerializer):
         }
         return features
 
+    def get_distance(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            lat = request.query_params.get('lat', None)
+            lng = request.query_params.get('lng', None)
+            position = (float(lat), float(lng))
+            return haversine(position, (obj.lat, obj.lng))
+        return 0
+
     class Meta:
         model = Kindergarten
-        fields = ['lat', 'lng', 'address', 'organization_name', 'reviews_count', 'score_avg', 'features']
+        fields = ['lat', 'lng', 'address', 'organization_name', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
 
 
 class KindergartenDetailSerializer(KindergartenListSerializer):

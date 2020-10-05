@@ -258,30 +258,6 @@ class Reviews(APIView):
 어린이집 리스트 페이지
 """
 class Kindergartens(APIView):
-    pagination_class = Pagination
-    serializer_class = KindergartenListSerializer
-   
-    @property
-    def paginator(self):
-        if not hasattr(self, '_paginator'):
-            if self.pagination_class is None:
-                self._paginator = None
-            else:
-                self._paginator = self.pagination_class()
-        else:
-            pass
-        return self._paginator
-
-    def paginate_queryset(self, queryset):
-        if self.paginator is None:
-            return None
-        return self.paginator.paginate_queryset(queryset,
-                   self.request, view=self)
-
-    def get_paginated_response(self, data):
-        assert self.paginator is not None
-        return self.paginator.get_paginated_response(data)
-
     @swagger_auto_schema(
         manual_parameters=[
             request_schemas.latitude,
@@ -306,12 +282,9 @@ class Kindergartens(APIView):
             Q(lng__range = (lng - 0.015, lng + 0.015))
         )
         instance = Kindergarten.objects.filter(condition1 & condition2)
-        page = self.paginate_queryset(instance)
-        if page is not None:
-            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
-        else:
-            serializer = self.serializer_class(instance, many=True)
+        serializer = KindergartenListSerializer(instance, context={'request': request}, many=True)
         return Response(serializer.data)
+
 
 class Recommend(APIView):
     permission_classes = [

@@ -31,9 +31,8 @@ class BoardDetailSerializer(serializers.ModelSerializer):
     article_count = serializers.SerializerMethodField()
     def get_favorite_yn(self, obj):
         request = self.context.get('request', None)
-        if obj.favorite_users.all():
-            if obj.favorite_users.filter(id=request.user.id).exists():
-                return 1
+        if obj.favorite_users.filter(id=request.user.id).exists():
+            return 1
         return 0
     def get_article_count(self, obj):
         return obj.article_set.all().count()
