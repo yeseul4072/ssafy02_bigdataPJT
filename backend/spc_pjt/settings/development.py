@@ -27,7 +27,18 @@ class MattermostRequestsHandler(logging.Handler):
 log_file_path = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'django-dev-log')
 log_file_name = f'django-dev.log.{date.today().isoformat()}'
 
-LOGGING['handlers'] = {
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        },
+        'json': {
+            'format': '{"text": "#### %(asctime)s %(name)s %(levelname)s \n##### %(message)s"}'
+        }
+    },
+    'handlers': {
         'file': {  
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(log_file_path, log_file_name),
@@ -39,4 +50,12 @@ LOGGING['handlers'] = {
             'class': 'spc_pjt.settings.development.MattermostRequestsHandler',
             'formatter': 'json'
         }
-    }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'http'],  
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+            'propagate': False
+        },
+    },
+}

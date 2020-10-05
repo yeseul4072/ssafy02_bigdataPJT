@@ -2,5 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('counts/', views.Count),
+    # main page
+    path('feature-based-recommend/', views.FBasedRecommend.as_view()),
+    path('activated-reviews/', views.ReviewActivated.as_view()),
+    # kidergartend detail page
+    path('<int:kindergarten_pk>/', views.KindergartenDetail.as_view()),
+    path('<int:kindergarten_pk>/reviews/', views.Reviews.as_view()),
+    # kindergarten list page
+    path('', views.Kindergartens.as_view()),
     path('recommend/', views.Recommend.as_view()),
+    # 찜
+    path('wishlist/<int:kindergarten_pk>/', views.WishList),
 ]
