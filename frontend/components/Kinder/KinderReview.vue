@@ -87,41 +87,69 @@
       <v-col cols="9" class="py-7">
         <v-row class="pa-3" style="border-left:thin solid #E6E6E6;">
           <v-row style="padding-left:16px;font-size:2vh;font-weight:800;width:100%;">
-            "{{ review.title }}""
+            <v-col>
+              <v-row>
+                <div class="px-3">
+                  "{{ review.title }}"
+                </div>
+              </v-row>
+              <v-row class="pl-4" style="font-size:1.5vh;width:100%;">
+                <div style="display:inline-block" class="pr-3">
+                  unseng@gmail.com
+                </div>
+                <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
+                <div style="display:inline-block" class="px-3">
+                  {{ '2020.09.25' | diffDate }}
+                </div>
+              </v-row>
+            </v-col>
+            <v-col class="pr-7" style="text-align:right;">
+              <v-btn
+                rounded
+                outlined
+                color="rgb(236, 236, 236)"
+                dark
+              >
+                <v-icon
+                  class="mr-2"
+                  color="rgb(143, 143, 143)"
+                  dark
+                  style="font-size:20px;"
+                >
+                  mdi-thumb-up-outline
+                </v-icon>
+                <span
+                  style="color:#212121;"
+                >
+                  0
+                </span>
+              </v-btn>
+            </v-col>
           </v-row>
-          <v-row class="pl-4" style="font-size:1.5vh;width:100%;">
-            <div style="display:inline-block" class="pr-3">
-              unseng@gmail.com
-            </div>
-            <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
-            <div style="display:inline-block" class="pl-3">
-              {{ '2020.09.25' | diffDate }}
-            </div>
-          </v-row>
-          <v-row>
-            <v-card-title class="px-4 pt-2 pb-1">
-              <v-chip class="success white--text">
-                장점
-              </v-chip>
-            </v-card-title>
+          <v-card-title class="px-4 pt-2 pb-1">
+            <v-chip class="success white--text">
+              장점
+            </v-chip>
+          </v-card-title>
 
-            <v-card-text style="overflow:hidden;">
-              <!-- https://www.npmjs.com/package/vue-line-clamp -->
-              <div v-html="review.pros.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
-            </v-card-text>
-            <v-divider />
-            <v-card-title class="px-4 pt-2 pb-1">
-              <v-chip class="pink white--text">
-                단점
-              </v-chip>
-            </v-card-title>
+          <v-card-text style="overflow:hidden;">
+            <!-- https://www.npmjs.com/package/vue-line-clamp -->
+            <div v-html="review.pros.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
+          </v-card-text>
+          <v-divider />
+          <v-card-title class="px-4 pt-2 pb-1">
+            <v-chip class="pink white--text">
+              단점
+            </v-chip>
+          </v-card-title>
 
-            <v-card-text style="overflow:hidden;">
-              <div v-html="review.cons.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
-            </v-card-text>
-          </v-row>
+          <v-card-text style="overflow:hidden;">
+            <div v-html="review.cons.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
+          </v-card-text>
         </v-row>
       </v-col>
+    </v-row>
+    </v-col>
     </v-row>
   </div>
 </template>
