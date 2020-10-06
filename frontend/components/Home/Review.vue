@@ -1,7 +1,6 @@
 <template>
   <v-col cols="12">
     <v-card
-      :loading="loading"
       style="width:100%;height:100%;"
     >
       <v-card-title style="height:40%">
@@ -85,7 +84,7 @@ export default {
   }),
   methods: {
     linkKinder () {
-      this.$router.push('/kinder/' + 1)
+      this.$router.push('/kinder/' + 11110000009)
     }
   }
 }

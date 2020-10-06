@@ -21,7 +21,7 @@ import BoardComponent from '@/components/Community/BoardComponent.vue'
 export default {
   components: { BoardComponent, BannerImage },
   asyncData ({ params }) {
-    return http.axios.get(`/community/${params.id}/article/`)
+    return http.axios.get(/community/${params.id}/article/)
       .then(({ data }) => {
         return {
           board: data.board,
