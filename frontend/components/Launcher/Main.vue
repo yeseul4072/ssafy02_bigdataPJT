@@ -9,11 +9,22 @@
       <div style="text-align:center; margin-top: 20px;">
         <div class="text-center">
           <v-btn
+            v-if="isLogin"
             x-large
             :rounded="true"
             :outlined="true"
             :min-width="250"
             to="/Home"
+          >
+            지금 시작해 보세요 :)
+          </v-btn>
+          <v-btn
+            v-else
+            x-large
+            :rounded="true"
+            :outlined="true"
+            :min-width="250"
+            to="/login"
           >
             지금 시작해 보세요 :)
           </v-btn>
@@ -25,8 +36,15 @@
 
 <script>
 export default {
+  data () {
+    return {
+      isLogin: false
+    }
+  },
+  mounted () {
+    this.isLogin = this.$store.state.User.isLogin
+  },
   methods: {
-
   }
 }
 </script>
