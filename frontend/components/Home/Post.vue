@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BoardDetail :board="board" style="1px solid gray !important" />
+    <BoardDetail :article="board" style="1px solid gray !important" />
   </div>
 </template>
 
