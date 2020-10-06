@@ -94,11 +94,10 @@
                     link
                   >
                     <v-row>
-                      <v-col cols="3" align="center">
+                      <v-col cols="4" align="center">
                         <i :class="userIcon[index]" />
                       </v-col>
-                      <v-col cols="2" align="center" />
-                      <v-col cols="7" align="left" class="tapFont">
+                      <v-col cols="8" align="left" class="tapFont">
                         {{ item }}
                       </v-col>
                     </v-row>
@@ -165,7 +164,9 @@
             <v-list-item>
               <v-row>
                 <v-col cols="3" align="center">
-                  <i class="far fa-user MNavIcon" />
+                  <v-icon>
+                    far fa-user MNavIcon
+                  </v-icon>
                 </v-col>
                 <v-col cols="9" align="center" class="MNavFont">
                   회원정보

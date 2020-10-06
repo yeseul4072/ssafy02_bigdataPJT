@@ -9,10 +9,91 @@
         <v-row>
           <ul class="footLink">
             <li class="point br1" style="padding-left: 0;">
-              <a href="javascript:void(0);" style="color: red !important;">개인정보 처리방침</a>
+              <v-dialog
+                v-model="policy"
+                width="600px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    style="color: red !important;"
+                    v-bind="attrs"
+                    @click="policy=!policy"
+                    v-on="on"
+                  >
+                    개인정보 처리방침
+                  </span>
+                </template>
+                <v-card>
+                  <v-card-title class="d-flex">
+                    <v-row>
+                      <v-col cols="12" align="end">
+                        <v-btn
+                          class="mx-2"
+                          fab
+                          x-small
+                          :outlined="false"
+                          :depressed="true"
+                          color="rgba(0, 153, 204, 0)"
+                          @click="policy=false"
+                        >
+                          <v-icon dark>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-col>
+                      <v-col cols="12">
+                        <span class="headline">어린이ZIP 개인정보 처리방침</span>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+                  <v-card-text style="word-break:keep-all">
+                    <private-policy />
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">이용약관</a>
+              <v-dialog
+                v-model="terms"
+                width="600px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    v-bind="attrs"
+                    @click="terms=!terms"
+                    v-on="on"
+                  >
+                    이용약관
+                  </span>
+                </template>
+                <v-card>
+                  <v-card-title class="d-flex">
+                    <v-row>
+                      <v-col cols="12" align="end">
+                        <v-btn
+                          class="mx-2"
+                          fab
+                          x-small
+                          :outlined="false"
+                          :depressed="true"
+                          color="rgba(0, 153, 204, 0)"
+                          @click="terms=false"
+                        >
+                          <v-icon dark>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-col>
+                      <v-col cols="12">
+                        <span class="headline">어린이ZIP 이용약관</span>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+                  <v-card-text style="word-break:keep-all">
+                    <terms />
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </li>
             <li class="br1">
               <a href="javascript:void(0);">Help</a>
@@ -35,16 +116,16 @@
       <v-col cols="3" class="d-flex justify-center">
         <ul class="sns" style="margin-top:15px;">
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
+            <a href="https://www.facebook.com/"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
+            <a href="https://section.blog.naver.com/BlogHome.nhn?directoryNo=0&currentPage=1&groupId=0"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
+            <a href="https://www.instagram.com/?hl=ko"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
+            <a href="https://www.youtube.com/"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
           </li>
         </ul>
       </v-col>
@@ -54,8 +135,19 @@
 </template>
 
 <script>
+import PrivatePolicy from '@/components/Common/Footer/Policy.vue'
+import Terms from '@/components/Common/Footer/Terms.vue'
 export default {
-
+  components: {
+    PrivatePolicy,
+    Terms
+  },
+  data () {
+    return {
+      policy: false,
+      terms: false
+    }
+  }
 }
 </script>
 
