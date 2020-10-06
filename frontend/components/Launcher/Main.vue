@@ -55,11 +55,11 @@ export default {
   align-items: center;
   justify-content: center;
   width:100%;
-  height:400px;
+  height:600px;
 }
 
 .dp-2{
-  color: #F257A0;
+  color: #00bf8c;
   font-weight: 700;
 }
 

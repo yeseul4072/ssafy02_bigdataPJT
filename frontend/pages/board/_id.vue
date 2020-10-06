@@ -154,7 +154,7 @@
                 dark
                 style="font-size:20px;"
               >
-                mdi-thumb-up
+                mdi-thumb-up-outline
               </v-icon>
               <span
                 style="color:#212121;"

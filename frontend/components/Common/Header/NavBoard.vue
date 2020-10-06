@@ -15,7 +15,7 @@
             :key="i"
             v-ripple="false"
             dense
-            @click="moveToCommunity(1)"
+            @click="moveToCommunity(item.id)"
           >
             {{ item.title }}
           </v-list-item>
@@ -27,35 +27,17 @@
         <v-col cols="7" style="max-width: 780px">
           <v-subheader><h2>나만의 게시판</h2></v-subheader>
           <v-row>
-            <v-col cols="4">
+            <v-col
+              v-for="(boards, i) in bookmarkBoard"
+              :key="i"
+              cols="4"
+            >
               <v-list-item
-                v-for="(item, i) in items2"
-                :key="i"
+                v-for="(item, j) in boards"
+                :key="j"
                 v-ripple="false"
                 dense
-                @click="moveToCommunity(1)"
-              >
-                {{ item.title }}
-              </v-list-item>
-            </v-col>
-            <v-col cols="4">
-              <v-list-item
-                v-for="(item, i) in items2"
-                :key="i"
-                v-ripple="false"
-                dense
-                @click="moveToCommunity(1)"
-              >
-                {{ item.title }}
-              </v-list-item>
-            </v-col>
-            <v-col cols="4">
-              <v-list-item
-                v-for="(item, i) in items2"
-                :key="i"
-                v-ripple="false"
-                dense
-                @click="moveToCommunity(1)"
+                @click="moveToCommunity(item.id)"
               >
                 {{ item.title }}
               </v-list-item>
@@ -75,6 +57,7 @@
 </template>
 
 <script>
+import http from '@/util/http_common.js'
 export default {
   // props: ['is-show'],
   data () {
@@ -82,67 +65,57 @@ export default {
       item: 5,
       items: [
         {
-          title: '공지사항'
+          title: '공지사항',
+          id: 1
         },
         {
-          title: 'FAQ'
+          title: 'FAQ',
+          id: 2
         },
         {
-          title: '1:1문의'
+          title: '1:1문의',
+          id: 3
         }
       ],
-      items2: [
-        {
-          title: '수다게시판'
-        },
-        {
-          title: '우리 아이'
-        },
-        {
-          title: '육아 질문'
-        },
-        {
-          title: '정보 공유/후기'
-        },
-        {
-          title: '같이해요/같이사요'
-        }
-      ],
-      items3: [
-        {
-          title: '수다게시판'
-        },
-        {
-          title: '우리 아이'
-        },
-        {
-          title: '육아 질문'
-        },
-        {
-          title: '정보 공유/후기'
-        },
-        {
-          title: '게시판 찾기'
-        }
-      ],
-      lenItems3 () {
-        return this.items3.length - 1
-      }
+      bookmarkBoard: []
     }
   },
   watch: {
-    // isShow (val) {
-    //   if (val === true) { this.$emit('child-event', this.$refs.boardBox.clientHeight) } else { this.$emit('child-event', 0) }
-    // }
+
   },
   mounted () {
+    http.axios.get('/community/favorite/boards/')
+      .then(({ data }) => {
+        if (data.length === 0) {
+          this.bookmarkBoard = []
+          this.bookmarkBoard.push([{
+            title: '북마크 추가',
+            id: 0
+          }])
+        } else {
+          for (let i = 0; i < 15; i = i + 5) {
+            this.bookmarkBoard.push(data.slice(i, i + 5))
+          }
+          let row = parseInt(data.length / 5)
+          row = row >= 3 ? 2 : row
+          const col = data.length % 5
+          this.bookmarkBoard[row][col] = {
+            title: '북마크 추가',
+            id: 0
+          }
+        }
+      })
   },
   methods: {
     validation () {
       this.dialog = true
     },
     moveToCommunity (id) {
-      this.$router.push(`/community/${id}`)
+      if (id === 0) {
+        this.$router.push('/searchboard')
+      } else {
+        this.$router.push(`/community/${id}`)
+      }
     }
   }
 
