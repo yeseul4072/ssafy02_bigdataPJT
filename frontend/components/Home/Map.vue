@@ -11,6 +11,14 @@ export default {
       selected_lng: ''
     }
   },
+  watch: {
+    selected_lat (lat) {
+      this.$emit('setLat', lat)
+    },
+    selected_lng (lng) {
+      this.$emit('setLng', lng)
+    }
+  },
   mounted () {
     window.kakao && window.kakao.maps ? this.initMap() : this.addScript()
   },
@@ -19,6 +27,7 @@ export default {
       this.isMap = true
     },
     initMap () {
+      const self = this
       setTimeout(function () {
         const container = document.getElementById('map')
         const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
@@ -51,8 +60,8 @@ export default {
         kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
           const latlng = mouseEvent.latLng
           marker.setPosition(latlng)
-          this.selected_lat = latlng.getLat()
-          this.selected_lng = latlng.getLng()
+          self.selected_lat = latlng.getLat()
+          self.selected_lng = latlng.getLng()
           const position = new kakao.maps.LatLng(this.selected_lat - 0.0001, this.selected_lng)
 
           customOverlay.setMap(null)
