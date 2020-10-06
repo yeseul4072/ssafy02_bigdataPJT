@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Kindergarten, Weight, Review
+from .models import Kindergarten, Weight, Review, Borough, Village
 from accounts.serializers import UserSerializer, UserListSerializer
 from django.db.models import Avg, Sum
 from haversine import haversine
@@ -72,21 +72,23 @@ class KindergartenListSerializer(serializers.ModelSerializer):
 
     def get_distance(self, obj):
         request = self.context.get('request', None)
-        lat = request.query_params.get('lat', None)
-        lng = request.query_params.get('lng', None)
-        # 검색 어린이집 조회
-        if lat and lng:
-            position = (float(lat), float(lng))
-            return haversine(position, (obj.lat, obj.lng))
-        else:
-            # 메인 어린이집 추천 
-            try:
-                user_lat = request.user.latitude
-                user_lng = request.user.longitude
-                return haversine((user_lat, user_lng), (obj.lat, obj.lng))
-            except:
-                return 0
-        return 0
+        if request:
+            lat = request.query_params.get('lat', None)
+            lng = request.query_params.get('lng', None)
+            # 검색 어린이집 조회
+            if lat and lng:
+                position = (float(lat), float(lng))
+                return haversine(position, (obj.lat, obj.lng))
+            else:
+                # 메인 어린이집 추천 
+                try:
+                    user_lat = request.user.latitude
+                    user_lng = request.user.longitude
+                    return haversine((user_lat, user_lng), (obj.lat, obj.lng))
+                except:
+                    return 0
+            return 0
+        return 0    
 
     class Meta:
         model = Kindergarten
@@ -201,3 +203,15 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['kindergarten', 'title', 'user', 'score_teacher', 'score_director', 'score_environment', 'pros', 'cons']
+
+
+class BoroughSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borough
+        fields = '__all__'
+
+
+class VillageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Village
+        fields = '__all__'
