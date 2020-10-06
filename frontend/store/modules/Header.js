@@ -1,7 +1,7 @@
 export default ({
-  state: () => ({
+  state: {
     token: ''
-  }),
+  },
   getters: {
     getToken (state) {
       return state.token

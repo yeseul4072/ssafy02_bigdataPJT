@@ -33,25 +33,25 @@
           <v-col cols="6">
             <v-row>
               <v-col cols="12" style="padding:30px;">
-                <v-row style="height:60%">
+                <v-row style="height:300px;">
                   <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.left.url)" @click="linkKinder(kinder.left.id)" />
                 </v-row>
-                <v-row :align="center">
-                  <span style="font-size:1.8vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
-                    {{ kinder.left.name }}
+                <v-row align="center">
+                  <span class="mt-4 mb-1" style="font-size:1.8vw;font-wight:800;padding-left:6px">
+                    {{ kinder.left.organization_name }}
                   </span>
                   &nbsp;&nbsp;
                   <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
                     <i style="color:orange" class="fas fa-star" />
-                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.left.stars }}</span>
+                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.left.score_avg.toFixed(1) }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
                     <span> {{ kinder.left.distance }} </span> Km
                     <i style="color:#DEDEDE" class="fas fa-ellipsis-v" />
 
-                    <nuxt-link :to="'/kinder/'+1">전체리뷰 <span>{{ kinder.left.review_cnt }}</span></nuxt-link>
+                    <nuxt-link :to="'/kinder/'+1">전체리뷰 <span>{{ kinder.left.reviews_count }}</span></nuxt-link>
                   </span>
                 </v-row>
-                <v-row>
+                <v-row style="height:68px; overflow:hidden;">
                   <v-chip
                     v-for="(tag, i) in kinder.left.tags"
                     :key="i"
@@ -73,25 +73,25 @@
           <v-col cols="6">
             <v-row>
               <v-col cols="12" style="padding:30px;">
-                <v-row style="height:60%">
+                <v-row style="height:300px;">
                   <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.right.url)" @click="linkKinder(kinder.right.id)" />
                 </v-row>
-                <v-row :align="center">
+                <v-row align="center">
                   <span style="font-size:1.8vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
-                    {{ kinder.right.name }}
+                    {{ kinder.right.organization_name }}
                   </span>
                   &nbsp;&nbsp;
                   <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
                     <i style="color:orange" class="fas fa-star" />
-                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.right.stars }}</span>
+                    <span style="font-size:1.1vw;font-weight:800;">{{ kinder.right.score_avg.toFixed(1) }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
                     <span> {{ kinder.right.distance }} </span> Km
                     <i style="color:#DEDEDE" class="fas fa-ellipsis-v" />
 
-                    <a>전체리뷰 <span>{{ kinder.right.review_cnt }}</span></a>
+                    <a>전체리뷰 <span>{{ kinder.right.reviews_count }}</span></a>
                   </span>
                 </v-row>
-                <v-row>
+                <v-row style="height:68px; overflow:hidden;">
                   <v-chip
                     v-for="(tag, i) in kinder.right.tags"
                     :key="i"
