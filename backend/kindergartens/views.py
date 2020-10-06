@@ -16,11 +16,7 @@ from rest_framework import generics
 # App - community
 from .models import Kindergarten, Weight, Review, Borough, Village
 from .serializers import (KindergartenListSerializer, ActivatedReviewSerializer, ReviewSerializer, KindergartenDetailSerializer, 
-<<<<<<< HEAD
-ReviewCreateSerializer, BoroughSerializer, VillageSerializer)
-=======
-ReviewCreateSerializer, KindergartenImageSerializer)
->>>>>>> c19e157529d808281bc38213d78454f82c5e3304
+ReviewCreateSerializer, BoroughSerializer, VillageSerializer, KindergartenImageSerializer)
 
 # data analysis
 import pandas as pd
