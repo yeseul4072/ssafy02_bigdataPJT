@@ -11,4 +11,5 @@ urlpatterns = [
   path('<int:board_pk>/article/<int:article_pk>/', views.ArticleDetail.as_view()),
   path('article/<int:article_pk>/like/', views.like_article),
   path('<int:board_pk>/article/<int:article_pk>/comment/<int:comment_pk>/', views.CommentDetail.as_view()),
+  path('favorite/boards/', views.user_favorite_boards),
 ]
