@@ -18,7 +18,7 @@
                 :max-lines="1"
                 ellipsis="..."
               >
-                {{ board.title }}
+                {{ article.title }}
               </v-clamp>
             </h3>
           </v-col>
@@ -29,20 +29,20 @@
               align="start"
             >
               <span>
-                {{ board.writer | filterWriter }}
+                {{ article.user.nickname | filterWriter }}
               </span>
               <span style="margin-left:10px;">
                 <v-icon class="vd-icon" color="blue">
                   mdi-comment-text-outline
-                </v-icon>
-                {{ board.boardCount }}
+                </v-icon><!-- 조회 수로 변경해야함 -->
+                {{ article.user.id }}
                 <v-icon class="vd-icon" color="pink">
                   mdi-thumb-up-outline
                 </v-icon>
-                {{ board.boardCount }}
+                {{ article.like_count }}
               </span>
               <span style="margin-left:10px;">
-                {{ board.dateTime | diffDate }}
+                {{ article.created_at | diffDate }}
               </span>
             </v-col>
           </v-list-item-subtitle>
@@ -80,11 +80,13 @@ export default {
       return `by ${val}`
     }
   },
-  props: ['board'],
+  props: ['article'],
   data () {
     return {
       line: 1
     }
+  },
+  mounted () {
   }
 }
 </script>

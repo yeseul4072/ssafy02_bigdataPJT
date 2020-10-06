@@ -116,6 +116,13 @@ export default {
       } else if (curPosition > height / 4 * 2) {
         this.selected = 1
       }
+    },
+    goto (target) {
+      this.$vuetify.goTo(target, {
+        duration: 1000,
+        offset: 100,
+        easing: 'easeInOutCubic'
+      })
     }
   }
 }

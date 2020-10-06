@@ -1,15 +1,22 @@
 <template>
   <div>
-    post컴포넌트
+    <BoardDetail :board="board" style="1px solid gray !important" />
   </div>
 </template>
 
 <script>
+import BoardDetail from '@/components/Community/BoardDetail.vue'
 export default {
+  components: { BoardDetail },
+  props: ['board'],
+  data () {
+    return {
 
+    }
+  }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
