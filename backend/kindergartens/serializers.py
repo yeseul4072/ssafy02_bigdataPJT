@@ -97,9 +97,8 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
     wishlist_yn = serializers.SerializerMethodField()
     def get_wishlist_yn(self, obj):
         request = self.context.get('request', None)
-        if obj.wish_users.all():
-            if request.user.id in obj.wish_users.all():
-                return 1
+        if obj.wish_users.filter(id=request.user.id).exists():
+            return 1
         return 0
     class Meta(KindergartenListSerializer.Meta):
         fields = KindergartenListSerializer.Meta.fields + ['wishlist_yn', 'director_name', 'establishment_type', 'created_date', 'agency', 'tel', 'homepage', 'address', 'grade', 'score', 'area_columns', 'area_info', 'building_columns', 'building_info', 'cctv_columns', 'cctv_info', 
