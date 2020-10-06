@@ -4,24 +4,24 @@
       style="width:100%;height:100%;"
     >
       <v-card-title style="height:40%">
-        <v-row style="width:100%;height:90%">
+        <v-row style="width:100%;height:200px;overflow: hidden;">
           <v-col cols="6">
-            <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
+            <v-img class="cursor" style="height:176px;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
           </v-col>
-          <v-col cols="6" style="padding-left:0">
+          <v-col cols="6" style="padding-left:0;">
             <v-row style="font-weight:800;">
-              &nbsp;&nbsp;&nbsp;{{ review.name }}
+              &nbsp;&nbsp;&nbsp;{{ review.kindergarten.organization_name }}
             </v-row>
             <v-chip
               v-for="(tag, i) in review.tags"
               :key="i"
               class="ma-1"
-              color="#ff9800"
+              color="green"
               text-color="#black"
               outlined
               small
             >
-              <v-icon color="#ff9800" left x-small>
+              <v-icon color="green" left x-small>
                 mdi-server-plus
               </v-icon>
               {{ tag }}
@@ -32,7 +32,7 @@
           &nbsp;"{{ review.title }}"
           &nbsp;
           <v-rating
-            :value="review.stars"
+            :value="review.avg_score"
             color="orange"
             background-color="orange lighten-3"
             dense
@@ -62,7 +62,7 @@
         </v-chip>
       </v-card-title>
 
-      <v-card-text style="height:13vh">
+      <v-card-text style="height:13vh;overflow:hidden;">
         <div v-html="review.cons.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
       </v-card-text>
     </v-card>
@@ -82,9 +82,11 @@ export default {
   data: () => ({
 
   }),
+  mounted () {
+  },
   methods: {
     linkKinder () {
-      this.$router.push('/kinder/' + 11110000009)
+      this.$router.push('/kinder/' + this.review.kindergarten.id)
     }
   }
 }

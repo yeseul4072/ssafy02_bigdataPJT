@@ -96,13 +96,19 @@
               </v-dialog>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">Help</a>
+              <nuxt-link to="/community/2">
+                Help
+              </nuxt-link>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">Contact</a>
+              <nuxt-link to="/community/3">
+                Contact
+              </nuxt-link>
             </li>
             <li>
-              <a href="javascript:void(0);">About</a>
+              <nuxt-link to="/community/1">
+                About
+              </nuxt-link>
             </li>
           </ul>
         </v-row>

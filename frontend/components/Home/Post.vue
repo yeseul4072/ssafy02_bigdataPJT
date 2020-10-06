@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <BoardDetail :article="board" style="1px solid gray !important" />
+  <div @click="goArticle">
+    <BoardDetail :article="board" />
   </div>
 </template>
 
@@ -12,6 +12,13 @@ export default {
   data () {
     return {
 
+    }
+  },
+  mounted () {
+  },
+  methods: {
+    goArticle () {
+      this.$router.push(`/board/${this.board.board.id}?id=${this.board.id}`)
     }
   }
 }
