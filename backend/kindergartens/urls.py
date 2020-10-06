@@ -12,7 +12,6 @@ urlpatterns = [
     path('<int:kindergarten_pk>/review/<int:review_pk>/', views.ReviewDetail.as_view()),
     # kindergarten list page
     path('', views.Kindergartens.as_view()),
-    path('recommend/', views.Recommend.as_view()),
     # 찜
     path('wishlist/<int:kindergarten_pk>/', views.WishList),
     # 리뷰 좋아요
