@@ -20,7 +20,7 @@
               :cols="6"
             >
               <v-list-item-title class="headline" style="font-weight:800;">
-                게시판 이름
+                {{ boardTitle }}
               </v-list-item-title>
             </v-col>
             <v-col
@@ -31,18 +31,14 @@
                 align="end"
                 justify="end"
                 class="pr-3"
-              >
-                <div>
-                  게시판 글쓰기 버튼 들어갈 자리
-                </div>
-              </v-row>
+              />
             </v-col>
             <div class="border_black py-2" />
           </v-row>
         </v-list-item>
         <v-list-item class="px-10">
           <v-list-item-content class="pa-0">
-            <v-list-item-title><h3>제목</h3></v-list-item-title>
+            <v-list-item-title><h3>{{ articleTitle }}</h3></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item class="px-8">
@@ -52,10 +48,10 @@
             />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>유저 이름</v-list-item-title>
+            <v-list-item-title>{{ user.nickname }}</v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="pr-1">
-            조회 7 | 추천 | 2020.09.28 05:07
+            조회 7 | 추천 {{ likeCount }} | {{ created | diffDate }}
           </v-list-item-icon>
         </v-list-item>
         <v-row>
@@ -68,7 +64,7 @@
         </v-row>
         <v-row class="px-9 pa-3">
           <v-col>
-            내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+            {{ articleContent }}
           </v-col>
         </v-row>
         <v-list-item class="px-8">
@@ -78,6 +74,7 @@
             outlined
             color="rgb(236, 236, 236)"
             dark
+            @click="goToBack"
           >
             <span
               style="color:#212121;"
@@ -92,8 +89,10 @@
               outlined
               color="rgb(236, 236, 236)"
               dark
+              @click="likeArticle"
             >
               <v-icon
+                v-if="!likeYn"
                 class="mr-2"
                 color="rgb(143, 143, 143)"
                 dark
@@ -101,42 +100,27 @@
               >
                 mdi-thumb-up-outline
               </v-icon>
+              <v-icon
+                v-else
+                class="mr-2"
+                color="blue"
+                dark
+                style="font-size:20px;"
+              >
+                mdi-thumb-up
+              </v-icon>
               <span
                 style="color:#212121;"
               >
-                0
+                {{ likeCount }}
               </span>
             </v-btn>
           </v-list-item-icon>
         </v-list-item>
-        <v-list-item class="px-10">
-          <v-list-item-content class="pa-0">
-            <v-list-item-title>
-              <v-icon
-                style="font-size:18px;"
-              >
-                mdi-comment-outline
-              </v-icon><span style="font-size:16px; font-weight:700;">&nbsp;댓글 <span style="font-size:16px; color:orange;">1</span>개</span>
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
         <v-row>
           <v-col
             align="center"
-            class="pa-0"
-          >
-            <div class="border_gray" />
-          </v-col>
-        </v-row>
-        <div class="pa-8">
-          <Review />
-          <Review />
-          <Review />
-        </div>
-        <v-row>
-          <v-col
-            align="center"
-            class="pa-0"
+            class="pt-5 px-0"
           >
             <div class="border_gray" />
           </v-col>
@@ -156,10 +140,11 @@
                 />
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title><h4>유저 이름</h4></v-list-item-title>
+                <v-list-item-title><h4>{{ profile.nickname }}</h4></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-textarea
+              v-model="text"
               class="px-4 ma-0"
               rows="1"
               flat
@@ -182,6 +167,7 @@
                   outlined
                   color="rgb(236, 236, 236)"
                   dark
+                  @click="writeComment"
                 >
                   <span
                     style="color:#212121;"
@@ -193,18 +179,183 @@
             </v-list-item>
           </v-card>
         </div>
+        <v-list-item class="px-10">
+          <v-list-item-content class="pa-0">
+            <v-list-item-title>
+              <v-icon
+                style="font-size:18px;"
+              >
+                mdi-comment-outline
+              </v-icon><span style="font-size:16px; font-weight:700;">&nbsp;댓글 <span style="font-size:16px; color:orange;">{{ comments.length }}</span>개</span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-row>
+          <v-col
+            align="center"
+            class="pa-0"
+          >
+            <div class="border_gray" />
+          </v-col>
+        </v-row>
+        <div
+          class="mb-10"
+          style="overflow-y: auto; height: 400px;"
+        >
+          <div
+            v-for="(item, index) in comments"
+            :key="index"
+            class="px-8 py-1"
+          >
+            <Review :review="item" :profile="profile" @delete-comment="deleteComment" />
+          </div>
+        </div>
       </v-card>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ warningText }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
+import http from '@/util/http_common.js'
 import BannerImage from '@/components/Community/Banner.vue'
 import Review from '@/components/Community/Review.vue'
 
 export default {
-  components: { BannerImage, Review }
+  components: { BannerImage, Review },
+  filters: {
+    diffDate (val) {
+      let diff = (new Date() - new Date(val)) / 1000
+      if (diff < 60) { return '방금 전' }
+      diff /= 60
+      if (diff < 60) { return parseInt(diff) + '분 전' }
 
+      diff /= 60
+      if (diff < 24) { return parseInt(diff) + '시간 전' }
+
+      diff /= 24
+      if (diff < 7) { return parseInt(diff) + '일 전' }
+      if (diff < 30) { return parseInt(diff / 7) + '주 전' }
+      if (diff < 365) { return parseInt(diff / 30) + '달 전' }
+      return parseInt(diff / 365) + '년 전'
+    }
+  },
+  asyncData ({ params, query }) {
+    return http.axios.get(`/community/${params.id}/article/${query.id}/`)
+      .then(({ data }) => {
+        return {
+          boardId: data.board_id,
+          boardTitle: data.board_name,
+          commentCount: data.comment_count,
+          comments: data.comments.reverse(),
+          articleId: data.id,
+          likeCount: data.like_count,
+          likeYn: data.like_yn,
+          user: data.user,
+          articleTitle: data.title,
+          articleContent: data.content,
+          created: data.created_at
+        }
+      })
+  },
+  data () {
+    return {
+      text: '',
+      profile: {
+        id: 0,
+        profile_image: '',
+        last_login: '',
+        is_superuser: false,
+        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        is_staff: false,
+        is_active: true,
+        date_joined: '',
+        latitude: 0,
+        longitude: 0,
+        address: '',
+        nickname: '',
+        is_director: false,
+        kindergarten_id: 0,
+        groups: [],
+        user_permissions: []
+      },
+      snackbar: false,
+      warningText: '댓글란은 비어있을 수 없습니다.'
+    }
+  },
+  mounted () {
+    http.axios.get('/rest-auth/user/profile/')
+      .then(({ data }) => {
+        this.profile = data
+      })
+  },
+  methods: {
+    goToBack () {
+      this.$router.go(-1)
+    },
+    likeArticle () {
+      http.axios.post(`/community/article/${this.articleId}/like/`)
+        .then(({ data }) => {
+          this.likeYn = !this.likeYn
+          this.likeCount = this.likeYn ? this.likeCount + 1 : this.likeCount - 1
+        })
+    },
+    writeComment () {
+      if (this.text === '') {
+        this.warningText = '댓글란은 비어있을 수 없습니다.'
+        this.snackbar = true
+      } else {
+        http.axios.post(`/community/${this.boardId}/article/${this.articleId}/`, {
+          content: this.text
+        }).then(({ data }) => {
+          this.reset()
+        })
+      }
+    },
+    deleteComment (id) {
+      http.axios.delete(`/community/${this.boardId}/article/${this.articleId}/comment/${id}/`)
+        .then(({ data }) => {
+          this.warningText = '댓글이 삭제 되었습니다.'
+          this.snackbar = true
+          this.reset()
+        })
+    },
+    reset () {
+      http.axios.get(`/community/${this.boardId}/article/${this.articleId}/`)
+        .then(({ data }) => {
+          this.boardId = data.board_id
+          this.boardTitle = data.board_name
+          this.commentCount = data.comment_count
+          this.comments = data.comments.reverse()
+          this.articleId = data.id
+          this.likeCount = data.like_count
+          this.likeYn = data.like_yn
+          this.user = data.user
+          this.varticleTitle = data.title
+          this.articleContent = data.content
+          this.created = data.created_at
+          this.text = ''
+        })
+    }
+  }
 }
 </script>
 

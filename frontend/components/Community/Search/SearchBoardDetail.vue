@@ -1,18 +1,19 @@
 <template>
   <div class="board-detail-box">
     <div class="board-detail-title">
-      <v-html
+      <div
         class="title-hover"
         style="font-size:1.2rem; width:80% !important;"
       >
-        <a
-          href
+        <span
+          class="sbd-title"
           style="text-decoration:none; color:#555555;"
+          @click="goBoard(id)"
           v-html="title.replace(text, '<strong>'+ text + '</strong>')"
         >
           {{ title }}
-        </a>
-      </v-html>
+        </span>
+      </div>
       <div
         style="text-align: right !important;
             width:20%;"
@@ -26,19 +27,24 @@
       </div>
     </div>
     <div style="margin-bottom:20px !important;">
-      <v-text
+      <div
         style="font-size:0.9rem; color:#555555;"
         v-html="content.replace(text, '<strong>'+ text + '</strong>')"
       >
         {{ content }}
-      </v-text>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['id', 'title', 'content', 'boardCount', 'text']
+  props: ['id', 'title', 'content', 'boardCount', 'text'],
+  methods: {
+    goBoard (id) {
+      this.$router.push(`/community/${id}`)
+    }
+  }
 }
 </script>
 
@@ -54,5 +60,6 @@ export default {
 }
 .title-hover:hover{
     text-decoration: underline;
+    cursor:pointer;
 }
 </style>
