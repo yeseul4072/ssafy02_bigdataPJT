@@ -14,7 +14,7 @@
             >
               <v-tooltip
                 left
-                color="#ff5faa"
+                color="#00BF8C"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <div
@@ -157,7 +157,7 @@ ul{
 .l1_icon_active{
   padding-left: 10px;
   font-size: 27px;
-  color: #ff5faa;
+  color: #00BF8C;
 }
 
 .l1_icon_none{

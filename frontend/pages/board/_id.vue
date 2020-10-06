@@ -51,7 +51,7 @@
             <v-list-item-title>{{ user.nickname }}</v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon class="pr-1">
-            조회 7 | 추천 {{ likeCount }} | {{ created | diffDate }}
+            조회 {{ hit }} | 추천 {{ likeCount }} | {{ created | diffDate }}
           </v-list-item-icon>
         </v-list-item>
         <v-row>
@@ -82,6 +82,53 @@
               목록보기
             </span>
           </v-btn>
+          <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="290"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-show="profile.id == user.id"
+                small
+                rounded
+                depressed
+                color="error"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                <span
+                  style="color:white;"
+                >
+                  삭제하기
+                </span>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="headline">
+                삭제 확인
+              </v-card-title>
+              <v-card-text>정말로 이 소중한 글을 삭제하시겠어요?</v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="dialog = false"
+                >
+                  취소
+                </v-btn>
+                <v-btn
+                  color="red darken-1"
+                  text
+                  @click="dialog = false; deleteArticle(articleId)"
+                >
+                  삭제하기
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-list-item-content />
           <v-list-item-icon class="pr-1">
             <v-btn
@@ -107,7 +154,7 @@
                 dark
                 style="font-size:20px;"
               >
-                mdi-thumb-up
+                mdi-thumb-up-outline
               </v-icon>
               <span
                 style="color:#212121;"
@@ -264,6 +311,7 @@ export default {
           commentCount: data.comment_count,
           comments: data.comments.reverse(),
           articleId: data.id,
+          hit: data.hit,
           likeCount: data.like_count,
           likeYn: data.like_yn,
           user: data.user,
@@ -298,7 +346,8 @@ export default {
         user_permissions: []
       },
       snackbar: false,
-      warningText: '댓글란은 비어있을 수 없습니다.'
+      warningText: '댓글란은 비어있을 수 없습니다.',
+      dialog: false
     }
   },
   mounted () {
@@ -353,6 +402,12 @@ export default {
           this.articleContent = data.content
           this.created = data.created_at
           this.text = ''
+        })
+    },
+    deleteArticle (id) {
+      http.axios.delete(`/community/${this.boardId}/article/${this.articleId}/`)
+        .then(({ data }) => {
+          this.$router.go(-1)
         })
     }
   }
