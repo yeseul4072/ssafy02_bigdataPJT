@@ -14,7 +14,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <v-rating
-              :value="4.5"
+              :value="Number(review.avg_score.toFixed(1))"
               color="orange"
               background-color="orange lighten-3"
               dense
@@ -23,7 +23,7 @@
               size="1.5vw"
               style="display:inline-block;"
             />
-            <span style="font-size:1.2vw;font-weight:800;">4.5</span>
+            <span style="font-size:1.2vw;font-weight:800;">{{ review.avg_score.toFixed(1) }}</span>
           </v-col>
           <v-col cols="12" align="center" class="py-0">
             <v-row class="py-0">
@@ -32,7 +32,7 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="5"
+                  :value="Number(review.score_director)"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
@@ -51,7 +51,7 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="4.5"
+                  :value="Number(review.score_teacher)"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
@@ -70,7 +70,7 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="4"
+                  :value="Number(review.score_environment)"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
@@ -87,43 +87,88 @@
       <v-col cols="9" class="py-7">
         <v-row class="pa-3" style="border-left:thin solid #E6E6E6;">
           <v-row style="padding-left:16px;font-size:2vh;font-weight:800;width:100%;">
-            <v-col>
-              <v-row>
+            <v-col cols="9">
+              <v-row align="end">
                 <div class="px-3">
                   "{{ review.title }}"
                 </div>
               </v-row>
-              <v-row class="pl-4" style="font-size:1.5vh;width:100%;">
+              <v-row class="pl-4" style="font-size:1.5vh;width:100%;" align="end">
                 <div style="display:inline-block" class="pr-3">
                   unseng@gmail.com
                 </div>
                 <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
                 <div style="display:inline-block" class="px-3">
-                  {{ '2020.09.25' | diffDate }}
+                  {{ review.created_at | diffDate }}
                 </div>
+                <template v-if="review.user == 9">
+                  <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
+                  <v-dialog
+                    v-model="isDelete"
+                    persistent
+                    max-width="350"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon
+                        color="teel darken-2"
+                        class="mx-3"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        mdi-trash-can
+                      </v-icon>
+                    </template>
+                    <v-card>
+                      <v-card-title class="headline">
+                        정말 삭제하시겠습니까?
+                      </v-card-title>
+                      <v-card-text>삭제된 리뷰내용은 다시 복구하실 수 없습니다.</v-card-text>
+                      <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="isDelete = false"
+                        >
+                          취소
+                        </v-btn>
+                        <v-btn
+                          color="red darken-1"
+                          text
+                          @click="reviewDelete"
+                        >
+                          삭제
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </template>
               </v-row>
             </v-col>
-            <v-col class="pr-7" style="text-align:right;">
-              <v-btn
-                rounded
-                outlined
-                color="rgb(236, 236, 236)"
-                dark
-              >
-                <v-icon
-                  class="mr-2"
-                  color="rgb(143, 143, 143)"
+            <v-col cols="3" class="pr-7">
+              <v-row justify="end">
+                <v-btn
+                  rounded
+                  outlined
+                  color="rgb(236, 236, 236)"
                   dark
-                  style="font-size:20px;"
+                  @click="reviewLike()"
                 >
-                  mdi-thumb-up-outline
-                </v-icon>
-                <span
-                  style="color:#212121;"
-                >
-                  0
-                </span>
-              </v-btn>
+                  <v-icon
+                    class="mr-2"
+                    :color="(review.like_yn ==0)?'rgb(143, 143, 143)':'blue'"
+                    dark
+                    style="font-size:20px;"
+                  >
+                    mdi-thumb-up-outline
+                  </v-icon>
+                  <span
+                    style="color:#212121;"
+                  >
+                    {{ review.like_count }}
+                  </span>
+                </v-btn>
+              </v-row>
             </v-col>
           </v-row>
           <v-card-title class="px-4 pt-2 pb-1">
@@ -179,6 +224,16 @@ export default {
   props: ['review'],
   data () {
     return {
+      isDelete: false
+    }
+  },
+  methods: {
+    reviewLike () {
+      this.$emit('reviewLike')
+    },
+    reviewDelete () {
+      this.isDelete = false
+      this.$emit('reviewDelete')
     }
   }
 }
