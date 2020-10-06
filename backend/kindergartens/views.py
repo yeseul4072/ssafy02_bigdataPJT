@@ -50,7 +50,7 @@ def Count(request):
     users = User.objects.all()
     kindergartens = Kindergarten.objects.all()
     reviews = Review.objects.all()
-    return JsonResponse([{'kindergartens': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count()}], safe=False)
+    return JsonResponse({'kindergartens': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count()})
 
 
 """
