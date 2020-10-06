@@ -34,3 +34,10 @@ class CustomRegisterSerializer(serializers.ModelSerializer, RegisterSerializer):
         self.custom_signup(request, user)
         setup_user_email(request, user, [])
         return user
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(required=False)
+    nickname = serializers.CharField(max_length=50, required=False)
+    class Meta:
+        model = User
+        fields = ['nickname', 'profile_image', 'latitude', 'longitude', 'address']

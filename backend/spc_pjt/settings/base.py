@@ -183,3 +183,6 @@ AUTHENTICATION_BACKENDS = [
 # for image upload
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# old password for password change
+OLD_PASSWORD_FIELD_ENABLED = True
