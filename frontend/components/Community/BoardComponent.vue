@@ -12,35 +12,41 @@
             align="start"
             class="pa-0"
           >
-            {{ board.title }}
-            <v-icon
-              v-if="!board.favorite_yn"
-              class="cm-bc-icon"
-              @click="bmBoard"
-            >
-              mdi-star-outline
-            </v-icon>
-            <v-icon
-              v-else
-              class="cm-bc-icon"
-              color="yellow"
-              @click="bmBoard"
-            >
-              mdi-star
-            </v-icon>
-            <v-btn
-              class="cm-bc-icon"
-              depressed
-              fab
-              dark
-              x-small
-              color="success"
-              @click="goToWrite"
-            >
-              <v-icon>
-                mdi-pencil
-              </v-icon>
-            </v-btn>
+            <v-row>
+              <span>
+                {{ board.title }}
+              </span>
+              <span v-if="board.title !== '공지사항' && board.title !== 'FAQ' && board.title !== '1:1문의'" class="pl-2">
+                <v-icon
+                  v-if="!board.favorite_yn"
+                  class="cm-bc-icon"
+                  @click="bmBoard"
+                >
+                  mdi-star-outline
+                </v-icon>
+                <v-icon
+                  v-else
+                  class="cm-bc-icon"
+                  color="yellow"
+                  @click="bmBoard"
+                >
+                  mdi-star
+                </v-icon>
+                <v-btn
+                  class="cm-bc-icon"
+                  depressed
+                  fab
+                  dark
+                  x-small
+                  color="success"
+                  @click="goToWrite"
+                >
+                  <v-icon>
+                    mdi-pencil
+                  </v-icon>
+                </v-btn>
+              </span>
+            </v-row>
           </v-col>
           <v-col
             class="pa-0"

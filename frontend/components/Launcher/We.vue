@@ -38,7 +38,7 @@ export default {
           subTitle: '보건복지부, 한국사회보장정보원에서 제공하는 정보로<br>우리 아이 어린이집 한눈에!'
         },
         {
-          src: 'https://images.unsplash.com/photo-1559251606-c623743a6d76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+          src: 'https://images.unsplash.com/photo-1433087870301-b85d84efc18a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
           mainTitle: '어린이집, 헤매지 말고 어린이ZIP하자!',
           subTitle: '어린이집 정보를 찾고, 알아보기 위해<br>아직도 헤매고 있지 않나요?'
         },

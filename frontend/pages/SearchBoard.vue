@@ -216,10 +216,10 @@ export default {
   },
   watch: {
     text () {
-      this.goSearch()
+      this.goSearch(1)
     },
     page () {
-      this.goSearch()
+      this.goSearch(this.page)
     }
   },
   mounted () {
@@ -231,16 +231,16 @@ export default {
       })
   },
   methods: {
-    goSearch () {
+    goSearch (page) {
       if (this.selected === 0) {
-        http.axios.get(`/community?page=${this.page}&title=${this.text}`)
+        http.axios.get(`/community?page=${page}&title=${this.text}`)
           .then(({ data }) => {
             this.boardList = data.results
             this.count = data.count
             this.pageCnt = parseInt((data.count - 1) / this.itemsPerPage + 1)
           })
       } else {
-        http.axios.get(`/community?page=${this.page}&content=${this.text}`)
+        http.axios.get(`/community?page=${page}&content=${this.text}`)
           .then(({ data }) => {
             this.boardList = data.results
             this.count = data.count
@@ -254,7 +254,7 @@ export default {
         content: this.content
       })
         .then(({ data }) => {
-          this.goSearch()
+          this.goSearch(1)
         })
     }
   }
