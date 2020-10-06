@@ -1,13 +1,15 @@
 # django
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, Prefetch
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
 
 # DRF
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 
 # swagger
@@ -447,3 +449,36 @@ def favorite(request, board_pk):
     else:
         board.favorite_users.add(request.user)
     return Response(status=200)
+
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[request_schemas.header], 
+    responses={200: BoardListSerializer}
+)
+@api_view(['GET'])
+@permission_classes([IsAuthenticatedOrReadOnly])
+def user_favorite_boards(request):
+    """
+    유저 즐겨찾기 게시판 목록
+
+    ## 유저 즐겨찾기 게시판 목록
+    - 현재 로그인한 유저가 즐겨찾기 한 게시판 목록을 보여줍니다.
+    - 최대 15개까지의 목록을 반환합니다.
+    """
+    User = get_user_model()
+    user = User.objects.get(id=request.user.id)
+    if user.favorite_set.all().exists():
+        boards = Board.objects.raw(f"""
+        select cb.*
+        from community_favorite cf
+        left outer join
+        community_board cb
+        on
+        cf.board_id = cb.id
+	    where cf.user_id = {request.user.id}
+        order by cf.created_at desc
+        limit 15;
+        """)
+        serializer = BoardListSerializer(boards, many=True, context={"request": request})
+        return Response(serializer.data)
+    return JsonResponse([], safe=False)
