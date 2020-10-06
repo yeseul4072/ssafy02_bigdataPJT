@@ -93,6 +93,7 @@ class Kindergarten(models.Model):
     program_by_age = models.TextField()
     cctv_grade = models.IntegerField()
     staff_grade = models.IntegerField()
+    image = models.ImageField(upload_to="kindergarten", null=True)
 
     weight_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Weight', related_name='weight_kindergartens')
     wish_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='wish_kindergartens')

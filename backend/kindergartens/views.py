@@ -6,17 +6,17 @@ from django.db.models import Avg, Count, Q
 
 # DRF
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 
 # App - community
 from .models import Kindergarten, Weight, Review
 from .serializers import (KindergartenListSerializer, ActivatedReviewSerializer, ReviewSerializer, KindergartenDetailSerializer, 
-ReviewCreateSerializer)
+ReviewCreateSerializer, KindergartenImageSerializer)
 
 # data analysis
 import pandas as pd
@@ -467,5 +467,19 @@ def WishList(request, kindergarten_pk):
         # 가중치 더하기
         weight.weight += 5
         weight.save()
-    return Response(status=200)
+    return Response(status=status.HTTP_200_OK)
 
+@permission_classes([IsAuthenticated, IsAdminUser])
+@api_view(['POST'])
+def kindergarten_image(request, kindergarten_pk):
+    """
+    어린이집 이미지 업로드
+
+    ## 어린이집 이미지 업로드
+    ### 관리자만 수행할 수 있습니다.
+    """
+    kindergarten = get_object_or_404(Kindergarten, pk=kindergarten_pk)
+    serializer = KindergartenImageSerializer(kindergarten, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+    return Response(status=status.HTTP_201_CREATED)
