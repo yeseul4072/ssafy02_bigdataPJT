@@ -92,7 +92,7 @@ class KindergartenListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kindergarten
-        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'grade', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
+        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'grade', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features', 'image']
 
 
 class KindergartenDetailSerializer(KindergartenListSerializer):
@@ -107,7 +107,12 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
         'area_per_cctv', 'age_by_class_columns', 'age_by_class_info', 'staff_columns', 'staff_info', 'continuous_columns', 'continuous_info', 'child_per_staff', 'fee_columns', 'fee_info', 'other_fee_columns', 'other_fee_info', 'special_activity_columns', 'special_activity_info',
         'monthly_fee', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'poisoning_columns', 'poisoning_info', 'air_quality_columns', 'air_quality_info', 'disinfection_columns', 'disinfection_info', 'water_quality_columns', 'water_quality_info',
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
-        
+
+class KindergartenImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    class Meta:
+        model = Kindergarten
+        fields = ['image']
 
 class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
@@ -153,7 +158,7 @@ class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
             return 0
     class Meta:
         model = Kindergarten
-        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg']
+        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image']
 
 
 class ActivatedReviewSerializer(serializers.ModelSerializer):
