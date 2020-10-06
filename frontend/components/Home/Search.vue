@@ -18,6 +18,7 @@
         <v-overflow-btn
           v-model="selectedGugun"
           :items="gugun"
+          :disabled="(selectedSi=='')?true:false"
           label="시/군/구"
         />
       </div>
@@ -25,6 +26,7 @@
         <v-overflow-btn
           v-model="selectedDong"
           :items="dong"
+          :disabled="(selectedGugun=='')?true:false"
           label="읍/면/동"
         />
       </div>
@@ -34,7 +36,7 @@
           class="mx-2"
           fab
           dark
-          color="#FA5882"
+          color="#0CC476"
           style="margin:0px !important;"
           @click="searchValidation"
         >
@@ -46,7 +48,7 @@
           class="mx-2"
           fab
           dark
-          color="#FA5882"
+          color="#0CC476"
           style="margin:0px !important;"
           @click="openMap"
         >
@@ -99,13 +101,13 @@
     <v-dialog v-model="isMap">
       <v-card>
         <!-- kakao map -->
-        <map-view />
+        <map-view @setLat="setLat" @setLng="setLng" />
         <v-card-actions>
           <v-spacer />
           <v-btn color="error darken-1" @click="isMap = false">
             취소
           </v-btn>
-          <v-btn color="primary darken-1" @click="isMap = false">
+          <v-btn color="primary darken-1" @click="mapSearch">
             검색
           </v-btn>
         </v-card-actions>
@@ -114,8 +116,12 @@
   </div>
 </template>
 
+<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>
 <script>
 import MapView from '@/components/Home/Map.vue'
+import http from '@/util/http_common.js'
+
 export default {
   components: {
     MapView
@@ -123,22 +129,38 @@ export default {
   data () {
     return {
       si: ['서울특별시'],
-      gugun: ['강남구', '강동구', '강북구', '강서구'],
-      dong: ['개포1동', '개포2동', '개포4동', '논현1동', '논현2동'],
-      selectedSi: '',
+      gugun: [],
+      dong: [],
+      selectedSi: '서울특별시',
       selectedGugun: '',
       selectedDong: '',
-      kinderName: '',
-      isLoading: false,
-      items: ['대봉어린이집', '기념어린이집', '우리어린이집', ''],
+      gugunList: [],
+      dongList: [],
       err: false,
       errMessage: "'시/도'를 선택해 주세요.",
       isMap: false,
       map: null,
       mapOption: '',
       mapContainer: '',
-      geocoder: ''
+      geocoder: '',
+      lat: 0,
+      lng: 0,
     }
+  },
+  watch: {
+    selectedGugun (val) {
+      for (const i in this.gugunList) {
+        if (this.gugunList[i].name === val) {
+          this.selectedDong = ''
+          this.dong = []
+          this.getDong(this.gugunList[i].id)
+          break
+        }
+      }
+    }
+  },
+  created () {
+    this.getGuGun()
   },
   methods: {
     searchValidation () {
@@ -153,12 +175,64 @@ export default {
         this.errMessage = "'읍/면/동'을 선택해 주세요."
       } else {
         this.errMessage = ''
+        this.getLatLNG()
       }
     },
     openMap () {
       this.isMap = true
-    }
+    },
+    getGuGun () {
+      http.axios.get('/kindergartens/boroughs/')
+        .then(({ data }) => {
+          for (const i in data) {
+            this.gugun.push(data[i].name)
+          }
+          this.gugunList = data
+        })
+    },
+    getDong (id) {
+      http.axios.get(`/kindergartens/boroughs/${id}/`)
+        .then(({ data }) => {
+          for (const i in data) {
+            this.dong.push(data[i].name)
+          }
+          this.dongList = data
+        })
+    },
+    getLatLNG () {
+      var setAddress = this.setAddress;
+      const geocoder = new kakao.maps.services.Geocoder()
 
+      const callback = function (result, status) {
+        console.log(result)
+        if (status === kakao.maps.services.Status.OK) {
+          setAddress(result[0].x, result[0].y)
+        }
+      }
+      geocoder.addressSearch(this.selectedSi+" "+this.selectedGugun+" "+this.selectedDong, callback)
+    },
+    setAddress(lng, lat) {
+      this.lng = lng
+      this.lat = lat
+      console.log(lng,lat, "!!!")
+      this.$router.push({
+          path: '/searchkind',
+          query: {
+              "lng": this.lng,
+              "lat": this.lat
+          }
+      });
+    },
+    setLng(lng){
+      this.lng = lng
+    },
+    setLat(lat){
+      this.lat = lat
+    },
+    mapSearch(){
+      this.isMap = false
+      this.setAddress(this.lng, this.lat)
+    }
   }
 
 }

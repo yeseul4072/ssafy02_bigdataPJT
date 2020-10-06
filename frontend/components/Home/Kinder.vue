@@ -20,7 +20,7 @@
             fab
             dark
             x-small
-            color="#f7d64d"
+            color="#0CC476"
             style="pointer-events: none !important;"
           >
             <v-icon>
@@ -37,11 +37,11 @@
                   <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.left.url)" @click="linkKinder(kinder.left.id)" />
                 </v-row>
                 <v-row align="center">
-                  <span class="mt-4 mb-1" style="font-size:1.8vw;font-wight:800;padding-left:6px">
+                  <span class="mt-4 mb-1" style="font-size:1.5vw;font-wight:800;padding-left:6px">
                     {{ kinder.left.organization_name }}
                   </span>
                   &nbsp;&nbsp;
-                  <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
+                  <span style="font-size:0.8vw;padding-left:6px;margin-top:15px;">
                     <i style="color:orange" class="fas fa-star" />
                     <span style="font-size:1.1vw;font-weight:800;">{{ kinder.left.score_avg.toFixed(1) }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
@@ -56,12 +56,12 @@
                     v-for="(tag, i) in kinder.left.tags"
                     :key="i"
                     class="ma-1"
-                    color="#ff9800"
+                    color="success"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="#ff9800" left>
+                    <v-icon color="success" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}
@@ -77,11 +77,11 @@
                   <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.right.url)" @click="linkKinder(kinder.right.id)" />
                 </v-row>
                 <v-row align="center">
-                  <span style="font-size:1.8vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
+                  <span style="font-size:1.5vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
                     {{ kinder.right.organization_name }}
                   </span>
                   &nbsp;&nbsp;
-                  <span style="font-size:0.8vw;padding-left:6px;margin-top:27px;">
+                  <span style="font-size:0.8vw;padding-left:6px;margin-top:15px;">
                     <i style="color:orange" class="fas fa-star" />
                     <span style="font-size:1.1vw;font-weight:800;">{{ kinder.right.score_avg.toFixed(1) }}</span>
                     <i style="color:#DEDEDE" class="fas fas fa-ellipsis-v" />
@@ -96,12 +96,12 @@
                     v-for="(tag, i) in kinder.right.tags"
                     :key="i"
                     class="ma-1"
-                    color="#ff9800"
+                    color="green"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="#ff9800" left>
+                    <v-icon color="green" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}

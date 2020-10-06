@@ -264,7 +264,6 @@
     <v-dialog v-model="dialog" width="960" height="600">
       <!-- <div style="width:100%; height:100%;"> -->
       <search-map
-        v-if="lat!=0"
         :items="items"
         :lat="lat"
         :lng="lng"
@@ -402,8 +401,9 @@ export default {
   },
   mounted () {
     // console.log(this.$route)
-    this.lat = this.$route.params.lat
-    this.lat = this.$route.params.lng
+    this.lat = this.$route.query.lat
+    this.lng = this.$route.query.lng
+    console.log(this.$route)
     this.getKindergartenList()
   },
   methods: {
