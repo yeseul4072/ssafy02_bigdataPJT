@@ -40,7 +40,6 @@ export default {
   },
   props: ['review'],
   mounted () {
-    console.log(this.review)
   }
 }
 </script>
