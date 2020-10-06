@@ -1,7 +1,7 @@
 export default ({
-  state: () => ({
-    token: ''
-  }),
+  state: {
+    token: sessionStorage.getItem('token')
+  },
   getters: {
     getToken (state) {
       return state.token
@@ -10,6 +10,7 @@ export default ({
   mutations: {
     setToken (state, payload) {
       state.token = payload
+      sessionStorage.setItem('token', payload)
     }
   },
   actions: {

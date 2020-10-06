@@ -14,7 +14,7 @@
           </v-col>
           <v-col cols="12" align="center">
             <v-rating
-              :value="4.5"
+              :value="(rateDirector+rateTeacher+rateEnv)/3"
               color="orange"
               background-color="orange lighten-3"
               dense
@@ -23,7 +23,7 @@
               size="1.5vw"
               style="display:inline-block;"
             />
-            <span style="font-size:1.2vw;font-weight:800;">4.5</span>
+            <span style="font-size:1.2vw;font-weight:800;">{{ ((rateDirector+rateTeacher+rateEnv)/3).toFixed(1) }}</span>
           </v-col>
           <v-col cols="12" align="center" class="py-0">
             <v-row class="py-0">
@@ -32,12 +32,12 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="5"
+                  v-model="rateDirector"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
+                  hover
                   half-increments
-                  readonly
                   size="1.0vw"
                   style="display:inline-block;"
                 />
@@ -51,12 +51,12 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="4.5"
+                  v-model="rateTeacher"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
+                  hover
                   half-increments
-                  readonly
                   size="1.0vw"
                   style="display:inline-block;"
                 />
@@ -70,17 +70,21 @@
               </v-col>
               <v-col cols="8" class="py-0">
                 <v-rating
-                  :value="4"
+                  v-model="rateEnv"
                   color="orange"
                   background-color="orange lighten-3"
                   dense
+                  hover
                   half-increments
-                  readonly
                   size="1.0vw"
                   style="display:inline-block;"
                 />
               </v-col>
             </v-row>
+          </v-col>
+          <v-col cols="12" align="center" class="py-0">
+            <span style="font-size:0.8vw;color:#bababa;">* 항목별 별을 눌러 평점을 주세요</sapn>
+            </span>
           </v-col>
         </v-row>
       </v-col>
@@ -89,62 +93,48 @@
           <v-row style="padding-left:16px;font-size:2vh;font-weight:800;width:100%;">
             <v-col>
               <v-row>
-                <div class="px-3">
-                  "{{ review.title }}"
-                </div>
-              </v-row>
-              <v-row class="pl-4" style="font-size:1.5vh;width:100%;">
-                <div style="display:inline-block" class="pr-3">
-                  unseng@gmail.com
-                </div>
-                <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
-                <div style="display:inline-block" class="px-3">
-                  {{ '2020.09.25' | diffDate }}
-                </div>
+                <v-text-field
+                  v-model="title"
+                  class="px-3"
+                  :rules="rules.require"
+                  label="제목을 입력하세요"
+                  required
+                />
               </v-row>
             </v-col>
-            <v-col class="pr-7" style="text-align:right;">
+          </v-row>
+
+          <v-card-text style="overflow:hidden;">
+            <!-- https://www.npmjs.com/package/vue-line-clamp -->
+            <v-textarea
+              v-model="pros"
+              color="teal"
+              :rules="rules.text"
+              label="장점"
+            />
+          </v-card-text>
+          <v-divider />
+          <v-card-text style="overflow:hidden;">
+            <v-textarea
+              v-model="cons"
+              color="#ffabf0"
+              :rules="rules.text"
+              label="단점"
+            />
+            <div style="text-align:center; color:red;">
+              {{ msg }}
+            </div>
+            <div style="text-align:right;">
               <v-btn
                 rounded
                 outlined
                 color="rgb(236, 236, 236)"
                 dark
+                @click="writeReview"
               >
-                <v-icon
-                  class="mr-2"
-                  color="rgb(143, 143, 143)"
-                  dark
-                  style="font-size:20px;"
-                >
-                  mdi-thumb-up-outline
-                </v-icon>
-                <span
-                  style="color:#212121;"
-                >
-                  0
-                </span>
+                <span style="color:orange;">작성</span>
               </v-btn>
-            </v-col>
-          </v-row>
-          <v-card-title class="px-4 pt-2 pb-1">
-            <v-chip class="success white--text">
-              장점
-            </v-chip>
-          </v-card-title>
-
-          <v-card-text style="overflow:hidden;">
-            <!-- https://www.npmjs.com/package/vue-line-clamp -->
-            <div v-html="review.pros.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
-          </v-card-text>
-          <v-divider />
-          <v-card-title class="px-4 pt-2 pb-1">
-            <v-chip class="pink white--text">
-              단점
-            </v-chip>
-          </v-card-title>
-
-          <v-card-text style="overflow:hidden;">
-            <div v-html="review.cons.replace(/(?:\r\n|\r|\n)/g, '<br />')" />
+            </div>
           </v-card-text>
         </v-row>
       </v-col>
@@ -176,9 +166,32 @@ export default {
       return `by ${val}`
     }
   },
-  props: ['review'],
   data () {
     return {
+      rateDirector: 0,
+      rateTeacher: 0,
+      rateEnv: 0,
+      title: '',
+      pros: '',
+      cons: '',
+      rules: {
+        require: [val => (val || '').length > 0 || '입력이 필요합니다.'],
+        text: [val => (val || '').length > 9 || '10자이상 입력이 필요합니다.']
+      },
+      msg: ''
+    }
+  },
+  methods: {
+    writeReview () {
+      let msg = ''
+      if (this.rateDirector === 0 || this.rateTeacher === 0 || this.rateEnv === 0) { msg = '별점을 입력해주세요.' }
+      if (this.title.length <= 0 || this.pros.length <= 9 || this.cons.length <= 9) { msg += ' 올바른 형식으로 입력해주세요.' }
+      if (msg !== '') {
+        this.msg = msg
+      } else {
+        this.msg = ''
+        // 통신
+      }
     }
   }
 }

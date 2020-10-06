@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  props: ['lat', 'lng'],
   data () {
     return {
       kakao_API: 'dff523ff715cfa66c3e0461e1f477834',
@@ -19,9 +20,11 @@ export default {
       this.isMap = true
     },
     initMap () {
+      const lat = this.lat
+      const lng = this.lng
       setTimeout(function () {
         const container = document.getElementById('map')
-        const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
+        const options = { center: new kakao.maps.LatLng(lat, lng), level: 3 }
         const map = new kakao.maps.Map(container, options)
         // 컨트롤러 생성
         const mapTypeControl = new kakao.maps.MapTypeControl()
