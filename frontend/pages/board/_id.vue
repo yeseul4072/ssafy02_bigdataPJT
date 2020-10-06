@@ -207,11 +207,27 @@
             :key="index"
             class="px-8 py-1"
           >
-            <Review :review="item" />
+            <Review :review="item" :profile="profile" @delete-comment="deleteComment" />
           </div>
         </div>
       </v-card>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ warningText }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -280,7 +296,9 @@ export default {
         kindergarten_id: 0,
         groups: [],
         user_permissions: []
-      }
+      },
+      snackbar: false,
+      warningText: '댓글란은 비어있을 수 없습니다.'
     }
   },
   mounted () {
@@ -301,25 +319,41 @@ export default {
         })
     },
     writeComment () {
-      http.axios.post(`/community/${this.boardId}/article/${this.articleId}/`, {
-        content: this.text
-      }).then(({ data }) => {
-        http.axios.get(`/community/${this.boardId}/article/${this.articleId}/`)
-          .then(({ data }) => {
-            this.boardId = data.board_id
-            this.boardTitle = data.board_name
-            this.commentCount = data.comment_count
-            this.comments = data.comments.reverse()
-            this.articleId = data.id
-            this.likeCount = data.like_count
-            this.likeYn = data.like_yn
-            this.user = data.user
-            this.varticleTitle = data.title
-            this.articleContent = data.content
-            this.created = data.created_at
-            this.text = ''
-          })
-      })
+      if (this.text === '') {
+        this.warningText = '댓글란은 비어있을 수 없습니다.'
+        this.snackbar = true
+      } else {
+        http.axios.post(`/community/${this.boardId}/article/${this.articleId}/`, {
+          content: this.text
+        }).then(({ data }) => {
+          this.reset()
+        })
+      }
+    },
+    deleteComment (id) {
+      http.axios.delete(`/community/${this.boardId}/article/${this.articleId}/comment/${id}/`)
+        .then(({ data }) => {
+          this.warningText = '댓글이 삭제 되었습니다.'
+          this.snackbar = true
+          this.reset()
+        })
+    },
+    reset () {
+      http.axios.get(`/community/${this.boardId}/article/${this.articleId}/`)
+        .then(({ data }) => {
+          this.boardId = data.board_id
+          this.boardTitle = data.board_name
+          this.commentCount = data.comment_count
+          this.comments = data.comments.reverse()
+          this.articleId = data.id
+          this.likeCount = data.like_count
+          this.likeYn = data.like_yn
+          this.user = data.user
+          this.varticleTitle = data.title
+          this.articleContent = data.content
+          this.created = data.created_at
+          this.text = ''
+        })
     }
   }
 }

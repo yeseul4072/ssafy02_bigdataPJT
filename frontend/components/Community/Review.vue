@@ -9,6 +9,16 @@
       <v-list-item-content>
         <v-list-item-title>{{ review.user.nickname }}</v-list-item-title>
       </v-list-item-content>
+      <v-list-item-action v-if="review.user.id == profile.id">
+        <v-btn
+          depressed
+          small
+          color="error"
+          @click="deleteComment(review.id)"
+        >
+          삭제
+        </v-btn>
+      </v-list-item-action>
     </v-list-item>
     <v-list-item>
       <v-list-item-content>
@@ -38,8 +48,18 @@ export default {
       return parseInt(diff / 365) + '년 전'
     }
   },
-  props: ['review'],
+  props: ['review', 'profile'],
+  data () {
+    return {
+      snackbar: false
+    }
+  },
   mounted () {
+  },
+  methods: {
+    deleteComment (id) {
+      this.$emit('delete-comment', id)
+    }
   }
 }
 </script>

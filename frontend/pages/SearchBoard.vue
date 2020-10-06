@@ -95,7 +95,74 @@
                 </v-row>
                 <v-row align="start" justify="center">
                   <div style="font-size:20px; margin-bottom:20px;">
-                    게시글이 존재하지 않습니다 :(
+                    게시판이 존재하지 않습니다 :(<br>
+                    여러분이 한번 만들어보세요!
+                    <v-dialog
+                      v-model="dialog"
+                      persistent
+                      max-width="350"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          class="cm-bc-icon"
+                          depressed
+                          fab
+                          dark
+                          x-small
+                          color="success"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          <v-icon>
+                            mdi-pencil
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">
+                          게시판 만들기
+                        </v-card-title>
+                        <v-card-text>
+                          <div>
+                            게시판이 없나요? 그렇다면 여러분이 원하는 게시판을 만들어보세요!
+                          </div>
+                          <div class="mt-5">
+                            <v-text-field
+                              v-model="title"
+                              class="pa-0"
+                              :rules="rules"
+                              hide-details="auto"
+                              label="이름"
+                            />
+                          </div>
+                          <div class="mt-5">
+                            <v-text-field
+                              v-model="content"
+                              class="pa-0"
+                              hide-details="auto"
+                              label="간단한 설명"
+                            />
+                          </div>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer />
+                          <v-btn
+                            color="red darken-1"
+                            text
+                            @click="dialog = false"
+                          >
+                            취소
+                          </v-btn>
+                          <v-btn
+                            color="green darken-1"
+                            text
+                            @click="dialog = false; createBoard()"
+                          >
+                            만들기
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </div>
                 </v-row>
               </v-col>
@@ -138,7 +205,13 @@ export default {
           id: 0,
           title: ''
         }
-      ]
+      ],
+      dialog: false,
+      rules: [
+        value => !!value || '필수로 입력해야합니다.'
+      ],
+      title: '',
+      content: ''
     }
   },
   watch: {
@@ -174,6 +247,15 @@ export default {
             this.pageCnt = parseInt((data.count - 1) / this.itemsPerPage + 1)
           })
       }
+    },
+    createBoard () {
+      http.axios.post('/community/', {
+        title: this.title,
+        content: this.content
+      })
+        .then(({ data }) => {
+          this.goSearch()
+        })
     }
   }
 }
