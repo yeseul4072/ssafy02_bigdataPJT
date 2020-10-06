@@ -83,7 +83,7 @@
             </v-row>
           </v-col>
           <v-col cols="12" align="center" class="py-0">
-            <span style="font-size:0.8vw;color:#bababa;">* 항목별 별을 눌러 평점을 주세요</sapn>
+            <span style="font-size:0.8vw;color:#4f4f4f;">* 항목별 별을 눌러 평점을 주세요</sapn>
             </span>
           </v-col>
         </v-row>
@@ -145,6 +145,8 @@
 </template>
 
 <script>
+import http from '@/util/http_common.js'
+
 export default {
   filters: {
     diffDate (val) {
@@ -190,7 +192,17 @@ export default {
         this.msg = msg
       } else {
         this.msg = ''
-        // 통신
+
+        http.axios.post(`/kindergartens/${this.$route.params.id}/reviews/`, {
+          title: this.title,
+          score_teacher: this.rateTeacher,
+          score_director: this.rateDirector,
+          score_environment: this.rateEnv,
+          pros: this.pros,
+          cons: this.cons
+        }).then(({ data }) => {
+          this.$emit('close-write')
+        })
       }
     }
   }
