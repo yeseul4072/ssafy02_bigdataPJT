@@ -90,7 +90,7 @@ class KindergartenListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kindergarten
-        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
+        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'grade', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
 
 
 class KindergartenDetailSerializer(KindergartenListSerializer):
@@ -108,8 +108,55 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
         
 
+class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
+    features = serializers.SerializerMethodField()
+    score_avg = serializers.SerializerMethodField()
+    def get_features(self, obj):
+        features = {
+            'school_bus': obj.school_bus,
+            'general': obj.general,
+            'infants': obj.infants,
+            'disabled': obj.disabled,
+            'disabled_integration': obj.disabled_integration,
+            'after_school': obj.after_school,
+            'after_school_inclusion': obj.after_school_inclusion,
+            'extension': obj.extension,
+            'holiday': obj.holiday,
+            'all_day': obj.all_day,
+            'part_time': obj.part_time, 
+            'office': obj.office, 
+            'public': obj.public, 
+            'private': obj.private, 
+            'family': obj.family, 
+            'corporate': obj.corporate, 
+            'cooperation': obj.cooperation, 
+            'welfare': obj.welfare, 
+            'has_extension_class': obj.has_extension_class, 
+            'language': obj.language, 
+            'culture': obj.culture, 
+            'sport': obj.sport, 
+            'science': obj.science, 
+            'has_extension_class': obj.has_extension_class, 
+            'extension': obj.extension
+        }
+        return features
+
+    def get_score_avg(self, obj):
+        if obj.review_set.all().exists():
+            count_all = obj.review_set.count() * 3
+            scores_teacher = obj.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+            scores_director = obj.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+            scores_environment = obj.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+            return (scores_teacher + scores_director + scores_environment) / count_all
+        else:
+            return 0
+    class Meta:
+        model = Kindergarten
+        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg']
+
+
 class ActivatedReviewSerializer(serializers.ModelSerializer):
-    kindergarten = KindergartenListSerializer()
+    kindergarten = ActivatedReviewKindergartenSerializer()
     avg_score = serializers.SerializerMethodField()
 
     def get_avg_score(self, obj):
@@ -141,3 +188,17 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         exclude = ['like_users', 'kindergarten']
+
+
+class ReviewCreateKindergarten(serializers.ModelSerializer):
+    class Meta:
+        model = Kindergarten
+        fields = '__all__'
+
+
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
+    kindergarten = ReviewCreateKindergarten(required=False)
+    class Meta:
+        model = Review
+        fields = ['kindergarten', 'title', 'user', 'score_teacher', 'score_director', 'score_environment', 'pros', 'cons']

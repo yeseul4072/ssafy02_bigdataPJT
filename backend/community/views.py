@@ -148,6 +148,7 @@ class BoardDetail(APIView):
         board.delete()
         return Response()
 
+
 @swagger_auto_schema(
     method='get',
     responses={200: ArticleSerializer(many=True)}
