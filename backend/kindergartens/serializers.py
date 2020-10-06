@@ -164,19 +164,21 @@ class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
 class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = ActivatedReviewKindergartenSerializer()
     avg_score = serializers.SerializerMethodField()
+    user = UserListSerializer(required=False)
 
     def get_avg_score(self, obj):
         return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
 
     class Meta:
         model = Review
-        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten']
+        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     like_yn = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
     avg_score = serializers.SerializerMethodField()
+    user = UserListSerializer(required=False)
 
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
