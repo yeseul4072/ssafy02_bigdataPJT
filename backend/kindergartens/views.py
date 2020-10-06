@@ -1,3 +1,7 @@
+#python
+from collections import OrderedDict
+from itertools import repeat
+
 # django
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
@@ -386,7 +390,7 @@ class Kindergartens(APIView):
             kindergarten_df = df.set_index('id')
             # print(kindergarten_df)
             # 유저-어린이집 가중치 행렬 
-            weights = Weight.objects.filter(kindergarten_id__in=near_kindergartens_id)
+            weights = Weight.objects.filter(Q(kindergarten_id__in=near_kindergartens_id) | Q(user=request.user))
             near_users_id = []
             User = get_user_model()
             for weight in weights:
@@ -401,12 +405,20 @@ class Kindergartens(APIView):
             preference_df = recommend.get_preference(kindergarten_df, user_df)
             contents_recommend = recommend.recommend(kindergarten_df, preference_df, 1000)
             user_df_collabo = users_weight.loc[[request.user.id],:]
+            # print(contents_recommend)
             collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df_collabo, 1000)
+            # print(collabo_recommend)
             recommend_kindergartens_id = collabo_recommend + list(contents_recommend)
+            recommend_kindergartens_id = list(OrderedDict(zip(recommend_kindergartens_id, repeat(None))))   
+            # print(recommend_kindergartens_id)
+            
             # 추천 어린이집
-            recommend_kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id)
-            serializer_recommend = KindergartenListSerializer(recommend_kindergartens, context={'request': request}, many=True)
-        
+            # kindergartens = []
+            # for id in recommend_kindergartens_id:
+            #     kindergartens.append(Kindergarten.objects.get(id=id))
+            ordering = f'FIELD(`id`, {",".join(recommend_kindergartens_id)})'
+            kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
+            serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
             return Response(serializer_recommend.data)
         # 로그인하지 않았거나, 활동하지 않은 경우 => 가까운 어린이집 
         else:
