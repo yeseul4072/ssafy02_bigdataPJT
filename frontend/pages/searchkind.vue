@@ -403,7 +403,7 @@ export default {
   mounted () {
     // console.log(this.$route)
     this.lat = this.$route.params.lat
-    this.lat = this.$route.params.lng
+    this.lng = this.$route.params.lng
     this.getKindergartenList()
   },
   methods: {
