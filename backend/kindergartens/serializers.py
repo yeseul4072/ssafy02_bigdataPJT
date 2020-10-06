@@ -72,17 +72,25 @@ class KindergartenListSerializer(serializers.ModelSerializer):
 
     def get_distance(self, obj):
         request = self.context.get('request', None)
-        if request:
-            lat = request.query_params.get('lat', None)
-            lng = request.query_params.get('lng', None)
-            if lat and lng:
-                position = (float(lat), float(lng))
-                return haversine(position, (obj.lat, obj.lng))
+        lat = request.query_params.get('lat', None)
+        lng = request.query_params.get('lng', None)
+        # 검색 어린이집 조회
+        if lat and lng:
+            position = (float(lat), float(lng))
+            return haversine(position, (obj.lat, obj.lng))
+        else:
+            # 메인 어린이집 추천 
+            try:
+                user_lat = request.user.latitude
+                user_lng = request.user.longitude
+                return haversine((user_lat, user_lng), (obj.lat, obj.lng))
+            except:
+                return 0
         return 0
 
     class Meta:
         model = Kindergarten
-        fields = ['lat', 'lng', 'address', 'organization_name', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
+        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
 
 
 class KindergartenDetailSerializer(KindergartenListSerializer):
@@ -114,6 +122,7 @@ class ActivatedReviewSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     like_yn = serializers.SerializerMethodField()
+    like_count = serializers.SerializerMethodField()
     avg_score = serializers.SerializerMethodField()
 
     def get_like_yn(self, obj):
@@ -126,6 +135,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     def get_avg_score(self, obj):
         return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
 
+    def get_like_count(self, obj):
+        return obj.like_users.count()
+    
     class Meta:
         model = Review
         exclude = ['like_users', 'kindergarten']
