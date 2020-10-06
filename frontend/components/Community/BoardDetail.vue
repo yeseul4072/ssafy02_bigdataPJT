@@ -29,7 +29,7 @@
               align="start"
             >
               <span>
-                {{ article.user.username | filterWriter }}
+                {{ article.user.nickname | filterWriter }}
               </span>
               <span style="margin-left:10px;">
                 <v-icon class="vd-icon" color="blue">
@@ -39,7 +39,7 @@
                 <v-icon class="vd-icon" color="pink">
                   mdi-thumb-up-outline
                 </v-icon>
-                {{ article.like_users_count }}
+                {{ article.like_count }}
               </span>
               <span style="margin-left:10px;">
                 {{ article.created_at | diffDate }}
@@ -85,6 +85,8 @@ export default {
     return {
       line: 1
     }
+  },
+  mounted () {
   }
 }
 </script>

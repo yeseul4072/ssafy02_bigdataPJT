@@ -119,7 +119,7 @@ export default {
       count: 0,
       page: 1,
       pageCnt: 0,
-      itemsPerPage: 5,
+      itemsPerPage: 10,
       searchList: [
         {
           text: '게시판 제목',
@@ -144,10 +144,13 @@ export default {
   watch: {
     text () {
       this.goSearch()
+    },
+    page () {
+      this.goSearch()
     }
   },
   mounted () {
-    http.axios.get(`/community?page=${this.page}`)
+    http.axios.get(`/community/?page=${this.page}`)
       .then(({ data }) => {
         this.boardList = data.results
         this.count = data.count

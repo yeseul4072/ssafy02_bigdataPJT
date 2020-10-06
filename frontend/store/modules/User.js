@@ -1,7 +1,7 @@
 export default ({
-  state: () => ({
+  state: {
     isLogin: false
-  }),
+  },
   getters: {
     isLogin (state) {
       return state.isLogin

@@ -4,7 +4,12 @@
     <BannerImage />
     <!-- 리스트 내용물 -->
     <div>
-      <BoardComponent :board-type="index" :title="title" :articles="articles" />
+      <BoardComponent
+        :board="board"
+        :articles="articles"
+        @call-board="reBoard"
+        @call-articles="reArticles"
+      />
     </div>
   </div>
 </template>
@@ -18,11 +23,9 @@ export default {
   asyncData ({ params }) {
     return http.axios.get(`/community/${params.id}/article/`)
       .then(({ data }) => {
-        console.log(data)
         return {
-          index: 10,
-          title: '게시물 이름',
-          articles: data
+          board: data.board,
+          articles: data.articles
         }
       })
   },
@@ -38,7 +41,12 @@ export default {
 
   },
   methods: {
-
+    reBoard (value) {
+      this.board = value
+    },
+    reArticles (value) {
+      this.articles = value
+    }
   }
 }
 </script>

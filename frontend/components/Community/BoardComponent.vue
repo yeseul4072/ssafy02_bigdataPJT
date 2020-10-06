@@ -2,55 +2,66 @@
   <div class="board-component-body">
     <!-- 리스트 뿌리기 -->
     <div class="bc-list-body">
-      <div
-        v-if="articles.length > 0"
-      >
-        <!-- 상단 title -->
-        <div class="divider">
-          <v-row
-            align="center"
-            class="cm-bc-t1"
+      <!-- 상단 title -->
+      <div class="divider">
+        <v-row
+          align="center"
+          class="cm-bc-t1"
+        >
+          <v-col
+            align="start"
+            class="pa-0"
           >
-            <v-col
-              align="start"
-              class="pa-0"
+            {{ board.title }}
+            <v-icon
+              v-if="!board.favorite_yn"
+              class="cm-bc-icon"
+              @click="bmBoard"
             >
-              {{ title }}
-              <v-icon
-                class="cm-bc-icon"
-              >
-                mdi-star-outline
+              mdi-star-outline
+            </v-icon>
+            <v-icon
+              v-else
+              class="cm-bc-icon"
+              color="yellow"
+              @click="bmBoard"
+            >
+              mdi-star
+            </v-icon>
+            <v-btn
+              class="cm-bc-icon"
+              depressed
+              fab
+              dark
+              x-small
+              color="success"
+              @click="goToWrite"
+            >
+              <v-icon>
+                mdi-pencil
               </v-icon>
-              <v-btn
-                class="cm-bc-icon"
-                depressed
-                fab
-                dark
-                x-small
-                color="success"
-              >
-                <v-icon>
-                  mdi-pencil
-                </v-icon>
-              </v-btn>
-            </v-col>
-            <v-col
-              class="pa-0"
-              md="5"
-              align="end"
-            >
-              <v-text-field
-                v-model="text"
-                outlined
-                dense
-                style="width:98%; padding-top:20px;"
-                label="검색"
-              />
-            </v-col>
-          </v-row>
-        </div>
+            </v-btn>
+          </v-col>
+          <v-col
+            class="pa-0"
+            md="5"
+            align="end"
+          >
+            <v-text-field
+              v-model="text"
+              outlined
+              dense
+              style="width:98%; padding-top:20px;"
+              label="검색"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div
+        v-if="articles.length != 0 && articles.results.length > 0"
+      >
         <v-data-iterator
-          :items="articles"
+          :items="articles.results"
           :items-per-page.sync="itemsPerPage"
           hide-default-footer="hide-default-footer"
           no-data-text="게시글이 존재하지 않습니다."
@@ -104,20 +115,52 @@
 </template>
 
 <script>
+import http from '@/util/http_common.js'
 import BoardDetail from '@/components/Community/BoardDetail.vue'
 export default {
   components: { BoardDetail },
-  props: ['boardType', 'title', 'articles'],
+  props: ['board', 'articles'],
   data () {
     return {
       page: 1,
-      pageCnt: 10,
-      itemsPerPage: 15
+      pageCnt: 0,
+      itemsPerPage: 10,
+      text: ''
     }
+  },
+  watch: {
+    text () {
+      http.axios.get(`/community/${this.board.id}/article?page=${this.page}&title=${this.text}`)
+        .then(({ data }) => {
+          this.pageCnt = parseInt((data.articles.count - 1) / this.itemsPerPage + 1)
+          this.$emit('call-board', data.board)
+          this.$emit('call-articles', data.articles)
+        })
+    },
+    page () {
+      http.axios.get(`/community/${this.board.id}/article?page=${this.page}&title=${this.text}`)
+        .then(({ data }) => {
+          this.pageCnt = parseInt((data.articles.count - 1) / this.itemsPerPage + 1)
+          this.$emit('call-board', data.board)
+          this.$emit('call-articles', data.articles)
+        })
+    }
+  },
+  mounted () {
+    this.pageCnt = parseInt((this.articles.count - 1) / this.itemsPerPage + 1)
   },
   methods: {
     goToBoardDetail (id) {
-      this.$router.push(`/board/${id}?title=${this.title}&id=1`)
+      this.$router.push(`/board/${this.board.id}?title=${this.board.title}&id=${id}`)
+    },
+    bmBoard () {
+      http.axios.post(`/community/${this.board.id}/favorite/`)
+        .then(({ data }) => {
+          this.board.favorite_yn = !this.board.favorite_yn
+        })
+    },
+    goToWrite () {
+      this.$router.push(`/board/write/${this.board.id}?title=${this.board.title}`)
     }
   }
 }
