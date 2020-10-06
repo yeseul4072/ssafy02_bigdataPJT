@@ -281,7 +281,7 @@ class ArticleDetail(APIView):
         - 게시글 list를 불러옵니다.
         - 게시판 id와 게시글 id 필요
         """
-        article = Article.objects.get(pk=article_pk)
+        article = get_object_or_404(Article, pk=article_pk)
         article.hit += 1
         article.save()
         serializer = ArticleDetailSerializer(article, context={'request': request})

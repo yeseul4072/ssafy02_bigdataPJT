@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Kindergarten, Weight, Review
+from .models import Kindergarten, Weight, Review, Borough, Village
 from accounts.serializers import UserSerializer, UserListSerializer
 from django.db.models import Avg, Sum
 from haversine import haversine
@@ -72,41 +72,47 @@ class KindergartenListSerializer(serializers.ModelSerializer):
 
     def get_distance(self, obj):
         request = self.context.get('request', None)
-        lat = request.query_params.get('lat', None)
-        lng = request.query_params.get('lng', None)
-        # 검색 어린이집 조회
-        if lat and lng:
-            position = (float(lat), float(lng))
-            return haversine(position, (obj.lat, obj.lng))
-        else:
-            # 메인 어린이집 추천 
-            try:
-                user_lat = request.user.latitude
-                user_lng = request.user.longitude
-                return haversine((user_lat, user_lng), (obj.lat, obj.lng))
-            except:
-                return 0
-        return 0
+        if request:
+            lat = request.query_params.get('lat', None)
+            lng = request.query_params.get('lng', None)
+            # 검색 어린이집 조회
+            if lat and lng:
+                position = (float(lat), float(lng))
+                return haversine(position, (obj.lat, obj.lng))
+            else:
+                # 메인 어린이집 추천 
+                try:
+                    user_lat = request.user.latitude
+                    user_lng = request.user.longitude
+                    return haversine((user_lat, user_lng), (obj.lat, obj.lng))
+                except:
+                    return 0
+            return 0
+        return 0    
 
     class Meta:
         model = Kindergarten
-        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'grade', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features']
+        fields = ['id', 'lat', 'lng', 'address', 'organization_name', 'grade', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'reviews_count', 'score_avg', 'distance', 'features', 'image']
 
 
 class KindergartenDetailSerializer(KindergartenListSerializer):
     wishlist_yn = serializers.SerializerMethodField()
     def get_wishlist_yn(self, obj):
         request = self.context.get('request', None)
-        if obj.wish_users.all():
-            if request.user.id in obj.wish_users.all():
-                return 1
+        if obj.wish_users.filter(id=request.user.id).exists():
+            return 1
         return 0
     class Meta(KindergartenListSerializer.Meta):
         fields = KindergartenListSerializer.Meta.fields + ['wishlist_yn', 'director_name', 'establishment_type', 'created_date', 'agency', 'tel', 'homepage', 'address', 'grade', 'score', 'area_columns', 'area_info', 'building_columns', 'building_info', 'cctv_columns', 'cctv_info', 
         'area_per_cctv', 'age_by_class_columns', 'age_by_class_info', 'staff_columns', 'staff_info', 'continuous_columns', 'continuous_info', 'child_per_staff', 'fee_columns', 'fee_info', 'other_fee_columns', 'other_fee_info', 'special_activity_columns', 'special_activity_info',
         'monthly_fee', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'poisoning_columns', 'poisoning_info', 'air_quality_columns', 'air_quality_info', 'disinfection_columns', 'disinfection_info', 'water_quality_columns', 'water_quality_info',
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
-        
+
+class KindergartenImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    class Meta:
+        model = Kindergarten
+        fields = ['image']
 
 class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
@@ -152,25 +158,27 @@ class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
             return 0
     class Meta:
         model = Kindergarten
-        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg']
+        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image']
 
 
 class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = ActivatedReviewKindergartenSerializer()
     avg_score = serializers.SerializerMethodField()
+    user = UserListSerializer(required=False)
 
     def get_avg_score(self, obj):
         return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
 
     class Meta:
         model = Review
-        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten']
+        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     like_yn = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
     avg_score = serializers.SerializerMethodField()
+    user = UserListSerializer(required=False)
 
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
@@ -202,3 +210,15 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['kindergarten', 'title', 'user', 'score_teacher', 'score_director', 'score_environment', 'pros', 'cons']
+
+
+class BoroughSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borough
+        fields = '__all__'
+
+
+class VillageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Village
+        fields = '__all__'

@@ -93,6 +93,7 @@ class Kindergarten(models.Model):
     program_by_age = models.TextField()
     cctv_grade = models.IntegerField()
     staff_grade = models.IntegerField()
+    image = models.ImageField(upload_to="kindergarten", null=True)
 
     weight_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Weight', related_name='weight_kindergartens')
     wish_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='wish_kindergartens')
@@ -109,14 +110,26 @@ class Review(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
     kindergarten = models.ForeignKey(Kindergarten, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
-    score_teacher = models.IntegerField()
-    score_director = models.IntegerField()
-    score_environment = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    score_teacher = models.FloatField()
+    score_director = models.FloatField()
+    score_environment = models.FloatField()
     pros = models.TextField()
     cons = models.TextField()
 
 
+class City(models.Model):
+    name = models.CharField(max_length=10)
+
+
+class Borough(models.Model):
+    name = models.CharField(max_length=20)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+
+class Village(models.Model):
+    name = models.CharField(max_length=20)
+    borough = models.ForeignKey(Borough, on_delete=models.CASCADE)
 
 
