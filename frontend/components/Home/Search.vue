@@ -31,28 +31,32 @@
         />
       </div>
 
-      <div style="padding-top: 10px;">
+      <div style="padding-top: 15px;">
         <v-btn
           class="mx-2"
           fab
+          small
           dark
+          depressed
           color="#0CC476"
           style="margin:0px !important;"
           @click="searchValidation"
         >
-          <v-icon>
+          <v-icon style="font-size:20px;">
             fas fa-search
           </v-icon>
         </v-btn>
         <v-btn
           class="mx-2"
+          small
           fab
           dark
+          depressed
           color="#0CC476"
           style="margin:0px !important;"
           @click="openMap"
         >
-          <v-icon>
+          <v-icon style="font-size:20px;">
             fas fa-map
           </v-icon>
         </v-btn>

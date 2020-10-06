@@ -1,3 +1,7 @@
+#python
+from collections import OrderedDict
+from itertools import repeat
+
 # django
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
@@ -83,7 +87,10 @@ class FBasedRecommend(APIView):
                 user_df = recommend.parse_user_data(user, near_kindergartens_id)
                 # 유저-어린이집feature 행렬
                 df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
-                kindergarten_df = df.set_index('id')
+                try:
+                    kindergarten_df = df.set_index('id')
+                except:
+                    return JsonResponse([], safe=False)
                 preference_df = recommend.get_preference(kindergarten_df, user_df)
                 # request 유저가 선호하는 feature 1, 2, 3위
                 preference_df = preference_df.transpose()
@@ -365,80 +372,125 @@ class Kindergartens(APIView):
 
         ## 검색 어린이집 리스트 조회
         - 검색 시 입력한 위치 반경 2km 내 어린이집을 조회합니다. 
+        - 추천 어린이집 
         """
         lat = float(request.GET.get('lat', None))
         lng = float(request.GET.get('lng', None))
-        # 반경 2km
+        position = (lat, lng)
+        
+        # 반경 5km
         condition1 = (
-            Q(lat__range = (lat - 0.01, lat + 0.01))
+            Q(lat__range = (lat - 0.025, lat + 0.025))
         )
         condition2 = (
-            Q(lng__range = (lng - 0.015, lng + 0.015))
+            Q(lng__range = (lng - 0.0375, lng + 0.0375))
         )
-        instance = Kindergarten.objects.filter(condition1 & condition2)
-        serializer = KindergartenListSerializer(instance, context={'request': request}, many=True)
-        return Response(serializer.data)
-
-
-
-class Recommend(APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def get(self, request):
-        """ 
-        추천 어린이집 조회 (수정 필요)
-
-        ## 추천 어린이집 조회
-        - 사용자 위치와 가중치 값을 이용해 추천된 어린이집을 조회합니다.
-        - 로그인한 사용자만 요청할 수 있습니다.
-        """
-        # request 유저 근처에 있는 어린이집id
-        latitude = request.user.latitude
-        longitude = request.user.longitude
-        user_position = (latitude, longitude)
-
-        near_kindergartens_id = []
-        for kindergarten in Kindergarten.objects.all():
-            if haversine(user_position, (kindergarten.lat, kindergarten.lng)) <= 5:
-                near_kindergartens_id.append(kindergarten.id)
-
-        # weight 테이블에 요청 유저 없는 경우(아무 활동도 하지 않은 경우) => 근처 어린이집 추천
-        if len(request.user.weight_kindergartens.all()):
+        near_kindergartens_id = Kindergarten.objects.filter(condition1 & condition2).values_list('id', flat=True)
+        # print(list(near_kindergartens_id))
+        if request.user.is_authenticated and len(request.user.weight_kindergartens.all()):
             # 어린이집-어린이집feature 행렬(근처)
-            df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
-            kindergarten_df = df.set_index('id')
-                            
-            # 추천 유저 주변에 사는 유저 목록 
+            df = pd.DataFrame(Kindergarten.objects.filter(condition1 & condition2).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
+            try:
+                kindergarten_df = df.set_index('id')
+            except:
+                return JsonResponse([], safe=False) 
+            # print(kindergarten_df)
+            # 유저-어린이집 가중치 행렬 
+            weights = Weight.objects.filter(Q(kindergarten_id__in=near_kindergartens_id) | Q(user=request.user))
             near_users_id = []
             User = get_user_model()
-            for q in Weight.objects.all():
-                user = User.objects.get(pk=q.user_id)
-                if haversine(user_position, (user.latitude, user.longitude)) <= 5 and q.kindergarten_id in near_kindergartens_id:
-                    near_users_id.append(q.id)
-            near_users = pd.DataFrame(Weight.objects.filter(id__in=near_users_id).values('user_id', 'kindergarten_id', 'weight'))
+            for weight in weights:
+                user = User.objects.get(pk=weight.user_id)
+                if haversine(position, (user.latitude, user.longitude)) <= 5:
+                    near_users_id.append(weight.id)
+            near_users = pd.DataFrame(Weight.objects.filter(Q(id__in=near_users_id) | Q(id=request.user.id)).values('user_id', 'kindergarten_id', 'weight'))
             # print(near_users)
-
-            # 유저-어린이집 가중치 행렬
             users_weight = recommend.parse_user_data(near_users, near_kindergartens_id)
-            # print(users_weight)
-            # 추천해줄 유저 행만 선택
-            user_df = users_weight.loc[request.user.id]
+            user_df = users_weight.loc[[request.user.id], :]
             # 유저-어린이집feature 행렬
             preference_df = recommend.get_preference(kindergarten_df, user_df)
-            print(preference_df)
-            # content-based 추천
-            contents_recommend = recommend.recommend(kindergarten_df, preference_df, 10)
-            # print(contents_recommend_df)
-            # collaborative 추천
-            user_df2 = users_weight.loc[[request.user.id],:]
-            collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df2, 10)
-
-            recommend_kindergartens = collabo_recommend + list(contents_recommend)
-            return Response(recommend_kindergartens[:10])
+            contents_recommend = recommend.recommend(kindergarten_df, preference_df, 1000)
+            user_df_collabo = users_weight.loc[[request.user.id],:]
+            # print(contents_recommend)
+            collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df_collabo, 1000)
+            # print(collabo_recommend)
+            recommend_kindergartens_id = collabo_recommend + list(contents_recommend)
+            recommend_kindergartens_id = list(OrderedDict(zip(recommend_kindergartens_id, repeat(None))))   
+            # print(recommend_kindergartens_id)
+            
+            # 추천 어린이집
+            # kindergartens = []
+            # for id in recommend_kindergartens_id:
+            #     kindergartens.append(Kindergarten.objects.get(id=id))
+            ordering = f'FIELD(`id`, {",".join(recommend_kindergartens_id)})'
+            kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
+            serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
+            return Response(serializer_recommend.data)
+                
+        # 로그인하지 않았거나, 활동하지 않은 경우 => 가까운 어린이집 
         else:
-            return Response(near_kindergartens_id)
+            instance = Kindergarten.objects.filter(condition1 & condition2)
+            serializer = KindergartenListSerializer(instance, context={'request': request}, many=True)
+            return Response(serializer.data)
+
+
+# class Recommend(APIView):
+
+
+#     def get(self, request):
+#         """ 
+#         추천 어린이집 조회 (수정 필요)
+
+#         ## 추천 어린이집 조회
+#         - 사용자 위치와 가중치 값을 이용해 추천된 어린이집을 조회합니다.
+#         - 로그인한 사용자만 요청할 수 있습니다.
+#         """
+#         # request 유저 근처에 있는 어린이집id
+#         latitude = request.user.latitude
+#         longitude = request.user.longitude
+#         user_position = (latitude, longitude)
+
+#         near_kindergartens_id = []
+#         for kindergarten in Kindergarten.objects.all():
+#             if haversine(user_position, (kindergarten.lat, kindergarten.lng)) <= 5:
+#                 near_kindergartens_id.append(kindergarten.id)
+
+#         # weight 테이블에 요청 유저 없는 경우(아무 활동도 하지 않은 경우) => 근처 어린이집 추천
+#         if len(request.user.weight_kindergartens.all()):
+#             # 어린이집-어린이집feature 행렬(근처)
+#             df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
+#             kindergarten_df = df.set_index('id')
+                            
+#             # 추천 유저 주변에 사는 유저 목록 
+#             near_users_id = []
+#             User = get_user_model()
+#             for q in Weight.objects.all():
+#                 user = User.objects.get(pk=q.user_id)
+#                 if haversine(user_position, (user.latitude, user.longitude)) <= 5 and q.kindergarten_id in near_kindergartens_id:
+#                     near_users_id.append(q.id)
+#             near_users = pd.DataFrame(Weight.objects.filter(id__in=near_users_id).values('user_id', 'kindergarten_id', 'weight'))
+#             # print(near_users)
+
+#             # 유저-어린이집 가중치 행렬
+#             users_weight = recommend.parse_user_data(near_users, near_kindergartens_id)
+#             # print(users_weight)
+#             # 추천해줄 유저 행만 선택
+#             user_df = users_weight.loc[request.user.id]
+#             print(user_df)
+#             # 유저-어린이집feature 행렬
+#             preference_df = recommend.get_preference(kindergarten_df, user_df)
+#             # print(preference_df)
+#             # content-based 추천
+#             contents_recommend = recommend.recommend(kindergarten_df, preference_df, 10)
+#             # print(contents_recommend_df)
+#             # collaborative 추천
+#             user_df2 = users_weight.loc[[request.user.id],:]
+#             collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df2, 10)
+
+#             recommend_kindergartens = collabo_recommend + list(contents_recommend)
+#             return Response(recommend_kindergartens[:10])
+#         else:
+#             return Response(near_kindergartens_id)
 
 """
 어린이집 찜

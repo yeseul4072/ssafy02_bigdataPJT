@@ -53,9 +53,9 @@ def parse_user_data(users, columns):
             try:
                 df.loc[id[0],id[1]] += users_sum.loc[id,][0]
             except:
-                print(id[1] in df.columns)
+                1
     except:
-        print()
+        1
     return df
 
 
@@ -174,9 +174,11 @@ def user_based_collaborative_filtering(users, user, n):
 """
     Test Code
 """
-# kindergarten_df = load_from_data('./data/data2.json')
+# kindergarten_df = load_from_data('../kindergartens/data.json')
 # users_data = [[1+(j == i) if j == i or j==i+1 else 0 for j in range(len(kindergarten_df))] for i in range(10)]
 # users_df = pd.DataFrame(users_data, columns=kindergarten_df.index)
+# print()
+# print(users_df)
 # preference_df = get_preference(kindergarten_df,users_df.iloc[0,:])
 # # print(kindergarten_df)
 # # print(preference_df)
