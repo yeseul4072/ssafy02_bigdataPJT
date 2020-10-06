@@ -271,7 +271,7 @@ class Articles(APIView):
 
 class ArticleDetail(APIView):
     
-    @swagger_auto_schema(responses={200: ArticleDetailSerializer})
+    @swagger_auto_schema(responses={200: ArticleDetailSerializer}) 
     def get(self, request, board_pk, article_pk):
         """
         게시글 상세 조회

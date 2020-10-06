@@ -41,10 +41,11 @@ class BoardDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'favorite_yn', 'article_count']
 
 
-class ArticleSerializer(serializers.ModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer): 
     user = UserListSerializer(required=False)
     like_count = serializers.SerializerMethodField()
     like_yn = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
         if request.user.is_authenticated: 
@@ -53,9 +54,11 @@ class ArticleSerializer(serializers.ModelSerializer):
         return 0
     def get_like_count(self, obj):
         return obj.like_users.count()
+    def get_comment_count(self, obj):
+        return obj.comment_set.count()
     class Meta:
         model = Article
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'user']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user']
         
 
 
@@ -74,7 +77,7 @@ class ArticleCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'content', 'created_at', 'updated_at', 'user']
 
 
-class ArticleDetailSerializer(serializers.ModelSerializer):
+class ArticleDetailSerializer(serializers.ModelSerializer): 
     board_id = serializers.IntegerField(source='board.id')
     board_name = serializers.CharField(source='board.title')
     user = UserListSerializer()

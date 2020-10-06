@@ -77,7 +77,7 @@ class FBasedRecommend(APIView):
         for kindergarten in Kindergarten.objects.all():
             if haversine(user_position, (kindergarten.lat, kindergarten.lng)) <= 5:
                 near_kindergartens_id.append(kindergarten.id)
-        
+
         if len(request.user.weight_kindergartens.all()):
             # 유저-어린이집 가중치 행렬
             user = pd.DataFrame(Weight.objects.filter(user=request.user, kindergarten_id__in=near_kindergartens_id).values('user_id', 'kindergarten_id', 'weight'))
@@ -85,8 +85,8 @@ class FBasedRecommend(APIView):
             # 유저-어린이집feature 행렬
             df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
             kindergarten_df = df.set_index('id')
-            print(kindergarten_df)
-            print(list(user_df.columns)==list(kindergarten_df.index))
+            # print(kindergarten_df)
+            # print(list(user_df.columns)==list(kindergarten_df.index))
             preference_df = recommend.get_preference(kindergarten_df, user_df)
             # request 유저가 선호하는 feature 1, 2, 3위
             preference_df = preference_df.transpose()
@@ -97,10 +97,10 @@ class FBasedRecommend(APIView):
             features = (list(features))
             f1 = features[0]
             f2 = features[1]
-            kindergartens1 = Kindergarten.objects.filter(**{f1: 1})[:6]
+            kindergartens1 = Kindergarten.objects.filter(**{f1: 1}, id__in=near_kindergartens_id).order_by('?')[:6]
             temp = [kindergarten['id'] for kindergarten in kindergartens1.values()]
-            kindergartens2 = Kindergarten.objects.filter(**{f2: 1}).exclude(id__in=temp)[:6]
-
+            kindergartens2 = Kindergarten.objects.filter(**{f2: 1}, id__in=near_kindergartens_id).exclude(id__in=temp).order_by('?')[:6]
+            
             data = []
             for k in kindergartens1:
                 if k.review_set.all().exists():
@@ -111,45 +111,54 @@ class FBasedRecommend(APIView):
                     score_avg = (scores_teacher + scores_director + scores_environment) / count_all
                 else:
                     score_avg = 0
+                # 유저-어린이집 거리
+                distance = haversine(user_position, (k.lat, k.lng))
+                
                 data.append({
+                    'id': k.id,
                     'feature': f1,
                     'lat': k.lat,
                     'lng': k.lng,
                     'organization_name': k.organization_name,
                     'reviews_count': k.review_set.count(),
                     'score_avg': score_avg,
+                    'distance': distance,
                     'features': {
                         'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
                         'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
                         'cooperation': k.cooperation, 'welfare': k.welfare, 'has_extension_class': k.has_extension_class, 'language': k.language, 'culture': k.culture, 'sport': k.sport, 'science': k.science, 'has_extension_class': k.has_extension_class, 'extension': k.extension
                     }
                 })
-            for kindergarten in kindergartens2:
-                if k.review_set.all().exists():
-                    count_all = k.review_set.count() * 3
-                    scores_teacher = k.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
-                    scores_director = k.review_set.aggregate(Sum('score_director')).get('score_director__sum')
-                    scores_environment = k.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
+            for k2 in kindergartens2:
+                if k2.review_set.all().exists():
+                    count_all = k2.review_set.count() * 3
+                    scores_teacher = k2.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
+                    scores_director = k2.review_set.aggregate(Sum('score_director')).get('score_director__sum')
+                    scores_environment = k2.review_set.aggregate(Sum('score_environment')).get('score_environment__sum')
                     score_avg = (scores_teacher + scores_director + scores_environment) / count_all
                 else:
                     score_avg = 0
+                # 유저-어린이집 거리
+                distance = haversine(user_position, (k2.lat, k2.lng))
                 data.append({
+                    'id': k2.id,
                     'feature': f2,
-                    'lat': kindergarten.lat,
-                    'lng': kindergarten.lng,
-                    'organization_name': kindergarten.organization_name,
-                    'reviews_count': kindergarten.review_set.count(),
+                    'lat': k2.lat,
+                    'lng': k2.lng,
+                    'organization_name': k2.organization_name,
+                    'reviews_count': k2.review_set.count(),
                     'score_avg': score_avg,
+                    'distance': distance,
                     'features': {
-                        'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
-                        'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
-                        'cooperation': k.cooperation, 'welfare': k.welfare, 'has_extension_class': k.has_extension_class, 'language': k.language, 'culture': k.culture, 'sport': k.sport, 'science': k.science, 'has_extension_class': k.has_extension_class, 'extension': k.extension
+                        'school_bus': k2.school_bus, 'general': k2.general , 'infants': k2.infants, 'disabled': k2.disabled, 'disabled_integration': k2.disabled_integration, 'after_school': k2.after_school, 'after_school_inclusion': k2.after_school_inclusion,
+                        'extension': k2.extension, 'holiday': k2.holiday, 'all_day': k2.all_day, 'part_time': k2.part_time, 'office': k2.office, 'public': k2.public, 'private': k2.private, 'family': k2.family, 'corporate': k2.corporate, 
+                        'cooperation': k2.cooperation, 'welfare': k2.welfare, 'has_extension_class': k2.has_extension_class, 'language': k2.language, 'culture': k2.culture, 'sport': k2.sport, 'science': k2.science, 'has_extension_class': k2.has_extension_class, 'extension': k2.extension
                     }
                 })
             return JsonResponse(data, safe=False)
         else:
             kindergartens = Kindergarten.objects.filter(id__in=near_kindergartens_id)[:12]
-            serializer = KindergartenListSerializer(kindergartens, many=True)
+            serializer = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
             return Response(serializer.data)
 
 
@@ -252,7 +261,7 @@ class Reviews(APIView):
             serializer = self.get_paginated_response(self.serializer_class(page, context={'request': request}, many=True).data)
         else:
             serializer = self.serializer_class(instance, context={'request': request}, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data) 
 
 """
 어린이집 리스트 페이지
