@@ -4,8 +4,9 @@ from rest_framework.decorators import api_view, permission_classes
 from django.http import HttpResponse
 # from spc_pjt.settings.base import Secrets, BASE_DIR
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserUpdateSerializer
 from rest_framework.response import Response
+from rest_framework import status
 import os
 import requests
 import json
@@ -47,6 +48,24 @@ def user_profile(request):
     user = get_object_or_404(User, id=request.user.id)
     serializer = UserSerializer(user)
     return Response(serializer.data)
+
+@swagger_auto_schema(method='put', request_body=UserUpdateSerializer, manual_parameters=[request_schemas.header], responses={200: UserUpdateSerializer},)
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def user_update(request):
+    """
+    유저 정보 변경
+
+    ## 유저 정보 변경
+    - 로그인 한 사용자만 요청할 수 있습니다.
+    - 닉네임, 주소(위도 경도 포함), 프로필사진을 바꿀 수 있습니다.
+    """
+    user = get_object_or_404(User, id=request.user.id)
+    serializer = UserUpdateSerializer(user, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return HttpResponse(status=400)
 
 # # 카카오 소셜로그인
 # kakao_secret = secrets.get_secret('KAKAO')
