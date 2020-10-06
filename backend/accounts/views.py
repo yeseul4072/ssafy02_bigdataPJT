@@ -7,6 +7,9 @@ from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, UserUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from .validators import CustomMinimumLengthValidator, CustomCommonPasswordValidator, CustomNumericPasswordValidator
+from django.core.validators import validate_email
+
 import os
 import requests
 import json
@@ -66,6 +69,77 @@ def user_update(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return HttpResponse(status=400)
+
+@swagger_auto_schema(method='get', manual_parameters=[request_schemas.password], responses={200: 'OK'},)
+@api_view(['GET'])
+def password_validate(request):
+    """
+    비밀번호 중복 체크
+
+    ## 비밀번호 중복 체크
+    - 사용 가능한 비밀번호인지 체크합니다.
+    - 사용 가능하면 200, 불가능하면 400 상태코드를 반환합니다.
+    """
+    password = request.GET.get('password')
+    if not CustomMinimumLengthValidator().validate(password): return HttpResponse('비밀번호가 너무 짧습니다. 최소한 8글자 이상의 비밀번호를 사용해야 합니다.', status=400)
+    if not CustomCommonPasswordValidator().validate(password): return HttpResponse('너무 일상적인 비밀번호입니다.', status=400)
+    if not CustomNumericPasswordValidator().validate(password): return HttpResponse('비밀번호가 모두 숫자로 이루어져 있습니다.', status=400)
+    return HttpResponse('적절한 비밀번호입니다.', status=200)
+    
+@swagger_auto_schema(method='get', manual_parameters=[request_schemas.username], responses={200: 'OK'},)
+@api_view(['GET'])
+def username_validate(request):
+    """
+    아이디 중복 체크
+
+    ## 아이디 중복 체크
+    - 사용 가능한 아이디인지 체크합니다.
+    - 사용 가능하면 200, 불가능하면 400 상태코드를 반환합니다.
+    """
+    username = request.GET.get('username')
+    try:
+        if User.objects.get(username=username):
+            return HttpResponse('이미 있는 아이디입니다.', status=400)
+    except:
+        return HttpResponse('사용할 수 있는 아이디입니다.', status=200)
+
+@swagger_auto_schema(method='get', manual_parameters=[request_schemas.nickname], responses={200: 'OK'},)
+@api_view(['GET'])
+def nickname_validate(request):
+    """
+    닉네임 중복 체크
+
+    ## 닉네임 중복 체크
+    - 사용 가능한 닉네임인지 체크합니다.
+    - 사용 가능하면 200, 불가능하면 400 상태코드를 반환합니다.
+    """
+    nickname = request.GET.get('nickname')
+    try:
+        if User.objects.get(nickname=nickname):
+            return HttpResponse('이미 있는 닉네임입니다.', status=400)
+    except:
+        return HttpResponse('사용할 수 있는 닉네임입니다.', status=200)
+
+@swagger_auto_schema(method='get', manual_parameters=[request_schemas.email], responses={200: 'OK'},)
+@api_view(['GET'])
+def email_validate(request):
+    """
+    이메일 중복 체크
+
+    ## 이메일 중복 체크
+    - 사용 가능한 이메일인지 체크합니다.
+    - 사용 가능하면 200, 불가능하면 400 상태코드를 반환합니다.
+    """
+    email = request.GET.get('email')
+    try:
+        validate_email(email)
+    except:
+        return HttpResponse('이메일 형식이 적절하지 않습니다.', status=400)
+    try:
+        if User.objects.get(email=email):
+            return HttpResponse('이미 있는 이메일입니다.', status=400)
+    except:
+        return HttpResponse('사용할 수 있는 이메일입니다.', status=200)
 
 # # 카카오 소셜로그인
 # kakao_secret = secrets.get_secret('KAKAO')
