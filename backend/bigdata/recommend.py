@@ -38,15 +38,26 @@ parse_user_data(columns, users)
             data: weight
         )
 """
-def parse_user_data(users, columns):            
-    user_list = set(users['user_id'])    
+def parse_user_data(users, columns):      
+    # print(users)      
+    try:
+        user_list = set(users['user_id'])    
+    except:
+        user_list = []
     df = pd.DataFrame(data=[[0]*len(columns) for i in range(len(user_list))], columns=columns, index=user_list)
 
-    users_sum = users.groupby(["user_id", "kindergarten_id"]).sum()    
-    for id in users_sum.index:
-        df.loc[id[0],id[1]] += users_sum.loc[id,][0]
+    try:
+        users_sum = users.groupby(["user_id", "kindergarten_id"]).sum()
+        # print(list(df.columns))  
+        for id in users_sum.index:
+            try:
+                df.loc[id[0],id[1]] += users_sum.loc[id,][0]
+            except:
+                print(id[1] in df.columns)
+    except:
+        print()
     return df
-    
+
 
 
 
@@ -79,9 +90,10 @@ get_preference(kindergarten_df, user_df):
 """
 def get_preference(kindergarten_df, user_df):
     data = [0] * len(kindergarten_df.keys())
-    for i,key in enumerate(kindergarten_df):
-        for j,value in enumerate(kindergarten_df[key]):            
-            data[i] += value * user_df[j]
+    if not user_df.empty:      
+        for i,key in enumerate(kindergarten_df):
+            for j,value in enumerate(kindergarten_df[key]):    
+                data[i] += value * user_df.iloc[0,j]
     return pd.DataFrame(columns=list(kindergarten_df.keys()), data=[data])
 
 
