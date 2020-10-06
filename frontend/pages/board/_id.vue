@@ -44,7 +44,7 @@
         <v-list-item class="px-8">
           <v-list-item-avatar>
             <v-img
-              :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+              :src="user.profile_image"
             />
           </v-list-item-avatar>
           <v-list-item-content>
@@ -183,7 +183,7 @@
             <v-list-item class="px-4 pt-2">
               <v-list-item-avatar>
                 <v-img
-                  :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+                  :src="profile.profile_image"
                 />
               </v-list-item-avatar>
               <v-list-item-content>
