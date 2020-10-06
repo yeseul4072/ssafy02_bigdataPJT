@@ -241,7 +241,7 @@ export default {
     },
 
     setAddress(address, lng, lat) {
-        console.log(address, lng, lng)
+        console.log(address, lat, lng)
         this.address = address
         this.lng = lng
         this.lat = lat
