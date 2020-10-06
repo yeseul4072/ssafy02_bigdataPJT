@@ -87,7 +87,10 @@ class FBasedRecommend(APIView):
                 user_df = recommend.parse_user_data(user, near_kindergartens_id)
                 # 유저-어린이집feature 행렬
                 df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
-                kindergarten_df = df.set_index('id')
+                try:
+                    kindergarten_df = df.set_index('id')
+                except:
+                    return JsonResponse([], safe=False)
                 preference_df = recommend.get_preference(kindergarten_df, user_df)
                 # request 유저가 선호하는 feature 1, 2, 3위
                 preference_df = preference_df.transpose()
@@ -387,7 +390,10 @@ class Kindergartens(APIView):
         if request.user.is_authenticated and len(request.user.weight_kindergartens.all()):
             # 어린이집-어린이집feature 행렬(근처)
             df = pd.DataFrame(Kindergarten.objects.filter(condition1 & condition2).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
-            kindergarten_df = df.set_index('id')
+            try:
+                kindergarten_df = df.set_index('id')
+            except:
+                return JsonResponse([], safe=False) 
             # print(kindergarten_df)
             # 유저-어린이집 가중치 행렬 
             weights = Weight.objects.filter(Q(kindergarten_id__in=near_kindergartens_id) | Q(user=request.user))
@@ -420,6 +426,7 @@ class Kindergartens(APIView):
             kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
             serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
             return Response(serializer_recommend.data)
+                
         # 로그인하지 않았거나, 활동하지 않은 경우 => 가까운 어린이집 
         else:
             instance = Kindergarten.objects.filter(condition1 & condition2)
