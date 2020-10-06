@@ -1,6 +1,6 @@
 export default ({
   state: {
-    isLogin: false
+    isLogin: sessionStorage.getItem('isLogin')
   },
   getters: {
     isLogin (state) {
@@ -10,6 +10,7 @@ export default ({
   mutations: {
     setIsLogin (state, payload) {
       state.isLogin = payload
+      sessionStorage.setItem('isLogin', payload)
     }
   },
   actions: {
