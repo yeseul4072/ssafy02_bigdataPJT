@@ -15,7 +15,8 @@ from rest_framework import generics
 
 # App - community
 from .models import Kindergarten, Weight, Review
-from .serializers import (KindergartenListSerializer, ActivatedReviewSerializer, ReviewSerializer, KindergartenDetailSerializer)
+from .serializers import (KindergartenListSerializer, ActivatedReviewSerializer, ReviewSerializer, KindergartenDetailSerializer, 
+ReviewCreateSerializer)
 
 # data analysis
 import pandas as pd
@@ -260,6 +261,90 @@ class Reviews(APIView):
         else:
             serializer = self.serializer_class(instance, context={'request': request}, many=True)
         return Response(serializer.data) 
+    
+    @swagger_auto_schema(
+        request_body=request_schemas.ReviewCreateRequest,
+        manual_parameters=[request_schemas.header],
+        responses={
+            200: ReviewCreateSerializer
+        }
+    )
+    def post(self, request, kindergarten_pk):
+        """
+        리뷰 생성
+
+        ## 리뷰 생성
+        - title을 받아 리뷰를 생성합니다.
+        - 로그인한 사용자만 요청할 수 있습니다.
+        """
+        kindergarten = get_object_or_404(Kindergarten, pk=kindergarten_pk)
+        serializer = ReviewCreateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, kindergarten=kindergarten)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ReviewDetail(APIView):
+    @swagger_auto_schema(manual_parameters=[request_schemas.header], responses={200: ''})
+    def delete(self, request, kindergarten_pk, review_pk):
+        """
+        리뷰 삭제
+
+        ## 리뷰 삭제
+        - 리뷰를 삭제합니다.
+        - 로그인한 사용자만 요청할 수 있습니다.
+        """
+        review = get_object_or_404(Review, pk=review_pk)
+        review.delete()
+        return Response()
+
+    @swagger_auto_schema(
+        request_body=request_schemas.ReviewCreateRequest,
+        manual_parameters=[request_schemas.header],
+        responses={
+            200: ReviewCreateSerializer
+        }
+    )
+    def put(self, request, kindergarten_pk, review_pk):
+        """
+        리뷰 수정 
+
+        ## 리뷰 수정
+        - 리뷰를 수정할 수 있습니다.
+        - 로그인한 사용자만 요청할 수 있습니다.
+        """
+        kindergarten = get_object_or_404(Kindergarten, pk=kindergarten_pk)
+        review = get_object_or_404(Review, pk=review_pk)
+        serializer = ReviewCreateSerializer(review, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, kindergarten=kindergarten)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(
+    method='post',
+    manual_parameters=[request_schemas.header], 
+    responses={200: ''}
+)
+@api_view(['POST'])
+def like_review(request, review_pk):
+    """
+    리뷰 좋아요
+
+    ## 리뷰 좋아요 
+    - 사용자가 이미 좋아요를 누른 리뷰라면 좋아요를 취소합니다.
+    - 로그인한 사용자만 요청할 수 있습니다.
+    """
+    review = get_object_or_404(Review, pk=review_pk)
+    # 이미 좋아요 한 경우
+    if review.like_users.filter(id=request.user.id).exists():
+        review.like_users.remove(request.user.id)
+        return Response(status=200)
+    else:
+        review.like_users.add(request.user.id)
+    return Response(status=200)
+
 
 """
 어린이집 리스트 페이지
@@ -291,6 +376,7 @@ class Kindergartens(APIView):
         instance = Kindergarten.objects.filter(condition1 & condition2)
         serializer = KindergartenListSerializer(instance, context={'request': request}, many=True)
         return Response(serializer.data)
+
 
 
 class Recommend(APIView):

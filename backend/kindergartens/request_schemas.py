@@ -9,6 +9,13 @@ header = openapi.Parameter(
     type=openapi.TYPE_STRING
 )
 
+
+class ReviewCreateRequest(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['title', 'score_teacher', 'score_director', 'score_environment', 'pros', 'cons']
+
+
 latitude = openapi.Parameter(
     'lat',
     openapi.IN_QUERY,
