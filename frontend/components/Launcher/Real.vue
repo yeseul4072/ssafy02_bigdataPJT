@@ -27,14 +27,14 @@ export default {
 .l3_main{
   display: flex;
   width:100%;
-  height:500px;
+  height:600px;
   align-items: center;
   justify-content: center;
-  background-color: #F2D5E5;
+  background-color: #d3ffef;
 }
 
 .dp-2{
-  color: #F257A0;
+  color: #00bf8c;
   font-weight: 700;
 }
 

@@ -5,6 +5,16 @@
       <search-bar />
     </div>
     <v-container class="result">
+      <v-layout wrap class="mb-4">
+        <h2> 검색 결과 <a v-text="count" />개</h2>
+        <v-spacer />
+        <a id="map-header-cta" class=" show_map sr_header--map " data-map-id="map-header-cta" data-source="map-header-cta" @click="dialog=true">
+          <div class="sr_header--map_pin" />
+          <span class="switch-map-view">
+            지도로 보기
+          </span>
+        </a>
+      </v-layout>
       <v-layout wrap>
         <v-flex id="left-panel" md3 lg3 xl3>
           <v-card flat outlined>
@@ -166,6 +176,7 @@
             flat
             outlined
             class="pa-4 ml-5 mb-5"
+            @click="moveKinder(item.id)"
           >
             <v-list three-line>
               <v-list-item class="kinder_list">
@@ -243,7 +254,6 @@
                       <span class="white--text">{{ item.grade | getGrade }}</span>
                     </v-row>
                   </v-row>
-                  <!-- <a>전체리뷰 <span>{{ item.reviews_count }}</span></a> -->
                 </v-list-item-action>
               </v-list-item>
             </v-list>
@@ -251,17 +261,30 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <v-dialog v-model="dialog" width="960" height="600">
+      <!-- <div style="width:100%; height:100%;"> -->
+      <search-map
+        :items="items"
+        :lat="lat"
+        :lng="lng"
+        :change="change"
+        @moveKinder="moveKinder"
+      />
+      <!-- </div> -->
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import SearchBar from '@/components/Home/Search.vue'
+import SearchMap from '@/components/Search/SearchMap.vue'
 import http from '@/util/http_common.js'
 
 export default {
   components:
   {
-    SearchBar
+    SearchBar,
+    SearchMap
   },
   filters: {
     getGrade (val) {
@@ -298,8 +321,10 @@ export default {
       }
     }
   },
+
   data () {
     return {
+      dialog: false,
       max_age: 5,
       age: -1,
       price: [0, 300000],
@@ -356,7 +381,11 @@ export default {
         [],
         []
       ],
-      ageColumns: ['zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old']
+      ageColumns: ['zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old'],
+      count: 0,
+      lat: '37.4798',
+      lng: '127.0677',
+      change: false
     }
   },
   watch: {
@@ -364,19 +393,27 @@ export default {
       this.filtering()
     },
     age () {
-      console.log('zz')
       this.filtering()
     },
     price () {
-      console.log('zz')
       this.filtering()
     }
   },
   mounted () {
+    // console.log(this.$route)
+    this.lat = this.$route.query.lat
+    this.lng = this.$route.query.lng
+    console.log(this.$route)
     this.getKindergartenList()
   },
   methods: {
+    moveKinder (id) {
+      this.dialog = false
+      this.$router.push(`/kinder/${id}`)
+    },
     filtering () {
+      this.change = !this.change
+      this.count = 0
       for (const i in this.items) {
         this.items[i].isShow = true
         for (const j in this.selected) {
@@ -396,6 +433,7 @@ export default {
             this.items[i].isShow = false
           }
         }
+        if (this.items[i].isShow) { this.count++ }
       }
     },
     getColor (val) {
@@ -410,13 +448,13 @@ export default {
       }
     },
     getKindergartenList () {
-      http.axios.get('/kindergartens/?lat=37.4798&lng=127.0677').then(({ data }) => {
+      http.axios.get(`/kindergartens/?lat=${this.lat}&lng=${this.lng}`).then(({ data }) => {
         for (const i in data) {
           data[i].isShow = true
           data[i].color = this.getColor(data[i].grade)
         }
+        this.count = data.length
 
-        console.log(data[0])
         this.items = data
         for (const i in data) {
           for (const j in this.ageColumns) {
@@ -483,5 +521,70 @@ h3 {
 
 .kinder_list {
   height:200px;
+}
+
+.sr_header--map {
+    margin-left: 10px;
+    background: URL(//cf.bstatic.com/static/img/map/cta_material/map_cta_background/ab82d9bf871cfe28b1f98ca73ff9c4e41378baef.jpg) no-repeat;
+    background-position: center;
+    position: relative;
+    text-align: center;
+    border: 1px solid #bababa;
+    border-radius: 3px;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-decoration: none;
+    min-height: 50px;
+    max-height: 150px;
+}
+
+.sr_header--map_pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 30px;
+    background: URL(//cf.bstatic.com/static/img/map/cta_material/map_cta_pin/630b60fdd032b0b47748700f4d87f64ff78d84cb.png) no-repeat;
+    background-size: 20px 30px;
+    background-position: 0 0;
+    margin-top: -10px;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+.sr_header--map .switch-map-view {
+    min-width: 75px;
+    font-size:13px;
+    font-weight:700;
+    line-height:15.6px;
+    display: block;
+    white-space: nowrap;
+    margin-top: auto;
+    -webkit-align-self: flex-end;
+    -ms-flex-item-align: end;
+    align-self: flex-end;
+    background: rgba(255,255,255,0.6);
+    color: #0071c2;
+    margin: 0;
+    margin-top:2px;
+    padding: 4px 10px;
+}
+#right-panel .v-card:hover {
+  cursor:pointer;
+  border-color: #69F0AE !important;
+  box-shadow: 0 0 10px #69F0AE !important;
 }
 </style>

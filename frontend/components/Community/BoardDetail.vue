@@ -32,14 +32,18 @@
                 {{ article.user.nickname | filterWriter }}
               </span>
               <span style="margin-left:10px;">
-                <v-icon class="vd-icon" color="blue">
+                <v-icon class="vd-icon">
                   mdi-comment-text-outline
                 </v-icon><!-- 조회 수로 변경해야함 -->
-                {{ article.user.id }}
-                <v-icon class="vd-icon" color="pink">
+                {{ article.comment_count }}
+                <v-icon class="vd-icon">
                   mdi-thumb-up-outline
                 </v-icon>
                 {{ article.like_count }}
+                <v-icon class="vd-icon">
+                  mdi-eye
+                </v-icon>
+                {{ article.hit }}
               </span>
               <span style="margin-left:10px;">
                 {{ article.created_at | diffDate }}

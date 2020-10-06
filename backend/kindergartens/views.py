@@ -50,7 +50,7 @@ def Count(request):
     users = User.objects.all()
     kindergartens = Kindergarten.objects.all()
     reviews = Review.objects.all()
-    return JsonResponse([{'kindergartens': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count()}], safe=False)
+    return JsonResponse({'kindergartens': kindergartens.count(), 'users': users.count(), 'reviews': reviews.count()})
 
 
 """
@@ -205,7 +205,7 @@ class KindergartenDetail(APIView):
         - 어린이집 디테일 페이지에서 필요한 어린이집 데이터를 조회합니다.
         - 인증된 유저는 어린이집 가중치가 더해집니다.
         """
-        kindergarten = Kindergarten.objects.get(pk=kindergarten_pk)
+        kindergarten = get_object_or_404(Kindergarten, pk=kindergarten_pk)
         serializer = KindergartenDetailSerializer(kindergarten, context={'request': request})
         # 가중치 더하기
         if request.user.is_authenticated:

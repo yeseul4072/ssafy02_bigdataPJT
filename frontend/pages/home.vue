@@ -46,7 +46,7 @@
         </v-col>
         <v-col cols="6" style="height:100%">
           <div class="card" style="height:100%">
-            <v-row style="height:10%;">
+            <v-row style="height:80px;">
               <v-col cols="12">
                 <v-row>
                   <v-col cols="6" style="font-size:2vw;">
@@ -63,8 +63,11 @@
                 </v-row>
               </v-col>
             </v-row>
-            <v-row style="height:90%">
-              <review-box :review="reviews[reviewIdx]" />
+            <v-row
+              v-if="review.length!=0"
+              style="height:660px;"
+            >
+              <review-box :review="review[reviewIdx]" />
             </v-row>
           </div>
         </v-col>
@@ -104,100 +107,6 @@ export default {
         '영아전담', '언어 교육', '직장', '시간제보육 가능', '민간', '국공립', '통학버스 시행', '과학/창의 교육', '체육 교육', '사회복지법인'
       ],
       board: [],
-      // boardList: [
-      //   {
-      //     id: 1,
-      //     title: '안녕하세요! 여러분께 화이트데이 사탕을 가져왔어요! ( + 풀이 슬라이드 )',
-      //     content: '여러분께 화이트 데이 사탕을 가지고 왔어요! 아래 문제를 화이트데이가 끝나기 전까지 풀어 주시면 제가 사탕 기프티콘을 드릴게요! https://www.acmicpc.net/proble... https://www.acmicpc.net/proble... https://www.acmicpc.net/proble... P. S. 1. 데이터가 중간에 추가 될 수 있어요, 그래도 데이터가 추가되기 전에 맞은 경우에는 사탕을 드릴게요! P. S. 2. 한 문제라도 풀어주시면 저는 기뻐요! 여러분들을 위한 사탕도 준비할 게요! P. S. 3. 이상한 방법으로 사탕을 얻으려고 시도 하면 제가 사탕을 안 줄지도 몰라요!',
-      //     boardCount: 1,
-      //     likeCount: 1,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   },
-      //   {
-      //     id: 1,
-      //     title: '안녕하세요!',
-      //     content: '드디어 인사드릴 수 있어 기쁩니다.요즘 매일같이 이곳에 들락거리며,  "틀렸습니다" 와 더 친해지고 있네요.운영자님의 노고에 감사드리며, 모두들 화이팅 입니다! ',
-      //     boardCount: 2,
-      //     likeCount: 2,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   },
-      //   {
-      //     id: 1,
-      //     title: '안녕하세요. 현재 군대에서 문제 풀고있네요.',
-      //     content: '안녕하세요.2012, 2013 ICPC 에 참가한 고려대학교 전명우입니다.다름이 아니라 얼마 전 있었던 인터넷예선 풀이를 제 블로그에 작성해서 같이 공유하고자 글을 쓰게 되었습니다.http://blog.myungwoo.krIOI 풀이도 작성했고, 기타 자잘한 문제 소개, 해법도 있습니다.감사합니다!',
-      //     boardCount: 3,
-      //     likeCount: 3,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   },
-      //   {
-      //     id: 1,
-      //     title: '안녕 여러분',
-      //     content: 'JAVA 공부하면서 문제풀이할 곳을 찾다가 들어오게 되었습니다.   같은 문제라도 다른방식으로 접근해서 푸는분들을 보면서요 컴퓨터 언어를 언어라고 하는 이유를 많이 느낍니다  어제 기초 문제인 셀프넘버 풀면서 많이 느꼇어요 안녕하세요랑 안녕하십니까랑 같은 의미를 전달하지만 다른 형태를 가지고 있는 것처럼요 아무쪼록 열심히 하겠습니다. 잘부탁드립니당',
-      //     boardCount: 4,
-      //     likeCount: 4,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   },
-      //   {
-      //     id: 1,
-      //     title: '안녕 여러분',
-      //     content: '반갑습니다 여러분',
-      //     boardCount: 5,
-      //     likeCount: 5,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   },
-      //   {
-      //     id: 1,
-      //     title: '안녕 여러분',
-      //     content: '반갑습니다 여러분',
-      //     boardCount: 5,
-      //     likeCount: 5,
-      //     dateTime: '2020-02-10',
-      //     writer: '미용쓰기'
-      //   }
-      // ],
-      reviews: [
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '믿고 맡길 수 있는 어린이집',
-          stars: 5,
-          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '둘리어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '사건사고 많은 어린이집',
-          stars: 2,
-          pros: '2원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '2원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '포차어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '원장선생님이 술마시다 걸림',
-          stars: 1,
-          pros: '3원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '3원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '바둑어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '세상에 이런 어린이집이?',
-          stars: 4.5,
-          pros: '4원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '4원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        }
-      ],
       review: [],
       reviewIdx: 0
     }
@@ -227,8 +136,7 @@ export default {
           for (let i = 0; i < 12; i++) {
             const temp = {}
             data[i].url = 'kinder_temp.jpg'
-            data[i].id = 11110000009
-            data[i].distance = 5
+            data[i].distance = data[i].distance.toFixed(1)
 
             // 토큰 처리
             data[i].tags = []
@@ -242,8 +150,7 @@ export default {
             temp.left = data[i++]
 
             data[i].url = 'kinder_temp.jpg'
-            data[i].id = 11110000009
-            data[i].distance = 3
+            data[i].distance = data[i].distance.toFixed(1)
 
             // 토큰 처리
             data[i].tags = []
@@ -272,10 +179,23 @@ export default {
           this.board = data
         })
 
-      // http.axios.get('/kindergartens/activated-reviews/')
-      //   .then(({ data }) => {
-      //     console.log(data)
-      //   })
+      http.axios.get('/kindergartens/activated-reviews/')
+        .then(({ data }) => {
+          for (const i in data) {
+            data[i].url = 'kinder_temp.jpg'
+            data[i].avg_score = Number(data[i].avg_score.toFixed(1))
+            data[i].tags = []
+            let idx = 0
+            for (const j in data[i].kindergarten.features) {
+              if (data[i].kindergarten.features[j]) {
+                data[i].tags.push(this.features[idx])
+              }
+              idx++
+            }
+          }
+
+          this.review = data
+        })
     }
   },
   methods: {
@@ -284,7 +204,7 @@ export default {
       this.$store.commit('setIsLogin', !cur)
     },
     changeReview (num) {
-      const len = this.reviews.length
+      const len = this.review.length
       this.reviewIdx = ((this.reviewIdx + num) + len) % len
     }
   }
