@@ -1,6 +1,6 @@
 # django
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Prefetch
+from django.db.models import Count, F
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 
@@ -281,6 +281,8 @@ class ArticleDetail(APIView):
         - 게시판 id와 게시글 id 필요
         """
         article = Article.objects.get(pk=article_pk)
+        article.hit += 1
+        article.save()
         serializer = ArticleDetailSerializer(article, context={'request': request})
         return Response(serializer.data)
 

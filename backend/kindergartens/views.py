@@ -85,8 +85,6 @@ class FBasedRecommend(APIView):
             # 유저-어린이집feature 행렬
             df = pd.DataFrame(Kindergarten.objects.filter(id__in=near_kindergartens_id).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
             kindergarten_df = df.set_index('id')
-            # print(kindergarten_df)
-            # print(list(user_df.columns)==list(kindergarten_df.index))
             preference_df = recommend.get_preference(kindergarten_df, user_df)
             # request 유저가 선호하는 feature 1, 2, 3위
             preference_df = preference_df.transpose()

@@ -58,9 +58,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         return obj.comment_set.count()
     class Meta:
         model = Article
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user']
-        
-
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user', 'hit']
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
@@ -96,7 +94,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
         return obj.comment_set.count()
     class Meta:
         model = Article
-        fields = ['board_id', 'board_name', 'user', 'id', 'title', 'content', 'created_at', 'updated_at', 'like_yn', 'like_count', 'comment_count', 'comments']
+        fields = ['board_id', 'board_name', 'user', 'id', 'title', 'content', 'created_at', 'updated_at', 'like_yn', 'like_count', 'comment_count', 'comments', 'hit']
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
