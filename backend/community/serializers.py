@@ -46,6 +46,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     like_yn = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
+    board = BoardListSerializer(required=False)
     def get_like_yn(self, obj):
         request = self.context.get('request', None)
         if request.user.is_authenticated: 
@@ -58,7 +59,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         return obj.comment_set.count()
     class Meta:
         model = Article
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user', 'hit']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user', 'hit', 'board']
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)

@@ -117,6 +117,15 @@ class Review(models.Model):
     pros = models.TextField()
     cons = models.TextField()
 
+class City(models.Model):
+    name = models.CharField(max_length=10)
 
+class Borough(models.Model):
+    name = models.CharField(max_length=20)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+class Village(models.Model):
+    name = models.CharField(max_length=20)
+    borough = models.ForeignKey(Borough, on_delete=models.CASCADE)
 
 
