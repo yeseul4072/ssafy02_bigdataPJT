@@ -7,10 +7,11 @@
           <v-row style="width:100%;">
             <v-col cols="12" class="mb-8 card">
               <v-img
-                class="white--text align-end"
+                class="white--text align-end mb-3"
                 height="270px"
                 width="270px"
-                :src="require('@/assets/lion.jpg')"
+
+                :src="kinder.image"
               />
               <div style="text-align:center;font-size:1.5vw;font-weight:800;">
                 {{ kinder.organization_name }}
@@ -234,7 +235,7 @@
                 </div>
               </v-row>
               <v-row class="mt-2" style="height:85%;">
-                <map-view v-if="lat!=0" :lat="lat" :lng="lng" />
+                <map-view v-if="lat!=0" :lat="lat" :lng="lng" :name="kinder.organization_name" />
               </v-row>
             </v-col>
           </v-row>
@@ -423,7 +424,7 @@ export default {
       const scrollH = e.target.scrollingElement.scrollHeight
       const scrollT = e.target.scrollingElement.scrollTop
       const clientH = e.target.scrollingElement.clientHeight
-      if (scrollT + clientH >= scrollH) {
+      if (scrollT + clientH >= scrollH - 5) {
         this.loadReview()
       }
     },
