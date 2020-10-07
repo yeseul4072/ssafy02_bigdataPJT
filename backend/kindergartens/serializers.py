@@ -108,15 +108,18 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
         'monthly_fee', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'poisoning_columns', 'poisoning_info', 'air_quality_columns', 'air_quality_info', 'disinfection_columns', 'disinfection_info', 'water_quality_columns', 'water_quality_info',
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
 
+
 class KindergartenImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     class Meta:
         model = Kindergarten
         fields = ['image']
 
+
 class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
     score_avg = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     def get_features(self, obj):
         features = {
             'school_bus': obj.school_bus,
@@ -156,9 +159,15 @@ class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
             return (scores_teacher + scores_director + scores_environment) / count_all
         else:
             return 0
+    
+    def get_image_url(self, obj):
+        request = self.context.get('request', None)
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
     class Meta:
         model = Kindergarten
-        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image']
+        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image_url']
 
 
 class ActivatedReviewSerializer(serializers.ModelSerializer):

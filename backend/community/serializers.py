@@ -61,6 +61,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'like_count', 'like_yn', 'comment_count', 'user', 'hit', 'board']
 
+
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
     board = BoardSerializer(required=False)
