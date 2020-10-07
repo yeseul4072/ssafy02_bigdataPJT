@@ -9,7 +9,7 @@
           </section>
           <section class="LogoRight">
             <div class="ServiceName" @click="goToHome()">
-              <h1 style="font-size:2.0rem">
+              <h1 style="font-size:2.0rem; color:#1fc981; font-weight:800">
                 어린이ZIP
               </h1>
             </div>
@@ -46,8 +46,8 @@
               >
                 <template v-slot:activator="{ attrs, on }">
                   <li type="button">
-                    <template v-if="newNoti!=0">
-                      <v-badge color="red" :content="newNoti">
+                    <template v-if="notiTap.length!=0">
+                      <v-badge color="red" :content="notiTap.length">
                         <i
                           v-bind="attrs"
                           class="mdi mdi-bell-outline NavIcon"
@@ -148,8 +148,8 @@
             <v-list-item>
               <v-row>
                 <v-col cols="3" align="center">
-                  <template v-if="newNoti!=0">
-                    <v-badge color="red" :content="newNoti">
+                  <template v-if="notiTap.length!=0">
+                    <v-badge color="red" :content="notiTap.length">
                       <i class="far fa-bell MNavIcon" />
                     </v-badge>
                   </template>
@@ -200,10 +200,15 @@ export default {
   },
   data () {
     return {
-      newNoti: 4,
       userTap: ['회원정보', '로그아웃'],
       userIcon: ['far fa-user tapIcon', 'fas fa-power-off tapIcon'],
-      notiTap: [...Array(4)].map((_, i) => `안녕하세요...글에 댓글이 달렸습니다. ${i}`),
+      notiTap: [
+        '\'아이와 함께 쿠키...\' 게시글에 댓글 \'4\'개가 달렸습니다.',
+        '\'엄청난 글씨로 믿...\' 리뷰에 댓글 \'1\'개가 달렸습니다.',
+        '\'코로나.. 퇴원하고..\' 게시글에 댓글 \'1\'개가 달렸습니다.',
+        '\'어제 돈까스 시켜...\' 게시글에 댓글 \'3\'개가 달렸습니다.',
+        '\'내일이면 보름달\' 게시글에 댓글 \'1\'개가 달렸습니다.'
+      ],
       drawer: false,
       group: null
     }
