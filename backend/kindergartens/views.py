@@ -6,7 +6,7 @@ from itertools import repeat
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http.response import JsonResponse
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count, Q, Sum
 
 # DRF
 from rest_framework.response import Response
