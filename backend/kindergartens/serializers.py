@@ -108,11 +108,13 @@ class KindergartenDetailSerializer(KindergartenListSerializer):
         'monthly_fee', 'zero_year_old', 'one_year_old', 'two_year_old', 'three_year_old', 'four_year_old', 'five_year_old', 'poisoning_columns', 'poisoning_info', 'air_quality_columns', 'air_quality_info', 'disinfection_columns', 'disinfection_info', 'water_quality_columns', 'water_quality_info',
         'rating_certificate_columns', 'rating_certificate_info', 'rating_history_columns', 'rating_history_info', 'extension_class_status_columns', 'extension_class_status_info', 'extension_class_program_columns', 'extension_class_program_info']
 
+
 class KindergartenImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     class Meta:
         model = Kindergarten
         fields = ['image']
+
 
 class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
@@ -165,13 +167,16 @@ class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = ActivatedReviewKindergartenSerializer()
     avg_score = serializers.SerializerMethodField()
     user = UserListSerializer(required=False)
+    image = serializers.SerializerMethodField()
+    def get_image(self, obj):
+        return str(obj.kindergarten.image)
 
     def get_avg_score(self, obj):
         return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
 
     class Meta:
         model = Review
-        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user']
+        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user', 'image']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
