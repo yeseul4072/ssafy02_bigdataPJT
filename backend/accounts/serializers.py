@@ -6,14 +6,28 @@ from allauth.account.utils import setup_user_email
 
 
 User = get_user_model()
+host_url = 'http://childrenzip.site'
+
 class UserSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField()
+    profile_image = serializers.SerializerMethodField()
+    
+    def get_profile_image(self, obj):
+        try: img = obj.profile_image.url
+        except: return None
+        return host_url + img
+
     class Meta:
         model = User
         exclude = ['password']
 
 class UserListSerializer(serializers.ModelSerializer):
-    # profile_image = serializers.ImageField()
+    profile_image = serializers.SerializerMethodField()
+
+    def get_profile_image(self, obj):
+        try: img = obj.profile_image.url
+        except: return None
+        return host_url + img
+
     class Meta:
         model = User
         fields = ['id', 'username', 'nickname', 'profile_image']
