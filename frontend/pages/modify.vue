@@ -170,7 +170,6 @@ export default {
   },
   mounted() {
       http.axios.get('/rest-auth/user/profile/').then(({data}) => {
-          console.log(data)
           this.user = data
       })
   },
