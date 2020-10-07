@@ -428,13 +428,13 @@ class Kindergartens(APIView):
             # for id in recommend_kindergartens_id:
             #     kindergartens.append(Kindergarten.objects.get(id=id))
             ordering = f'FIELD(`id`, {",".join(recommend_kindergartens_id)})'
-            kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
+            kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))[:50]
             serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
             return Response(serializer_recommend.data)
                 
         # 로그인하지 않았거나, 활동하지 않은 경우 => 가까운 어린이집 
         else:
-            instance = Kindergarten.objects.filter(condition1 & condition2)
+            instance = Kindergarten.objects.filter(condition1 & condition2)[:50]
             serializer = KindergartenListSerializer(instance, context={'request': request}, many=True)
             return Response(serializer.data)
 

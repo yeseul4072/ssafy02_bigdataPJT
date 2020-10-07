@@ -11,7 +11,7 @@
       />
       <!-- </v-expand-transition> -->
       <div :style="{'height' : (boardHeight) + 'px' }" />
-      <Nuxt />
+      <Nuxt :key="$route.fullPath" />
       <common-footer v-if="notMain" />
     </v-app>
   </div>

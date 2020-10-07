@@ -222,7 +222,7 @@ export default {
           query: {
               "lng": this.lng,
               "lat": this.lat
-          }
+          },
       });
     },
     setLng(lng){
