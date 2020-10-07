@@ -11,7 +11,15 @@
 
         <div class="form">
           <v-text-field v-model="id" outlined color="success" label="아이디" />
-          <v-text-field v-model="password" outlined color="#0CC476" label="비밀번호" hide-details />
+          <v-text-field
+            v-model="password"
+            outlined
+            color="#0CC476"
+            label="비밀번호"
+            hide-details
+            type="password"
+            @keydown="login"
+          />
           <v-list-item style="padding:0;margin-top:30px;">
             <v-list-item-content style="padding:0">
               <v-checkbox label="아이디 저장" color="success" dense style="margin:0px" />
@@ -57,7 +65,6 @@
             </div>
           </div>
         </div>
-        </h2>
       </div>
     </div>
     <div class="banner" />
@@ -90,15 +97,20 @@ export default {
       kakaoIcon.attr('class',`${className} _serviceIcon`);
       targetIcon.attr('class',`_kakao _serviceIcon`);
     },
+    getSession() {
+      http.axios.get('/rest-auth/user/profile').then(({data}) => {
+        this.$router.app.$store.commit('setUser', data)
+      })
+      this.$router.push('/home')
+    },
     login() {
       http.axios.post('/rest-auth/login/', {
         'username':this.id,
         'password':this.password,
       }).then( ({data}) => {
-        console.log(this.$router)
         this.$router.app.$store.commit('setIsLogin', true)
         this.$router.app.$store.commit('setToken', `Token ${data.key}`)
-        this.$router.push('/home')
+        this.getSession()
       })
     }
   }

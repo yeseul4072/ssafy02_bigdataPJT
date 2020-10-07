@@ -19,6 +19,7 @@
             class="mx-2"
             fab
             dark
+            depressed
             x-small
             color="#0CC476"
             style="pointer-events: none !important;"
