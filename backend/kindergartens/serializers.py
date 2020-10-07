@@ -119,6 +119,7 @@ class KindergartenImageSerializer(serializers.ModelSerializer):
 class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
     score_avg = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     def get_features(self, obj):
         features = {
             'school_bus': obj.school_bus,
@@ -158,25 +159,28 @@ class ActivatedReviewKindergartenSerializer(serializers.ModelSerializer):
             return (scores_teacher + scores_director + scores_environment) / count_all
         else:
             return 0
+    
+    def get_image_url(self, obj):
+        request = self.context.get('request', None)
+        image_url = obj.image.url
+        return request.build_absolute_uri(image_url)
+
     class Meta:
         model = Kindergarten
-        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image']
+        fields = ['id', 'address', 'organization_name', 'director_name', 'features', 'score_avg', 'image_url']
 
 
 class ActivatedReviewSerializer(serializers.ModelSerializer):
     kindergarten = ActivatedReviewKindergartenSerializer()
     avg_score = serializers.SerializerMethodField()
     user = UserListSerializer(required=False)
-    image = serializers.SerializerMethodField()
-    def get_image(self, obj):
-        return str(obj.kindergarten.image)
 
     def get_avg_score(self, obj):
         return (obj.score_teacher + obj.score_director + obj.score_environment) / 3
 
     class Meta:
         model = Review
-        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user', 'image']
+        fields = ['title', 'avg_score', 'pros', 'cons', 'kindergarten', 'user']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
