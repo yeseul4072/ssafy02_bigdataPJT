@@ -400,10 +400,8 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.$route)
     this.lat = this.$route.query.lat
     this.lng = this.$route.query.lng
-    console.log(this.$route)
     this.getKindergartenList()
   },
   methods: {
@@ -449,7 +447,6 @@ export default {
     },
     getKindergartenList () {
       http.axios.get(`/kindergartens/?lat=${this.lat}&lng=${this.lng}`).then(({ data }) => {
-        console.log(data)
         for (const i in data) {
           data[i].isShow = true
           data[i].color = this.getColor(data[i].grade)
