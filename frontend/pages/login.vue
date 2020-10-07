@@ -24,7 +24,7 @@
             label="비밀번호"
             hide-details
             type="password"
-            @keydown="login"
+            @keydown.enter="login"
           />
           <v-list-item style="padding:0;margin-top:30px;">
             <v-list-item-content style="padding:0">

@@ -6,7 +6,7 @@ from itertools import repeat
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http.response import JsonResponse
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count, Q, Sum
 
 # DRF
 from rest_framework.response import Response
@@ -20,7 +20,7 @@ from rest_framework import generics
 # App - community
 from .models import Kindergarten, Weight, Review, Borough, Village
 from .serializers import (KindergartenListSerializer, ActivatedReviewSerializer, ReviewSerializer, KindergartenDetailSerializer, 
-ReviewCreateSerializer, BoroughSerializer, VillageSerializer, KindergartenImageSerializer)
+ReviewCreateSerializer, BoroughSerializer, VillageSerializer, KindergartenImageSerializer, host_url)
 
 # data analysis
 import pandas as pd
@@ -107,8 +107,8 @@ class FBasedRecommend(APIView):
                 
                 data = []
                 for k in kindergartens1:
-                    print(k.image)
-                    print(type(k.image))
+                    # print(k.image)
+                    # print(type(k.image))
                     if k.review_set.all().exists():
                         count_all = k.review_set.count() * 3
                         scores_teacher = k.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
@@ -119,7 +119,8 @@ class FBasedRecommend(APIView):
                         score_avg = 0
                     # 유저-어린이집 거리
                     distance = haversine(user_position, (k.lat, k.lng))
-                    
+                    try: image1 = host_url + k.image.url
+                    except: image1 = None
                     data.append({
                         'id': k.id,
                         'feature': f1,
@@ -129,7 +130,8 @@ class FBasedRecommend(APIView):
                         'reviews_count': k.review_set.count(),
                         'score_avg': score_avg,
                         'distance': distance,
-                        'image': request.build_absolute_uri(k.image.url),
+                        # 'image': request.build_absolute_uri(k.image.url),
+                        'image': image1,
                         'features': {
                             'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
                             'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
@@ -147,6 +149,8 @@ class FBasedRecommend(APIView):
                         score_avg = 0
                     # 유저-어린이집 거리
                     distance = haversine(user_position, (k2.lat, k2.lng))
+                    try: image2 = host_url + k2.image.url
+                    except: image2 = None
                     data.append({
                         'id': k2.id,
                         'feature': f2,
@@ -156,7 +160,8 @@ class FBasedRecommend(APIView):
                         'reviews_count': k2.review_set.count(),
                         'score_avg': score_avg,
                         'distance': distance,
-                        'image': request.build_absolute_uri(k2.image.url),
+                        # 'image': request.build_absolute_uri(k2.image.url),
+                        'image': image2,
                         'features': {
                             'school_bus': k2.school_bus, 'general': k2.general , 'infants': k2.infants, 'disabled': k2.disabled, 'disabled_integration': k2.disabled_integration, 'after_school': k2.after_school, 'after_school_inclusion': k2.after_school_inclusion,
                             'extension': k2.extension, 'holiday': k2.holiday, 'all_day': k2.all_day, 'part_time': k2.part_time, 'office': k2.office, 'public': k2.public, 'private': k2.private, 'family': k2.family, 'corporate': k2.corporate, 

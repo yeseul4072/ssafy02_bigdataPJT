@@ -172,6 +172,7 @@ export default {
               break
             }
           }
+          this.$router.app.$store.commit('setOverlay', false)
         })
         .finally(() => {
           this.$router.app.$store.commit('setOverlay', false)

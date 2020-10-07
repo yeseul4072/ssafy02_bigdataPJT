@@ -184,7 +184,7 @@ export default {
   mounted() {
     http.axios.get('/rest-auth/user/profile/').then(({data}) => {
       if(data.profile_image)
-        this.$refs.img.src = 'http://j3a111.p.ssafy.io:8000'+data.profile_image;
+        this.$refs.img.src = data.profile_image;
       else
         this.$refs.img.src = "/user2.png";
       this.item = data;
@@ -262,13 +262,8 @@ export default {
       frm.append("address", this.item.address)
       frm.append("nickname", this.item.nickname)
       const token = this.$router.app.$store.getters.getToken
-      http.axios.put('http://j3a111.p.ssafy.io:8000/rest-auth/user/update/', frm, {
-        headers: {
-          Authorization: token ? token : '',
-          'accept': '*/*',
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(({data}) => {
+      http.formAxios.put('/rest-auth/user/update/', frm)
+      .then(({data}) => {
         alert("수정되었습니다.")
         this.loading = false;
         this.$router.push('/home')

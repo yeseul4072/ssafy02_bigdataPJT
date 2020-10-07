@@ -202,7 +202,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>
+<script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>
 <script>
 import http from "@/util/http_common.js"
 // import axios from "axios"
@@ -389,13 +389,8 @@ export default {
       frm.append("address", this.address)
       frm.append("nickname", this.nickname)
       frm.append("is_director", 'False')
-      console.log(frm)
-      http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
-        headers: {
-          'accept': '*/*',
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(({data}) => {
+      http.formAxios.post('/rest-auth/registration/', frm)
+      .then(({data}) => {
         alert(data.detail)
         this.loading = false;
         this.$router.push('/login')
