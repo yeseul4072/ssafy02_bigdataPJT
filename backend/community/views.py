@@ -469,7 +469,7 @@ def user_favorite_boards(request):
     - 최대 15개까지의 목록을 반환합니다.
     """
     User = get_user_model()
-    user = User.objects.get(id=request.user.id)
+    user = get_object_or_404(User, id=request.user.id)
     if user.favorite_set.all().exists():
         boards = Board.objects.raw(f"""
         select cb.*
