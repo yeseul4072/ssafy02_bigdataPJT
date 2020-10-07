@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ['password']
 
 class UserListSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField()
+    # profile_image = serializers.ImageField()
     class Meta:
         model = User
         fields = ['id', 'username', 'nickname', 'profile_image']

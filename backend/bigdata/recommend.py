@@ -44,6 +44,8 @@ def parse_user_data(users, columns):
         user_list = set(users['user_id'])    
     except:
         user_list = []
+    print(user_list)
+    print(users)
     df = pd.DataFrame(data=[[0]*len(columns) for i in range(len(user_list))], columns=columns, index=user_list)
 
     try:

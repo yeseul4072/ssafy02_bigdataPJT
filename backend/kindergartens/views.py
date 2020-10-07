@@ -107,7 +107,8 @@ class FBasedRecommend(APIView):
                 
                 data = []
                 for k in kindergartens1:
-                    print(str(k.image))
+                    print(k.image)
+                    print(type(k.image))
                     if k.review_set.all().exists():
                         count_all = k.review_set.count() * 3
                         scores_teacher = k.review_set.aggregate(Sum('score_teacher')).get('score_teacher__sum')
@@ -128,7 +129,7 @@ class FBasedRecommend(APIView):
                         'reviews_count': k.review_set.count(),
                         'score_avg': score_avg,
                         'distance': distance,
-                        'image': str(k.image),
+                        'image': request.build_absolute_uri(k.image.url),
                         'features': {
                             'school_bus': k.school_bus, 'general': k.general , 'infants': k.infants, 'disabled': k.disabled, 'disabled_integration': k.disabled_integration, 'after_school': k.after_school, 'after_school_inclusion': k.after_school_inclusion,
                             'extension': k.extension, 'holiday': k.holiday, 'all_day': k.all_day, 'part_time': k.part_time, 'office': k.office, 'public': k.public, 'private': k.private, 'family': k.family, 'corporate': k.corporate, 
@@ -155,7 +156,7 @@ class FBasedRecommend(APIView):
                         'reviews_count': k2.review_set.count(),
                         'score_avg': score_avg,
                         'distance': distance,
-                        'image': str(k2.image),
+                        'image': request.build_absolute_uri(k2.image.url),
                         'features': {
                             'school_bus': k2.school_bus, 'general': k2.general , 'infants': k2.infants, 'disabled': k2.disabled, 'disabled_integration': k2.disabled_integration, 'after_school': k2.after_school, 'after_school_inclusion': k2.after_school_inclusion,
                             'extension': k2.extension, 'holiday': k2.holiday, 'all_day': k2.all_day, 'part_time': k2.part_time, 'office': k2.office, 'public': k2.public, 'private': k2.private, 'family': k2.family, 'corporate': k2.corporate, 
@@ -199,7 +200,7 @@ class ReviewActivated(APIView):
         # limit 5;
         # """)
         review_list = Review.objects.order_by('-created_at')[:5]
-        serializer = ActivatedReviewSerializer(review_list, many=True)
+        serializer = ActivatedReviewSerializer(review_list, context={'request': request}, many=True)
         return Response(serializer.data)
 
 """
@@ -381,12 +382,12 @@ class Kindergartens(APIView):
         lng = float(request.GET.get('lng', None))
         position = (lat, lng)
         
-        # 반경 5km
+        # 반경 2km
         condition1 = (
-            Q(lat__range = (lat - 0.025, lat + 0.025))
+            Q(lat__range = (lat - 0.01, lat + 0.01))
         )
         condition2 = (
-            Q(lng__range = (lng - 0.0375, lng + 0.0375))
+            Q(lng__range = (lng - 0.015, lng + 0.015))
         )
         near_kindergartens_id = Kindergarten.objects.filter(condition1 & condition2).values_list('id', flat=True)
         # print(list(near_kindergartens_id))
@@ -395,40 +396,41 @@ class Kindergartens(APIView):
             df = pd.DataFrame(Kindergarten.objects.filter(condition1 & condition2).values('id','school_bus','general','infants','disabled','disabled_integration','after_school','after_school_inclusion','extension','holiday','all_day','part_time','office','public','private','family','corporate','cooperation','welfare','has_extension_class','language','culture','sport','science'))
             try:
                 kindergarten_df = df.set_index('id')
-                # print(kindergarten_df)
-                # 유저-어린이집 가중치 행렬 
-                weights = Weight.objects.filter(Q(kindergarten_id__in=near_kindergartens_id) | Q(user=request.user))
-                near_users_id = []
-                User = get_user_model()
-                for weight in weights:
-                    user = User.objects.get(pk=weight.user_id)
-                    if haversine(position, (user.latitude, user.longitude)) <= 5:
-                        near_users_id.append(weight.id)
-                near_users = pd.DataFrame(Weight.objects.filter(Q(id__in=near_users_id) | Q(id=request.user.id)).values('user_id', 'kindergarten_id', 'weight'))
-                # print(near_users)
-                users_weight = recommend.parse_user_data(near_users, near_kindergartens_id)
-                user_df = users_weight.loc[[request.user.id], :]
-                # 유저-어린이집feature 행렬
-                preference_df = recommend.get_preference(kindergarten_df, user_df)
-                contents_recommend = recommend.recommend(kindergarten_df, preference_df, 1000)
-                user_df_collabo = users_weight.loc[[request.user.id],:]
-                # print(contents_recommend)
-                collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df_collabo, 1000)
-                # print(collabo_recommend)
-                recommend_kindergartens_id = collabo_recommend + list(contents_recommend)
-                recommend_kindergartens_id = list(OrderedDict(zip(recommend_kindergartens_id, repeat(None))))   
-                # print(recommend_kindergartens_id)
-                
-                # 추천 어린이집
-                # kindergartens = []
-                # for id in recommend_kindergartens_id:
-                #     kindergartens.append(Kindergarten.objects.get(id=id))
-                ordering = f'FIELD(`id`, {",".join(recommend_kindergartens_id)})'
-                kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
-                serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
-                return Response(serializer_recommend.data)
             except:
                 return JsonResponse([], safe=False) 
+            # print(kindergarten_df)
+            # 유저-어린이집 가중치 행렬 
+            weights = Weight.objects.filter(Q(kindergarten_id__in=near_kindergartens_id) | Q(user=request.user))
+            near_users_id = []
+            User = get_user_model()
+            for weight in weights:
+                user = User.objects.get(pk=weight.user_id)
+                if haversine(position, (user.latitude, user.longitude)) <= 2:
+                    near_users_id.append(weight.id)
+            near_users = pd.DataFrame(Weight.objects.filter(Q(user_id=request.user.id) | Q(id__in=near_users_id)).values('user_id', 'kindergarten_id', 'weight'))
+            users_weight = recommend.parse_user_data(near_users, near_kindergartens_id)
+            # print(users_weight.index)
+            # print(type(users_weight))
+            user_df = users_weight.loc[[request.user.id], :]
+            # 유저-어린이집feature 행렬
+            preference_df = recommend.get_preference(kindergarten_df, user_df)
+            contents_recommend = recommend.recommend(kindergarten_df, preference_df, 1000)
+            user_df_collabo = users_weight.loc[[request.user.id],:]
+            # print(contents_recommend)
+            collabo_recommend = recommend.user_based_collaborative_filtering(users_weight, user_df_collabo, 1000)
+            # print(collabo_recommend)
+            recommend_kindergartens_id = collabo_recommend + list(contents_recommend)
+            recommend_kindergartens_id = list(OrderedDict(zip(recommend_kindergartens_id, repeat(None))))   
+            # print(recommend_kindergartens_id)
+            
+            # 추천 어린이집
+            # kindergartens = []
+            # for id in recommend_kindergartens_id:
+            #     kindergartens.append(Kindergarten.objects.get(id=id))
+            ordering = f'FIELD(`id`, {",".join(recommend_kindergartens_id)})'
+            kindergartens = Kindergarten.objects.filter(id__in=recommend_kindergartens_id).extra(select={'ordering': ordering}, order_by=('ordering',))
+            serializer_recommend = KindergartenListSerializer(kindergartens, context={'request': request}, many=True)
+            return Response(serializer_recommend.data)
                 
         # 로그인하지 않았거나, 활동하지 않은 경우 => 가까운 어린이집 
         else:
