@@ -290,8 +290,8 @@
 
 <script>
 import http from '@/util/http_common.js'
-import BannerImage from '@/components/Community/Banner.vue'
-import Review from '@/components/Community/Review.vue'
+import BannerImage from '@/components/Community/Banner'
+import Review from '@/components/Community/Review'
 
 export default {
   components: { BannerImage, Review },
