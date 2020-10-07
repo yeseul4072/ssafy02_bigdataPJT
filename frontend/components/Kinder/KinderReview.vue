@@ -102,7 +102,7 @@
               </v-row>
               <v-row class="pl-4" style="font-size:1.5vh;width:100%;" align="end">
                 <div style="display:inline-block" class="pr-3">
-                  {{ user.nickname }}
+                  {{ review.user.nickname }}
                 </div>
                 <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
                 <div style="display:inline-block" class="px-3">
