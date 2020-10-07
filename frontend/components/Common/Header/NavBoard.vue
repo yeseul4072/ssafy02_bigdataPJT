@@ -119,7 +119,6 @@ export default {
     },
     test () {
       this.$on('open-contact-form', () => {
-        console.log('test')
       })
     }
   }

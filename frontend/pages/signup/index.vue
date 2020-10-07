@@ -14,7 +14,7 @@
           justify="center"
         >
           <h1 style="font-size:40px;">
-            <span class="success--text" style="font-weight:800;">어린이ZIP</span> 회원가입
+            <span style="color:#1fc981;font-weight:800;">어린이ZIP</span> 회원가입
           </h1>
         </v-row>
         <v-row
@@ -108,7 +108,7 @@ export default {
 
 <style scoped>
     .logo {
-      background: url(/Vue.png) center center / cover no-repeat;
+      background: url(~assets/logo.png) center center / cover no-repeat;
       margin-bottom:5px;
       height:50px;
       width:50px;
