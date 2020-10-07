@@ -9,7 +9,7 @@ export default new Vue({
     },
     axios () {
       return axios.create({
-        baseURL: 'http://localhost:8800',
+        baseURL: 'http://j3a111.p.ssafy.io:8800',
         headers: {
           Authorization: this.token ? this.token : '',
           'Content-type': 'application/json'
