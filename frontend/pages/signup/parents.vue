@@ -79,9 +79,9 @@
                     v-model="id"
                     placeholder="아이디를 입력해 주세요."
                     color="grey"
-                    :success-messages="!iderror ? id_text : false"
-                    :error-messages="iderror ? id_text : false"
-                    @blur="vaildId"
+                    :success-messages="!iderror ? id_text : ''"
+                    :error-messages="iderror ? id_text : ''"
+                    @blur="validID()"
                   />
                 </td>
               </tr>
@@ -98,9 +98,9 @@
                     placeholder="비밀번호를 입력해 주세요."
                     color="grey"
                     type="password"
-                    :success-messages="!pwerror ? pw_text : false"
-                    :error-messages="pwerror ? pw_text : false"
-                    @blur="vaildPassword"
+                    :success-messages="!pwerror ? pw_text : ''"
+                    :error-messages="pwerror ? pw_text : ''"
+                    @blur="validPassword()"
                   />
                 </td>
               </tr>
@@ -111,9 +111,9 @@
                     placeholder="비밀번호를 다시 한번 입력해 주세요."
                     color="grey"
                     type="password"
-                    :success-messages="!repwerror ? repw_text : false"
-                    :error-messages="repwerror ? repw_text : false"
-                    @change="vaildRePassword"
+                    :success-messages="!repwerror ? repw_text : ''"
+                    :error-messages="repwerror ? repw_text : ''"
+                    @input="validRePassword()"
                   />
                 </td>
               </tr>
@@ -129,9 +129,9 @@
                     v-model="nickname"
                     placeholder="닉네임을 입력해 주세요."
                     color="grey"
-                    :success-messages="!nickerror ? nick_text : false"
-                    :error-messages="nickerror ? nick_text : false"
-                    @blur="vaildNickname"
+                    :success-messages="!nickerror ? nick_text : ''"
+                    :error-messages="nickerror ? nick_text : ''"
+                    @blur="validNickname()"
                   />
                 </td>
               </tr>
@@ -147,9 +147,9 @@
                     v-model="email"
                     placeholder="이메일을 입력해 주세요."
                     color="grey"
-                    :success-messages="!emailerror ? email_text : false"
-                    :error-messages="emailerror ? email_text : false"
-                    @blur="vaildEmail"
+                    :success-messages="!emailerror ? email_text : ''"
+                    :error-messages="emailerror ? email_text : ''"
+                    @blur="validEmail()"
                   />
                 </td>
               </tr>
@@ -167,6 +167,7 @@
                     color="grey"
                     :success-messages="!addrerror ? addr_text : false"
                     :error-messages="addrerror ? addr_text : false"
+                    readonly
                     @click="openDaumZipAddress"
                   />
                 </td>
@@ -179,15 +180,16 @@
           style="margin-top:20px;"
         >
           <v-btn
-            color="#0dCA78"
+            :color="!validCheck() ? '#0dCA78' : '#d4d4d4'"
             rounded
             x-large
             depressed
             dark
             style="width:240px;"
+            :loading="loading"
             @click="signup"
           >
-            <span style="font-size:16px; font-weight:400">가입완료</span>
+            <span style="font-size:18px; font-weight:500">가입완료</span>
           </v-btn>
         </v-row>
 
@@ -217,68 +219,84 @@ export default {
         lng: '',
 
         iderror: false,
-        id_text: '사용할 수 없는 아이디입니다.',
+        id_text: '',
         pwerror: false,
-        pw_text: '사용할 수 없는 패스워드입니다.',
+        pw_text: '',
         repwerror: false,
-        repw_text: '비밀번호가 일치하지 않습니다.',
+        repw_text: '',
         emailerror: false,
-        email_text: '사용할 수 없는 이메일입니다.',
+        email_text: '',
         nickerror:false,
-        nick_text: '사용할 수 없는 닉네임입니다.',
+        nick_text: '',
         addrerror:false,
-        addr_text: '주소가 올바르지 않습니다.',
+        addr_text:  '',
+        loading:false,
     }
   },
   methods: {
-    vaildID() {
+    validCheck() {
+      return this.iderror || this.nickerror || this.emailerror || this.pwerror || this.repwerror || this.addrerror || !this.id_text || !this.nick_text || !this.email_text || !this.pw_text || !this.repw_text || !this.addr_text;
+    },
+    validID() {
       http.axios.get(`/rest-auth/validate/username/?username=${this.id}`)
         .then(({data}) => {
           this.iderror = false;
+          this.id_text = '사용할 수 있는 아이디입니다.';
         })
         .catch((error) => {
           this.iderror = true;
+          this.id_text = '사용할 수 없는 아이디입니다.';
         })
     },
-    vaildPassword() {
+    validPassword() {
       http.axios.get(`/rest-auth/validate/password/?password=${this.password}`)
         .then(({data}) => {
           this.pwerror = false;
+          this.pw_text = '사용할 수 있는 비밀번호입니다.';
         })
         .catch((error) => {
           this.pwerror = true;
+          this.pw_text = '사용할 수 없는 비밀번호입니다.';
         })
     },
-    vaildRePassword() {
+    validRePassword() {
       if(this.password == this.re_password) {
         this.repwerror = false;
+        this.repw_text = '비밀번호가 일치합니다.'
       }else {
         this.repwerror = true;
+        this.repw_text = '비밀번호가 일치하지 않습니다.'
       }
     },
-    vaildNickname() {
+    validNickname() {
       http.axios.get(`/rest-auth/validate/nickname/?nickname=${this.nickname}`)
         .then(({data}) => {
           this.nickerror = false;
+          this.nick_text = '사용할 수 있는 닉네임입니다.'
         })
         .catch((error) => {
           this.nickerror = true;
+          this.nick_text = '사용할 수 없는 닉네임입니다.'
         })
     },
-    vaildEmail() {
+    validEmail() {
       http.axios.get(`/rest-auth/validate/email/?email=${this.email}`)
         .then(({data}) => {
           this.emailerror = false;
+          this.email_text = '사용할 수 있는 이메일입니다.'
         })
         .catch((error) => {
           this.emailerror = true;
+          this.email_text = '사용할 수 없는 이메일입니다.'
         })
     },
-    vaildAddr() {
+    validAddr() {
       if(this.lat && this.lng) {
         this.addrerror = false;
+        this.addr_text = '올바른 주소입니다.'
       }else {
         this.addrerror = true;
+        this.addr_text = '올바르지 않은 주소입니다.'
       }
     },
     clickImg() {
@@ -315,14 +333,50 @@ export default {
     },
 
     setAddress(address, lng, lat) {
-        console.log(address, lat, lng)
         this.address = address
         this.lng = lng
         this.lat = lat
+        this.validAddr()
     },
     signup() {
+      if(this.id == ''){
+        this.iderror = true;
+        this.id_text = '아이디를 입력해주세요.';
+        return;
+      }
+      else if(this.password == ''){
+        this.pwerror = true;
+        this.pw_text = '비밀번호를 입력해주세요.';
+        return;
+      }
+      else if(this.re_password == ''){
+        this.repwerror = true;
+        this.repw_text = '비밀번호를 재확인해주세요.';
+        return;
+      }
+      else if(this.nickname == ''){
+        this.nickerror = true;
+        this.nick_text = '닉네임을 입력해주세요.';
+        return;
+      }
+      else if(this.email == ''){
+        this.emailerror = true;
+        this.email_text = '이메일을 입력해주세요.';
+        return;
+      }
+      else if(this.address == ''){
+        this.addrerror = true;
+        this.addr_text = '주소를 입력해주세요.';
+        return;
+      }
+      else if(this.validCheck()){
+        return;
+      }
+      this.loading = true;
       var frm = new FormData();
-      frm.append("profile_image", document.getElementById("file").files[0]);
+      if(document.getElementById("file").files[0]) {
+        frm.append("profile_image", document.getElementById("file").files[0]);
+      }
       frm.append("username", this.id)
       frm.append("email", this.email)
       frm.append("password1", this.password)
@@ -339,17 +393,10 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then(({data}) => {
-        console.log(data)
+        alert(data.detail)
+        this.loading = false;
+        this.$router.push('/login')
       })
-
-      // http.axios.post('/rest-auth/registration/', {
-      //   'username':this.id,
-      //   'email':this.email,
-      //   'password1':this.password,
-      //   'password2':this.re_password,
-      // }).then( ({data}) => {
-      //   console.log(data);
-      // })
     }
   }
 }
