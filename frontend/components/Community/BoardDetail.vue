@@ -4,7 +4,12 @@
       <v-list-item>
         <v-list-item-avatar>
           <v-img
+            v-if="article.user.profile_image != null"
             :src="article.user.profile_image"
+          />
+          <v-img
+            v-else
+            :src="require('@/assets/default_profile.png')"
           />
         </v-list-item-avatar>
         <v-list-item-content>
