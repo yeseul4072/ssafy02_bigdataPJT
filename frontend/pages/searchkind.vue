@@ -470,7 +470,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @media (min-width:320px) and (max-width:960px) {
     #left-panel {
         display:none
