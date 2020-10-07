@@ -57,7 +57,6 @@
             </div>
           </div>
         </div>
-        </h2>
       </div>
     </div>
     <div class="banner" />
@@ -90,15 +89,20 @@ export default {
       kakaoIcon.attr('class',`${className} _serviceIcon`);
       targetIcon.attr('class',`_kakao _serviceIcon`);
     },
+    getSession() {
+      http.axios.get('/rest-auth/user/profile').then(({data}) => {
+        this.$router.app.$store.commit('setUser', data)
+      })
+      this.$router.push('/home')
+    },
     login() {
       http.axios.post('/rest-auth/login/', {
         'username':this.id,
         'password':this.password,
       }).then( ({data}) => {
-        console.log(this.$router)
         this.$router.app.$store.commit('setIsLogin', true)
         this.$router.app.$store.commit('setToken', `Token ${data.key}`)
-        this.$router.push('/home')
+        this.getSession()
       })
     }
   }
