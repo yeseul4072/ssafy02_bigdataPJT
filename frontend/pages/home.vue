@@ -101,6 +101,31 @@ export default {
       features: ['방과후 전담', '방과후 통합', '24시간', '협동', '법인 단체', '문화/예술', '장애아전문', '장애아통합', '야간연장', '가정', '일반', '연장 보육반', '휴일보육',
         '영아전담', '언어', '직장', '시간제보육', '민간', '국공립', '통학버스', '과학/창의', '체육', '사회복지법인'
       ],
+      features2: {
+        after_school: '방과후 전담',
+        after_school_inclusion: '방과후 통합',
+        all_day: '24시간',
+        cooperation: '협동',
+        corporate: '법인 단체',
+        culture: '문화/예술',
+        disabled: '장애아전문',
+        disabled_integration: '장애아통합',
+        extension: '야간연장',
+        family: '가정',
+        general: '일반',
+        has_extension_class: '연장 보육반',
+        holiday: '휴일보육',
+        infants: '영아전담',
+        language: '언어',
+        office: '직장',
+        part_time: '시간제보육',
+        private: '민간',
+        public: '국공립',
+        school_bus: '통학버스',
+        science: '과학/창의',
+        sport: '체육',
+        welfare: '사회복지법인'
+      },
       featuresEng: ['after_school', 'after_school_inclusion', 'all_day', 'cooperation', 'corporate', 'culture', 'disabled', 'disabled_integration', 'extension', 'family',
         'general', 'has_extension_class', 'holiday', 'infants', 'language', 'office', 'part_time', 'private', 'public', 'school_bus', 'science', 'sport', 'welfare'
       ],
@@ -141,12 +166,10 @@ export default {
 
             // 토큰 처리
             data[i].tags = []
-            let idx = 0
             for (const j in data[i].features) {
               if (data[i].features[j]) {
-                data[i].tags.push(this.features[idx])
+                data[i].tags.push(this.features2[j])
               }
-              idx++
             }
             temp.left = data[i++]
 
@@ -154,12 +177,10 @@ export default {
 
             // 토큰 처리
             data[i].tags = []
-            idx = 0
             for (const j in data[i].features) {
               if (data[i].features[j]) {
-                data[i].tags.push(this.features[idx])
+                data[i].tags.push(this.features2[j])
               }
-              idx++
             }
 
             temp.right = data[i]
@@ -187,12 +208,10 @@ export default {
           for (const i in data) {
             data[i].avg_score = Number(data[i].avg_score.toFixed(1))
             data[i].tags = []
-            let idx = 0
             for (const j in data[i].kindergarten.features) {
               if (data[i].kindergarten.features[j]) {
-                data[i].tags.push(this.features[idx])
+                data[i].tags.push(this.features2[j])
               }
-              idx++
             }
           }
 
