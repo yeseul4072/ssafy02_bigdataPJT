@@ -208,7 +208,6 @@ export default {
       const geocoder = new kakao.maps.services.Geocoder()
 
       const callback = function (result, status) {
-        console.log(result)
         if (status === kakao.maps.services.Status.OK) {
           setAddress(result[0].x, result[0].y)
         }
@@ -218,7 +217,6 @@ export default {
     setAddress(lng, lat) {
       this.lng = lng
       this.lat = lat
-      console.log(lng,lat, "!!!")
       this.$router.push({
           path: '/searchkind',
           query: {
