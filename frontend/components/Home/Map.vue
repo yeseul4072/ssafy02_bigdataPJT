@@ -32,6 +32,8 @@ export default {
     },
     initMap () {
       const self = this
+      this.selected_lat = self.getUser.latitude
+      this.selected_lng = self.getUser.longitude
       setTimeout(function () {
         const container = document.getElementById('map')
         const options = { center: new kakao.maps.LatLng(self.getUser.latitude, self.getUser.longitude), level: 3 }
