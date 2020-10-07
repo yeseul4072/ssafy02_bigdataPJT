@@ -172,9 +172,10 @@ export default {
               break
             }
           }
+        })
+        .finally(() => {
           this.$router.app.$store.commit('setOverlay', false)
         })
-
       http.axios.get('/community/main-articles/')
         .then(({ data }) => {
           this.board = data
