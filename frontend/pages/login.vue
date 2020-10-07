@@ -1,6 +1,12 @@
 <template>
   <div class="login">
     <div class="login-box">
+      <v-img
+        class="logo"
+        :src="require('@/assets/logo.png')"
+        contain
+        @click="$router.push('/')"
+      />
       <a href="/" class="logo" />
 
       <div class="login-box-wrap">
@@ -147,15 +153,6 @@ export default {
         width: 480px;
         margin: auto;
     }
-    .logo {
-      margin-top:1%;
-      margin-left:3%;
-      background: url(/Vue.png) center center / cover no-repeat;
-
-      height:50px;
-      width:50px;
-    }
-
     .login-text{
       text-align:center;
       color:#0CC476;
@@ -234,5 +231,15 @@ export default {
       .banner {
         display: none;
       }
+    }
+    .logo {
+      margin-top:1%;
+      margin-left:3%;
+      height:50px;
+      max-height:70px;
+      width:50px;
+    }
+    .logo:hover{
+      cursor: pointer;
     }
 </style>

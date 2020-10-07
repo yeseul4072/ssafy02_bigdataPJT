@@ -2,7 +2,7 @@ FROM python:3.7.6
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
-RUN mkdir -p /django-dev-log
+RUN mkdir -p /django-prod-log
 COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
