@@ -90,7 +90,8 @@
             </v-row>
           </v-col>
           <v-col cols="12" align="center" class="py-0">
-            <span style="font-size:0.8vw;color:#4f4f4f;">* 항목별 별을 눌러 평점을 주세요</sapn>
+            <span style="font-size:0.8vw;color:#4f4f4f;">
+              * 항목별 별을 눌러 평점을 주세요
             </span>
           </v-col>
         </v-row>
@@ -145,8 +146,6 @@
           </v-card-text>
         </v-row>
       </v-col>
-    </v-row>
-    </v-col>
     </v-row>
   </div>
 </template>
