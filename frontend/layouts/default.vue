@@ -41,9 +41,12 @@ export default {
   computed: {
     notMain () {
       // ignore = ['/', '/']
-      return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path.indexOf('/signup')
+      return this.$route.path !== '/' && this.$route.path.indexOf('/login') && this.$route.path.indexOf('/signup')
     },
     ...mapGetters(['isBoard', 'getOverlay'])
+  },
+  mounted () {
+    console.log(this.notMain)
   },
   methods: {
     checkHeight (height) {
