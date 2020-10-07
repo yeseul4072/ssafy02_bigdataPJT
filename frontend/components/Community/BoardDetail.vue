@@ -4,7 +4,12 @@
       <v-list-item>
         <v-list-item-avatar>
           <v-img
-            :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+            v-if="article.user.profile_image != null"
+            :src="article.user.profile_image"
+          />
+          <v-img
+            v-else
+            :src="require('@/assets/default_profile.png')"
           />
         </v-list-item-avatar>
         <v-list-item-content>
@@ -18,7 +23,7 @@
                 :max-lines="1"
                 ellipsis="..."
               >
-                {{ board.title }}
+                {{ article.title }}
               </v-clamp>
             </h3>
           </v-col>
@@ -29,20 +34,24 @@
               align="start"
             >
               <span>
-                {{ board.writer | filterWriter }}
+                {{ article.user.nickname | filterWriter }}
               </span>
               <span style="margin-left:10px;">
-                <v-icon class="vd-icon" color="blue">
+                <v-icon class="vd-icon" color="primary">
                   mdi-comment-text-outline
                 </v-icon>
-                {{ board.boardCount }}
-                <v-icon class="vd-icon" color="pink">
+                {{ article.comment_count }}
+                <v-icon class="vd-icon pl-2" color="error">
                   mdi-thumb-up-outline
                 </v-icon>
-                {{ board.boardCount }}
+                {{ article.like_count }}
+                <v-icon class="vd-icon pl-2">
+                  mdi-eye
+                </v-icon>
+                {{ article.hit }}
               </span>
               <span style="margin-left:10px;">
-                {{ board.dateTime | diffDate }}
+                {{ article.created_at | diffDate }}
               </span>
             </v-col>
           </v-list-item-subtitle>
@@ -80,11 +89,14 @@ export default {
       return `by ${val}`
     }
   },
-  props: ['board'],
+  props: ['article'],
   data () {
     return {
       line: 1
     }
+  },
+  mounted () {
+
   }
 }
 </script>

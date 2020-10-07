@@ -8,7 +8,7 @@
         fab
         top
         right
-        color="pink"
+        color="#00BF8C"
         @click="goto(componentName);"
       >
         <v-icon>mdi-arrow-up</v-icon>

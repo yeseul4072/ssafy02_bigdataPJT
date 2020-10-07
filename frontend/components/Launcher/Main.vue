@@ -7,13 +7,24 @@
         </p>
       </div>
       <div style="text-align:center; margin-top: 20px;">
-        <div class="text-center">
+        <div class="text-center mt-11">
           <v-btn
+            v-if="isLogin"
             x-large
             :rounded="true"
             :outlined="true"
             :min-width="250"
             to="/Home"
+          >
+            지금 시작해 보세요 :)
+          </v-btn>
+          <v-btn
+            v-else
+            x-large
+            :rounded="true"
+            :outlined="true"
+            :min-width="250"
+            to="/login"
           >
             지금 시작해 보세요 :)
           </v-btn>
@@ -25,8 +36,15 @@
 
 <script>
 export default {
+  data () {
+    return {
+      isLogin: false
+    }
+  },
+  mounted () {
+    this.isLogin = this.$store.state.User.isLogin
+  },
   methods: {
-
   }
 }
 </script>
@@ -37,11 +55,11 @@ export default {
   align-items: center;
   justify-content: center;
   width:100%;
-  height:400px;
+  height:600px;
 }
 
 .dp-2{
-  color: #F257A0;
+  color: #00bf8c;
   font-weight: 700;
 }
 

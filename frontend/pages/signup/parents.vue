@@ -54,7 +54,7 @@
               </v-btn>
             </template>
             <v-avatar width="184" height="184">
-              <v-img src="/user2.png" />
+              <v-img ref="img" src="/user2.png" />
             </v-avatar>
           </v-badge>
         </v-row>
@@ -79,6 +79,9 @@
                     v-model="id"
                     placeholder="아이디를 입력해 주세요."
                     color="grey"
+                    :success-messages="!iderror ? id_text : ''"
+                    :error-messages="iderror ? id_text : ''"
+                    @blur="validID()"
                   />
                 </td>
               </tr>
@@ -95,6 +98,9 @@
                     placeholder="비밀번호를 입력해 주세요."
                     color="grey"
                     type="password"
+                    :success-messages="!pwerror ? pw_text : ''"
+                    :error-messages="pwerror ? pw_text : ''"
+                    @blur="validPassword()"
                   />
                 </td>
               </tr>
@@ -105,6 +111,9 @@
                     placeholder="비밀번호를 다시 한번 입력해 주세요."
                     color="grey"
                     type="password"
+                    :success-messages="!repwerror ? repw_text : ''"
+                    :error-messages="repwerror ? repw_text : ''"
+                    @input="validRePassword()"
                   />
                 </td>
               </tr>
@@ -120,6 +129,9 @@
                     v-model="nickname"
                     placeholder="닉네임을 입력해 주세요."
                     color="grey"
+                    :success-messages="!nickerror ? nick_text : ''"
+                    :error-messages="nickerror ? nick_text : ''"
+                    @blur="validNickname()"
                   />
                 </td>
               </tr>
@@ -135,6 +147,9 @@
                     v-model="email"
                     placeholder="이메일을 입력해 주세요."
                     color="grey"
+                    :success-messages="!emailerror ? email_text : ''"
+                    :error-messages="emailerror ? email_text : ''"
+                    @blur="validEmail()"
                   />
                 </td>
               </tr>
@@ -150,6 +165,9 @@
                     v-model="address"
                     placeholder="관심 지역을 입력해 주세요."
                     color="grey"
+                    :success-messages="!addrerror ? addr_text : false"
+                    :error-messages="addrerror ? addr_text : false"
+                    readonly
                     @click="openDaumZipAddress"
                   />
                 </td>
@@ -162,15 +180,16 @@
           style="margin-top:20px;"
         >
           <v-btn
-            color="#0dCA78"
+            :color="!validCheck() ? '#0dCA78' : '#d4d4d4'"
             rounded
             x-large
             depressed
             dark
             style="width:240px;"
+            :loading="loading"
             @click="signup"
           >
-            <span style="font-size:16px; font-weight:400">가입완료</span>
+            <span style="font-size:18px; font-weight:500">가입완료</span>
           </v-btn>
         </v-row>
 
@@ -186,6 +205,7 @@
 <!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>-->
 <script>
 import http from "@/util/http_common.js"
+// import axios from "axios"
 export default {
   data () {
     return {
@@ -197,31 +217,103 @@ export default {
         address: '',
         lat: '',
         lng: '',
+
+        iderror: false,
+        id_text: '',
+        pwerror: false,
+        pw_text: '',
+        repwerror: false,
+        repw_text: '',
+        emailerror: false,
+        email_text: '',
+        nickerror:false,
+        nick_text: '',
+        addrerror:false,
+        addr_text:  '',
+        loading:false,
     }
   },
   methods: {
+    validCheck() {
+      return this.iderror || this.nickerror || this.emailerror || this.pwerror || this.repwerror || this.addrerror || !this.id_text || !this.nick_text || !this.email_text || !this.pw_text || !this.repw_text || !this.addr_text;
+    },
+    validID() {
+      http.axios.get(`/rest-auth/validate/username/?username=${this.id}`)
+        .then(({data}) => {
+          this.iderror = false;
+          this.id_text = '사용할 수 있는 아이디입니다.';
+        })
+        .catch((error) => {
+          this.iderror = true;
+          this.id_text = '사용할 수 없는 아이디입니다.';
+        })
+    },
+    validPassword() {
+      http.axios.get(`/rest-auth/validate/password/?password=${this.password}`)
+        .then(({data}) => {
+          this.pwerror = false;
+          this.pw_text = '사용할 수 있는 비밀번호입니다.';
+        })
+        .catch((error) => {
+          this.pwerror = true;
+          this.pw_text = '사용할 수 없는 비밀번호입니다.';
+        })
+    },
+    validRePassword() {
+      if(this.password == this.re_password) {
+        this.repwerror = false;
+        this.repw_text = '비밀번호가 일치합니다.'
+      }else {
+        this.repwerror = true;
+        this.repw_text = '비밀번호가 일치하지 않습니다.'
+      }
+    },
+    validNickname() {
+      http.axios.get(`/rest-auth/validate/nickname/?nickname=${this.nickname}`)
+        .then(({data}) => {
+          this.nickerror = false;
+          this.nick_text = '사용할 수 있는 닉네임입니다.'
+        })
+        .catch((error) => {
+          this.nickerror = true;
+          this.nick_text = '사용할 수 없는 닉네임입니다.'
+        })
+    },
+    validEmail() {
+      http.axios.get(`/rest-auth/validate/email/?email=${this.email}`)
+        .then(({data}) => {
+          this.emailerror = false;
+          this.email_text = '사용할 수 있는 이메일입니다.'
+        })
+        .catch((error) => {
+          this.emailerror = true;
+          this.email_text = '사용할 수 없는 이메일입니다.'
+        })
+    },
+    validAddr() {
+      if(this.lat && this.lng) {
+        this.addrerror = false;
+        this.addr_text = '올바른 주소입니다.'
+      }else {
+        this.addrerror = true;
+        this.addr_text = '올바르지 않은 주소입니다.'
+      }
+    },
     clickImg() {
         $("#file").click();
     },
     changeImg(e){
-      // var frm = new FormData();
-      // frm.append("file", document.getElementById("file").files[0]);
+      var self = this
+      var file = document.getElementById("file").files[0]
+      var reader  = new FileReader();
 
-      // axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
-      //   headers: {
-      //     'accept': '*/*',
-      //     'X-AUTH-TOKEN': store.state.token,
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // }).then(({data}) => {
-      //   this.thumbnailUrl = data.result;
-      //   this.changeForm(true);
-      // }).catch((error) => {
-      //   console.dir(error)
-      // }).finally(()=>{
+      reader.onloadend = function () {
+        self.$refs.img.src = reader.result;
+      }
 
-      // })
-      // this.$refs.file.value = ''
+      if (file) {
+        reader.readAsDataURL(file);
+      }
     },
 
     openDaumZipAddress() {
@@ -241,19 +333,69 @@ export default {
     },
 
     setAddress(address, lng, lat) {
-        console.log(address, lng, lng)
         this.address = address
         this.lng = lng
         this.lat = lat
+        this.validAddr()
     },
     signup() {
-      http.axios.post('/rest-auth/registration/', {
-        'username':this.id,
-        'email':this.email,
-        'password1':this.password,
-        'password2':this.re_password,
-      }).then( ({data}) => {
-        console.log(data);
+      if(this.id == ''){
+        this.iderror = true;
+        this.id_text = '아이디를 입력해주세요.';
+        return;
+      }
+      else if(this.password == ''){
+        this.pwerror = true;
+        this.pw_text = '비밀번호를 입력해주세요.';
+        return;
+      }
+      else if(this.re_password == ''){
+        this.repwerror = true;
+        this.repw_text = '비밀번호를 재확인해주세요.';
+        return;
+      }
+      else if(this.nickname == ''){
+        this.nickerror = true;
+        this.nick_text = '닉네임을 입력해주세요.';
+        return;
+      }
+      else if(this.email == ''){
+        this.emailerror = true;
+        this.email_text = '이메일을 입력해주세요.';
+        return;
+      }
+      else if(this.address == ''){
+        this.addrerror = true;
+        this.addr_text = '주소를 입력해주세요.';
+        return;
+      }
+      else if(this.validCheck()){
+        return;
+      }
+      this.loading = true;
+      var frm = new FormData();
+      if(document.getElementById("file").files[0]) {
+        frm.append("profile_image", document.getElementById("file").files[0]);
+      }
+      frm.append("username", this.id)
+      frm.append("email", this.email)
+      frm.append("password1", this.password)
+      frm.append("password2", this.re_password)
+      frm.append("latitude", this.lat)
+      frm.append("longitude", this.lng)
+      frm.append("address", this.address)
+      frm.append("nickname", this.nickname)
+      frm.append("is_director", 'False')
+      console.log(frm)
+      http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(({data}) => {
+        alert(data.detail)
+        this.loading = false;
+        this.$router.push('/login')
       })
     }
   }

@@ -38,15 +38,28 @@ parse_user_data(columns, users)
             data: weight
         )
 """
-def parse_user_data(users, columns):            
-    user_list = set(users['user_id'])    
+def parse_user_data(users, columns):      
+    # print(users)      
+    try:
+        user_list = set(users['user_id'])    
+    except:
+        user_list = []
+    print(user_list)
+    print(users)
     df = pd.DataFrame(data=[[0]*len(columns) for i in range(len(user_list))], columns=columns, index=user_list)
 
-    users_sum = users.groupby(["user_id", "kindergarten_id"]).sum()    
-    for id in users_sum.index:
-        df.loc[id[0],id[1]] += users_sum.loc[id,][0]
+    try:
+        users_sum = users.groupby(["user_id", "kindergarten_id"]).sum()
+        # print(list(df.columns))  
+        for id in users_sum.index:
+            try:
+                df.loc[id[0],id[1]] += users_sum.loc[id,][0]
+            except:
+                1
+    except:
+        1
     return df
-    
+
 
 
 
@@ -79,9 +92,10 @@ get_preference(kindergarten_df, user_df):
 """
 def get_preference(kindergarten_df, user_df):
     data = [0] * len(kindergarten_df.keys())
-    for i,key in enumerate(kindergarten_df):
-        for j,value in enumerate(kindergarten_df[key]):            
-            data[i] += value * user_df[j]
+    if not user_df.empty:      
+        for i,key in enumerate(kindergarten_df):
+            for j,value in enumerate(kindergarten_df[key]):    
+                data[i] += value * user_df.iloc[0,j]
     return pd.DataFrame(columns=list(kindergarten_df.keys()), data=[data])
 
 
@@ -162,9 +176,11 @@ def user_based_collaborative_filtering(users, user, n):
 """
     Test Code
 """
-# kindergarten_df = load_from_data('./data/data2.json')
+# kindergarten_df = load_from_data('../kindergartens/data.json')
 # users_data = [[1+(j == i) if j == i or j==i+1 else 0 for j in range(len(kindergarten_df))] for i in range(10)]
 # users_df = pd.DataFrame(users_data, columns=kindergarten_df.index)
+# print()
+# print(users_df)
 # preference_df = get_preference(kindergarten_df,users_df.iloc[0,:])
 # # print(kindergarten_df)
 # # print(preference_df)

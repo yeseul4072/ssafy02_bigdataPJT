@@ -1,27 +1,114 @@
 <template>
-  <v-container class="justify-center wrap" fluid fill-height>
+  <v-container class="justify-center wrap mt-9" fluid fill-height>
     <v-row fill-height>
       <v-col cols="1" />
       <v-col cols="1" align="center">
-        <v-img :src="require('../../assets/logo_foot.png')" height="70px" width="70px" />
+        <logo-icon />
       </v-col>
       <v-col cols="6">
         <v-row>
           <ul class="footLink">
             <li class="point br1" style="padding-left: 0;">
-              <a href="javascript:void(0);" style="color: red !important;">개인정보 처리방침</a>
+              <v-dialog
+                v-model="policy"
+                width="600px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    style="color: red !important;"
+                    v-bind="attrs"
+                    @click="policy=!policy"
+                    v-on="on"
+                  >
+                    개인정보 처리방침
+                  </span>
+                </template>
+                <v-card>
+                  <v-card-title class="d-flex">
+                    <v-row>
+                      <v-col cols="12" align="end">
+                        <v-btn
+                          class="mx-2"
+                          fab
+                          x-small
+                          :outlined="false"
+                          :depressed="true"
+                          color="rgba(0, 153, 204, 0)"
+                          @click="policy=false"
+                        >
+                          <v-icon dark>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-col>
+                      <v-col cols="12">
+                        <span class="headline">어린이ZIP 개인정보 처리방침</span>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+                  <v-card-text style="word-break:keep-all">
+                    <private-policy />
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">이용약관</a>
+              <v-dialog
+                v-model="terms"
+                width="600px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    v-bind="attrs"
+                    @click="terms=!terms"
+                    v-on="on"
+                  >
+                    이용약관
+                  </span>
+                </template>
+                <v-card>
+                  <v-card-title class="d-flex">
+                    <v-row>
+                      <v-col cols="12" align="end">
+                        <v-btn
+                          class="mx-2"
+                          fab
+                          x-small
+                          :outlined="false"
+                          :depressed="true"
+                          color="rgba(0, 153, 204, 0)"
+                          @click="terms=false"
+                        >
+                          <v-icon dark>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-col>
+                      <v-col cols="12">
+                        <span class="headline">어린이ZIP 이용약관</span>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+                  <v-card-text style="word-break:keep-all">
+                    <terms />
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">Help</a>
+              <nuxt-link to="/community/2">
+                Help
+              </nuxt-link>
             </li>
             <li class="br1">
-              <a href="javascript:void(0);">Contact</a>
+              <nuxt-link to="/community/3">
+                Contact
+              </nuxt-link>
             </li>
             <li>
-              <a href="javascript:void(0);">About</a>
+              <nuxt-link to="/community/1">
+                About
+              </nuxt-link>
             </li>
           </ul>
         </v-row>
@@ -35,16 +122,28 @@
       <v-col cols="3" class="d-flex justify-center">
         <ul class="sns" style="margin-top:15px;">
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
+            <a href="https://www.facebook.com/">
+              <!-- <v-img :src="require('../../assets/foot_ic_facebook.png')" /> -->
+              <v-icon class="mdi-36px">mdi-facebook</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
+            <a href="https://section.blog.naver.com/BlogHome.nhn?directoryNo=0&currentPage=1&groupId=0">
+              <!-- <v-img :src="require('../../assets/foot_ic_blog.png')" /> -->
+              <v-icon class="mdi-36px">mdi-blogger</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
+            <a href="https://www.instagram.com/?hl=ko">
+              <!-- <v-img :src="require('../../assets/foot_ic_insta.png')" /> -->
+              <v-icon class="mdi-36px">mdi-instagram</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="javascript:void(0);"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
+            <a href="https://www.youtube.com/">
+              <!-- <v-img :src="require('../../assets/foot_ic_youtube.png')" /> -->
+              <v-icon class="mdi-36px">mdi-youtube</v-icon>
+            </a>
           </li>
         </ul>
       </v-col>
@@ -54,18 +153,33 @@
 </template>
 
 <script>
-export default {
+import PrivatePolicy from '@/components/Common/Footer/Policy.vue'
+import Terms from '@/components/Common/Footer/Terms.vue'
+import LogoIcon from '@/components/Common/Header/Logo.vue'
 
+export default {
+  components: {
+    PrivatePolicy,
+    Terms,
+    LogoIcon
+  },
+  data () {
+    return {
+      policy: false,
+      terms: false
+    }
+  }
 }
 </script>
 
 <style scoped>
 .wrap{
   height: 180px;
-  background-color:#333;
+  /* background-color:#333; */
   font-weight: 600;
   color: #999 ;
   font-size: 1vw;
+  border-top: thin solid #d9d9d9;
 }
 ul{
   list-style: none;

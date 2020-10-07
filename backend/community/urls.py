@@ -7,7 +7,9 @@ urlpatterns = [
   path('<int:board_pk>/', views.BoardDetail.as_view()),
   path('<int:board_pk>/favorite/', views.favorite), 
   path('<int:board_pk>/article/', views.Articles.as_view()),
+  path('main-articles/', views.main_articles),
   path('<int:board_pk>/article/<int:article_pk>/', views.ArticleDetail.as_view()),
-  path('<int:board_pk>/article/<int:article_pk>/like/', views.like_article),
+  path('article/<int:article_pk>/like/', views.like_article),
   path('<int:board_pk>/article/<int:article_pk>/comment/<int:comment_pk>/', views.CommentDetail.as_view()),
+  path('favorite/boards/', views.user_favorite_boards),
 ]

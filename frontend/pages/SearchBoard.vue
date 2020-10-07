@@ -34,11 +34,11 @@
             style="padding-top:5px;"
           >
             <div>
-              <v-text
-                @click="selected=index"
+              <span
+                @click="selected=index; goSearch();"
               >
                 {{ item.text }}
-              </v-text>
+              </span>
               <v-hover v-slot:default="{ hover }">
                 <v-icon
                   v-if="selected == index || hover"
@@ -71,7 +71,7 @@
                     :id="item.id"
                     :title="item.title"
                     :content="item.content"
-                    :board-count="item.boardCount"
+                    :board-count="item.article_count"
                     :text="text"
                   />
                 </v-col>
@@ -95,7 +95,74 @@
                 </v-row>
                 <v-row align="start" justify="center">
                   <div style="font-size:20px; margin-bottom:20px;">
-                    게시글이 존재하지 않습니다 :(
+                    게시판이 존재하지 않습니다 :(<br>
+                    여러분이 한번 만들어보세요!
+                    <v-dialog
+                      v-model="dialog"
+                      persistent
+                      max-width="350"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          class="cm-bc-icon"
+                          depressed
+                          fab
+                          dark
+                          x-small
+                          color="success"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          <v-icon>
+                            mdi-pencil
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">
+                          게시판 만들기
+                        </v-card-title>
+                        <v-card-text>
+                          <div>
+                            게시판이 없나요? 그렇다면 여러분이 원하는 게시판을 만들어보세요!
+                          </div>
+                          <div class="mt-5">
+                            <v-text-field
+                              v-model="title"
+                              class="pa-0"
+                              :rules="rules"
+                              hide-details="auto"
+                              label="이름"
+                            />
+                          </div>
+                          <div class="mt-5">
+                            <v-text-field
+                              v-model="content"
+                              class="pa-0"
+                              hide-details="auto"
+                              label="간단한 설명"
+                            />
+                          </div>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer />
+                          <v-btn
+                            color="red darken-1"
+                            text
+                            @click="dialog = false"
+                          >
+                            취소
+                          </v-btn>
+                          <v-btn
+                            color="green darken-1"
+                            text
+                            @click="dialog = false; createBoard()"
+                          >
+                            만들기
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </div>
                 </v-row>
               </v-col>
@@ -108,6 +175,7 @@
 </template>
 
 <script>
+import http from '@/util/http_common.js'
 import SearchBoardDetail from '@/components/Community/Search/SearchBoardDetail.vue'
 export default {
   components: { SearchBoardDetail },
@@ -117,60 +185,77 @@ export default {
       text: '',
       count: 0,
       page: 1,
-      pageCnt: 10,
-      itemsPerPage: 5,
+      pageCnt: 0,
+      itemsPerPage: 10,
       searchList: [
         {
-          text: '게시판 제목'
+          text: '게시판 제목',
+          type: 'title'
         },
         {
-          text: '게시판 설명'
+          text: '게시판 설명',
+          tyep: 'content'
         }
       ],
       boardList: [
         {
-          id: 1,
-          title: '안녕하세요! 여러분께 화이트데이 사탕을 가져왔어요! ( + 풀이 슬라이드 )',
-          content: '여러분께 화이트 데이 사탕을 가지고 왔어요! 아래 문제를 화이트데이가 끝나기 전까지 풀어 주시면 제가 사탕 기프티콘을 드릴게요! https://www.acmicpc.net/proble... https://www.acmicpc.net/proble... https://www.acmicpc.net/proble... P. S. 1. 데이터가 중간에 추가 될 수 있어요, 그래도 데이터가 추가되기 전에 맞은 경우에는 사탕을 드릴게요! P. S. 2. 한 문제라도 풀어주시면 저는 기뻐요! 여러분들을 위한 사탕도 준비할 게요! P. S. 3. 이상한 방법으로 사탕을 얻으려고 시도 하면 제가 사탕을 안 줄지도 몰라요!',
-          boardCount: 1
-        },
-        {
-          id: 1,
-          title: '안녕하세요!',
-          content: '드디어 인사드릴 수 있어 기쁩니다.요즘 매일같이 이곳에 들락거리며,  "틀렸습니다" 와 더 친해지고 있네요.운영자님의 노고에 감사드리며, 모두들 화이팅 입니다! ',
-          boardCount: 2
-        },
-        {
-          id: 1,
-          title: '안녕하세요. 현재 군대에서 문제 풀고있네요.',
-          content: '안녕하세요.2012, 2013 ICPC 에 참가한 고려대학교 전명우입니다.다름이 아니라 얼마 전 있었던 인터넷예선 풀이를 제 블로그에 작성해서 같이 공유하고자 글을 쓰게 되었습니다.http://blog.myungwoo.krIOI 풀이도 작성했고, 기타 자잘한 문제 소개, 해법도 있습니다.감사합니다!',
-          boardCount: 3
-        },
-        {
-          id: 1,
-          title: '안녕 여러분',
-          content: 'JAVA 공부하면서 문제풀이할 곳을 찾다가 들어오게 되었습니다.   같은 문제라도 다른방식으로 접근해서 푸는분들을 보면서요 컴퓨터 언어를 언어라고 하는 이유를 많이 느낍니다  어제 기초 문제인 셀프넘버 풀면서 많이 느꼇어요 안녕하세요랑 안녕하십니까랑 같은 의미를 전달하지만 다른 형태를 가지고 있는 것처럼요 아무쪼록 열심히 하겠습니다. 잘부탁드립니당',
-          boardCount: 4
-        },
-        {
-          id: 1,
-          title: '안녕 여러분',
-          content: '반갑습니다 여러분',
-          boardCount: 5
-        },
-        {
-          id: 1,
-          title: '안녕 여러분',
-          content: '반갑습니다 여러분',
-          boardCount: 6
-        },
-        {
-          id: 1,
-          title: '안녕 여러분',
-          content: '반갑습니다 여러분',
-          boardCount: 7
+          article_count: 0,
+          content: '',
+          favorite_yn: 0,
+          id: 0,
+          title: ''
         }
-      ]
+      ],
+      dialog: false,
+      rules: [
+        value => !!value || '필수로 입력해야합니다.'
+      ],
+      title: '',
+      content: ''
+    }
+  },
+  watch: {
+    text () {
+      this.goSearch(1)
+    },
+    page () {
+      this.goSearch(this.page)
+    }
+  },
+  mounted () {
+    http.axios.get(`/community/?page=${this.page}`)
+      .then(({ data }) => {
+        this.boardList = data.results
+        this.count = data.count
+        this.pageCnt = parseInt((data.count - 1) / this.itemsPerPage + 1)
+      })
+  },
+  methods: {
+    goSearch (page) {
+      if (this.selected === 0) {
+        http.axios.get(`/community?page=${page}&title=${this.text}`)
+          .then(({ data }) => {
+            this.boardList = data.results
+            this.count = data.count
+            this.pageCnt = parseInt((data.count - 1) / this.itemsPerPage + 1)
+          })
+      } else {
+        http.axios.get(`/community?page=${page}&content=${this.text}`)
+          .then(({ data }) => {
+            this.boardList = data.results
+            this.count = data.count
+            this.pageCnt = parseInt((data.count - 1) / this.itemsPerPage + 1)
+          })
+      }
+    },
+    createBoard () {
+      http.axios.post('/community/', {
+        title: this.title,
+        content: this.content
+      })
+        .then(({ data }) => {
+          this.goSearch(1)
+        })
     }
   }
 }

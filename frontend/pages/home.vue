@@ -10,41 +10,43 @@
             </div>
           </v-col>
         </v-row>
-        <v-row style="width:100%;margin-bottom:50px;">
+        <v-row class="mb-2" style="width:100%;height:620px;">
           <v-col cols="12">
-            <kinder-box :kinders="kinders1" class="card" title="천사동에 3~4살 아이가 가장 많은 어린이집" />
+            <kinder-box :kinders="kinders1" class="card" :title="`근처 ${feature1} 어린이집`" />
           </v-col>
         </v-row>
-        <v-row style="width:100%;">
+        <v-row style="width:100%;height:620px;">
           <v-col cols="12">
-            <kinder-box :kinders="kinders1" class="card" title="천사동에 야간운영을 하는 어린이집" />
+            <kinder-box :kinders="kinders2" class="card" :title="`근처 ${feature2} 어린이집`" />
           </v-col>
         </v-row>
       </v-row>
-      <v-row style="height:800px;margin-top:50px;">
+      <v-row class="mt-1" style="height:790px;">
         <v-col cols="6" style="height:100%">
           <div class="card" style="height:100%">
             <v-row>
               <v-col cols="12">
                 <div style="font-size:2vw">
-                  우리 아이
+                  지금 뜨는 게시글
                 </div>
               </v-col>
             </v-row>
             <v-row
-              v-for="(item, index) in posts"
+              v-for="(item, index) in board"
               :key="index"
-              style="height:18%;"
             >
-              <v-col cols="12">
-                <post-box />
+              <v-col
+                cols="12"
+                class="py-0"
+              >
+                <post-box :board="item" />
               </v-col>
             </v-row>
           </div>
         </v-col>
         <v-col cols="6" style="height:100%">
           <div class="card" style="height:100%">
-            <v-row style="height:10%;">
+            <v-row style="height:80px;">
               <v-col cols="12">
                 <v-row>
                   <v-col cols="6" style="font-size:2vw;">
@@ -61,8 +63,11 @@
                 </v-row>
               </v-col>
             </v-row>
-            <v-row style="height:90%">
-              <review-box :review="reviews[reviewIdx]" />
+            <v-row
+              v-if="review.length!=0"
+              style="height:660px;"
+            >
+              <review-box :review="review[reviewIdx]" />
             </v-row>
           </div>
         </v-col>
@@ -77,6 +82,8 @@ import SearchBar from '@/components/Home/Search.vue'
 import KinderBox from '@/components/Home/Kinder.vue'
 import PostBox from '@/components/Home/Post.vue'
 import ReviewBox from '@/components/Home/Review.vue'
+import http from '@/util/http_common.js'
+
 export default {
   components: {
     SearchBar,
@@ -86,151 +93,21 @@ export default {
   },
   data () {
     return {
-      kinders1: [
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 1.5
-        },
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 2.2
-        },
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 3.3
-        },
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 1.2
-        },
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', '안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 1.5
-        },
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          tel: '(02)3789-5971',
-          stars: 4.3,
-          grade: 'A',
-          review_cnt: 120,
-          distance: 1.7
-        }
+      kinders1: [],
+      kinders2: [],
+      feature1: '',
+      feature2: '',
+      features: ['방과후 전담', '방과후 통합', '24시간', '협동', '법인 단체', '문화/예술', '장애아전문', '장애아통합', '야간연장', '가정', '일반', '연장 보육반', '휴일보육',
+        '영아전담', '언어', '직장', '시간제보육', '민간', '국공립', '통학버스', '과학/창의', '체육', '사회복지법인'
       ],
-      kinders2: [
-
+      featuresEng: ['after_school', 'after_school_inclusion', 'all_day', 'cooperation', 'corporate', 'culture', 'disabled', 'disabled_integration', 'extension', 'family',
+        'general', 'has_extension_class', 'holiday', 'infants', 'language', 'office', 'part_time', 'private', 'public', 'school_bus', 'science', 'sport', 'welfare'
       ],
-      posts: [
-        {
-          title: '오늘은 날이 좋더라구요',
-          user: {
-            name: '우승아빠'
-          },
-          viewcnt: 266,
-          likecnt: 50
-        },
-        {
-          title: '오늘은 날이 좋더라구요',
-          user: {
-            name: '우승아빠'
-          },
-          viewcnt: 266,
-          likecnt: 50
-        }, {
-          title: '오늘은 날이 좋더라구요',
-          user: {
-            name: '우승아빠'
-          },
-          viewcnt: 266,
-          likecnt: 50
-        },
-        {
-          title: '오늘은 날이 좋더라구요',
-          user: {
-            name: '우승아빠'
-          },
-          viewcnt: 266,
-          likecnt: 50
-        },
-        {
-          title: '오늘은 날이 좋더라구요',
-          user: {
-            name: '우승아빠'
-          },
-          viewcnt: 266,
-          likecnt: 50
-        }
-
+      featuresKo: ['방과후 전담', '방과후 통합', '24시간', '협동', '법인 단체', '문화/예술 교육', '장애아전문', '장애아통합', '야간연장', '가정', '일반', '연장 보육반이 있는', '휴일보육제공',
+        '영아전담', '언어 교육', '직장', '시간제보육 가능', '민간', '국공립', '통학버스 시행', '과학/창의 교육', '체육 교육', '사회복지법인'
       ],
-      reviews: [
-        {
-          name: '대봉어린이집',
-          tags: ['국공립', '야간연장', '방과후 통합', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '믿고 맡길 수 있는 어린이집',
-          stars: 5,
-          pros: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '1원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '둘리어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '사건사고 많은 어린이집',
-          stars: 2,
-          pros: '2원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '2원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '포차어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '원장선생님이 술마시다 걸림',
-          stars: 1,
-          pros: '3원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '3원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        },
-        {
-          name: '바둑어린이집',
-          tags: ['국공립', '방과후 통합', '야간연장', ' 안전교육', '통학차량', 'CCTV 운영'],
-          url: 'kinder_temp.jpg',
-          title: '세상에 이런 어린이집이?',
-          stars: 4.5,
-          pros: '4원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.',
-          cons: '4원장선생님이 교육에 대한 열의가 굉장하시다고 느꼈다. \n원비 대비 하는 활동이나 교육프로그램이 많고 다양해서 아이가 항상 유치원 가기를 즐거워한다. 또한 현장학습이나 생일파티때 따로 음식을 준비하지 않아도 원에서 준비해 주신다. \n매주 학습이 어떻게 이루어졌는지 그주의 활동을 정리해 보내주신다.'
-        }
-      ],
+      board: [],
+      review: [],
       reviewIdx: 0
     }
   },
@@ -240,13 +117,91 @@ export default {
   watch: {
 
   },
+  created () {
+    if (!this.isLogin) { this.$router.push('/login') } else {
+      http.axios.get('/kindergartens/feature-based-recommend/')
+        .then(({ data }) => {
+          // 특징 매핑
+          for (let i = 0; i < this.featuresEng.length; i++) {
+            if (data[0].feature === this.featuresEng[i]) {
+              this.feature1 = this.featuresKo[i]
+            }
+          }
+          for (let i = 0; i < this.featuresEng.length; i++) {
+            if (data[6].feature === this.featuresEng[i]) {
+              this.feature2 = this.featuresKo[i]
+            }
+          }
+          // 데이터 형태 처리
+          for (let i = 0; i < 12; i++) {
+            const temp = {}
+            data[i].distance = data[i].distance.toFixed(1)
+
+            // 토큰 처리
+            data[i].tags = []
+            let idx = 0
+            for (const j in data[i].features) {
+              if (data[i].features[j]) {
+                data[i].tags.push(this.features[idx])
+              }
+              idx++
+            }
+            temp.left = data[i++]
+
+            data[i].distance = data[i].distance.toFixed(1)
+
+            // 토큰 처리
+            data[i].tags = []
+            idx = 0
+            for (const j in data[i].features) {
+              if (data[i].features[j]) {
+                data[i].tags.push(this.features[idx])
+              }
+              idx++
+            }
+
+            temp.right = data[i]
+            if (i < 6) { this.kinders1.push(temp) } else { this.kinders2.push(temp) }
+          }
+
+          for (const i in data[6].features) {
+            if (data[0].features[i] === this.featuresEng[i]) {
+              this.feature2 = this.features[i]
+              break
+            }
+          }
+        })
+
+      http.axios.get('/community/main-articles/')
+        .then(({ data }) => {
+          this.board = data
+        })
+
+      http.axios.get('/kindergartens/activated-reviews/')
+        .then(({ data }) => {
+          for (const i in data) {
+            data[i].avg_score = Number(data[i].avg_score.toFixed(1))
+            data[i].tags = []
+            let idx = 0
+            for (const j in data[i].kindergarten.features) {
+              if (data[i].kindergarten.features[j]) {
+                data[i].tags.push(this.features[idx])
+              }
+              idx++
+            }
+          }
+
+          this.review = data
+        })
+    }
+  },
   methods: {
     changelogin () {
       const cur = this.$store.state.User.isLogin
       this.$store.commit('setIsLogin', !cur)
     },
     changeReview (num) {
-      const len = this.reviews.length
+      const len = this.review.length
       this.reviewIdx = ((this.reviewIdx + num) + len) % len
     }
   }

@@ -1,8 +1,8 @@
 # 어린이ZIP
 
-> 특화-Sub PJT 2 
+> 특화-Sub PJT 3
 >
-> 2020.09.07~2020.09.18(총 2주)
+> 2020.09.21~2020.10.08(총 3주)
 
 | 이름         | 역할                                   |
 | ------------ | -------------------------------------- |
@@ -11,6 +11,12 @@
 | 서지훈       | Frontend Develop                       |
 | 안성민       | Fullstack Develop, 데이터 수집 및 정제 |
 | 허예슬       | Backend Develop                        |
+
+<br><br>
+
+![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
+
+<br>
 
 
 
@@ -46,7 +52,8 @@
 - 어린이집 정보와 더불어 지역구별 인구당 범죄 발생 빈도 & 강력 범죄 비율 시각화
 - 어린이집 리뷰 데이터를 기반으로 어린이집 추천 
 
-
+<br><br>
+[<img src="./img/logo.png" width=50>](http://childrenzip.site/)를 클릭해 사이트를 확인하세요! 😊
 
 ### 사용 기술
 
@@ -60,13 +67,19 @@ ETC : Docker
 
 
 
-### ERD(수정 예정)
+### ERD
 
 [ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
+<br><br>
+
+### 사용된 도구
+- npx 6.14.5
+- nuxt.js 2.14.6
+- Django 3.12.0
+- IDE: Visual Studio Code 1.48
 
 
-### WireFrame
+<img src="./img/skill_set.png" width=100%>
 
-
-
+<br><br>

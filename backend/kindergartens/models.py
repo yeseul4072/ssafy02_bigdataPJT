@@ -15,27 +15,27 @@ class Kindergarten(models.Model):
     tel = models.CharField(max_length=50)
     homepage = models.TextField()
     address = models.CharField(max_length=255)
-    school_bus = models.SmallIntegerField()
+    school_bus = models.BooleanField()
     grade = models.SmallIntegerField()
     start_time = models.IntegerField()
     finish_time = models.IntegerField()
-    general = models.SmallIntegerField()
-    infants = models.SmallIntegerField()
-    disabled = models.SmallIntegerField()
-    disabled_integration = models.SmallIntegerField()
-    after_school = models.SmallIntegerField()
-    after_school_inclusion = models.SmallIntegerField()
-    extension = models.SmallIntegerField()
-    holiday = models.SmallIntegerField()
-    all_day = models.SmallIntegerField()
-    part_time = models.SmallIntegerField()
-    office = models.SmallIntegerField()
-    public = models.SmallIntegerField()
-    private = models.SmallIntegerField()
-    family = models.SmallIntegerField()
-    corporate = models.SmallIntegerField()
-    cooperation = models.SmallIntegerField()
-    welfare = models.SmallIntegerField()
+    general = models.BooleanField()
+    infants = models.BooleanField()
+    disabled = models.BooleanField()
+    disabled_integration = models.BooleanField()
+    after_school = models.BooleanField()
+    after_school_inclusion = models.BooleanField()
+    extension = models.BooleanField()
+    holiday = models.BooleanField()
+    all_day = models.BooleanField()
+    part_time = models.BooleanField()
+    office = models.BooleanField()
+    public = models.BooleanField()
+    private = models.BooleanField()
+    family = models.BooleanField()
+    corporate = models.BooleanField()
+    cooperation = models.BooleanField()
+    welfare = models.BooleanField()
 
     score = models.FloatField()
     area_columns = models.CharField(max_length=255)
@@ -84,18 +84,52 @@ class Kindergarten(models.Model):
     extension_class_status_info = models.TextField()
     extension_class_program_columns = models.CharField(max_length=255)
     extension_class_program_info = models.TextField()
-    has_extension_class = models.SmallIntegerField()
-    language = models.SmallIntegerField()
-    culture = models.SmallIntegerField()
-    sport = models.SmallIntegerField()
-    science = models.SmallIntegerField()
-    other = models.SmallIntegerField()
+    has_extension_class = models.BooleanField()
+    language = models.BooleanField()
+    culture = models.BooleanField()
+    sport = models.BooleanField()
+    science = models.BooleanField()
+    other = models.BooleanField()
     program_by_age = models.TextField()
     cctv_grade = models.IntegerField()
     staff_grade = models.IntegerField()
+    image = models.ImageField(upload_to="kindergarten", null=True)
 
+    weight_users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Weight', related_name='weight_kindergartens')
+    wish_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='wish_kindergartens')
+    
     
 class Weight(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     kindergarten = models.ForeignKey(Kindergarten, on_delete=models.CASCADE)
     weight = models.IntegerField()
+
+
+class Review(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
+    kindergarten = models.ForeignKey(Kindergarten, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    score_teacher = models.FloatField()
+    score_director = models.FloatField()
+    score_environment = models.FloatField()
+    pros = models.TextField()
+    cons = models.TextField()
+
+
+class City(models.Model):
+    name = models.CharField(max_length=10)
+
+
+class Borough(models.Model):
+    name = models.CharField(max_length=20)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
+
+class Village(models.Model):
+    name = models.CharField(max_length=20)
+    borough = models.ForeignKey(Borough, on_delete=models.CASCADE)
+
+

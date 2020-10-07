@@ -9,7 +9,7 @@
           </section>
           <section class="LogoRight">
             <div class="ServiceName" @click="goToHome()">
-              <h1 style="font-size:2.0rem">
+              <h1 style="font-size:2.0rem; color:#1fc981; font-weight:800">
                 어린이ZIP
               </h1>
             </div>
@@ -24,9 +24,20 @@
           <ul class="NavBarMenu">
             <v-col class="d-none d-md-block">
               <!-- 게시판 -->
-              <li type="button">
-                <i class="far fa-clipboard NavIcon" />
-              </li>
+              <v-tooltip bottom style="z-index:99;">
+                <template v-slot:activator="{ on, attrs }">
+                  <li
+                    type="button"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <nuxt-link to="/searchboard">
+                      <i class="mdi mdi-text-box-search-outline NavIcon" />
+                    </nuxt-link>
+                  </li>
+                </template>
+                <span>게시판 검색</span>
+              </v-tooltip>
               <!-- 알림 -->
               <v-menu
                 rounded="lg"
@@ -35,16 +46,16 @@
               >
                 <template v-slot:activator="{ attrs, on }">
                   <li type="button">
-                    <template v-if="newNoti!=0">
-                      <v-badge color="red" :content="newNoti">
+                    <template v-if="notiTap.length!=0">
+                      <v-badge color="red" :content="notiTap.length">
                         <i
                           v-bind="attrs"
-                          class="far fa-bell NavIcon"
+                          class="mdi mdi-bell-outline NavIcon"
                           v-on="on"
                         />
                       </v-badge>
                     </template>
-                    <i v-else class="far fa-bell NavIcon" />
+                    <i v-else class="mdi mdi-bell-outline NavIcon" />
                   </li>
                 </template>
 
@@ -70,7 +81,7 @@
                   <li type="button">
                     <i
                       v-bind="attrs"
-                      class="far fa-user-circle NavIcon"
+                      class="mdi mdi-account-circle-outline NavIcon"
                       v-on="on"
                     />
                   </li>
@@ -83,11 +94,10 @@
                     link
                   >
                     <v-row>
-                      <v-col cols="3" align="center">
+                      <v-col cols="4" align="center">
                         <i :class="userIcon[index]" />
                       </v-col>
-                      <v-col cols="2" align="center" />
-                      <v-col cols="7" align="left" class="tapFont">
+                      <v-col cols="8" align="left" class="tapFont">
                         {{ item }}
                       </v-col>
                     </v-row>
@@ -138,8 +148,8 @@
             <v-list-item>
               <v-row>
                 <v-col cols="3" align="center">
-                  <template v-if="newNoti!=0">
-                    <v-badge color="red" :content="newNoti">
+                  <template v-if="notiTap.length!=0">
+                    <v-badge color="red" :content="notiTap.length">
                       <i class="far fa-bell MNavIcon" />
                     </v-badge>
                   </template>
@@ -154,7 +164,9 @@
             <v-list-item>
               <v-row>
                 <v-col cols="3" align="center">
-                  <i class="far fa-user MNavIcon" />
+                  <v-icon>
+                    far fa-user MNavIcon
+                  </v-icon>
                 </v-col>
                 <v-col cols="9" align="center" class="MNavFont">
                   회원정보
@@ -188,10 +200,15 @@ export default {
   },
   data () {
     return {
-      newNoti: 4,
       userTap: ['회원정보', '로그아웃'],
       userIcon: ['far fa-user tapIcon', 'fas fa-power-off tapIcon'],
-      notiTap: [...Array(4)].map((_, i) => `안녕하세요...글에 댓글이 달렸습니다. ${i}`),
+      notiTap: [
+        '\'아이와 함께 쿠키...\' 게시글에 댓글 \'4\'개가 달렸습니다.',
+        '\'엄청난 글씨로 믿...\' 리뷰에 댓글 \'1\'개가 달렸습니다.',
+        '\'코로나.. 퇴원하고..\' 게시글에 댓글 \'1\'개가 달렸습니다.',
+        '\'어제 돈까스 시켜...\' 게시글에 댓글 \'3\'개가 달렸습니다.',
+        '\'내일이면 보름달\' 게시글에 댓글 \'1\'개가 달렸습니다.'
+      ],
       drawer: false,
       group: null
     }

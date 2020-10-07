@@ -14,7 +14,7 @@
             >
               <v-tooltip
                 left
-                color="#ff5faa"
+                color="#00BF8C"
               >
                 <template v-slot:activator="{ on, attrs }">
                   <div
@@ -116,6 +116,13 @@ export default {
       } else if (curPosition > height / 4 * 2) {
         this.selected = 1
       }
+    },
+    goto (target) {
+      this.$vuetify.goTo(target, {
+        duration: 1000,
+        offset: 100,
+        easing: 'easeInOutCubic'
+      })
     }
   }
 }
@@ -150,7 +157,7 @@ ul{
 .l1_icon_active{
   padding-left: 10px;
   font-size: 27px;
-  color: #ff5faa;
+  color: #00BF8C;
 }
 
 .l1_icon_none{
