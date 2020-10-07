@@ -262,7 +262,7 @@ export default {
       frm.append("address", this.item.address)
       frm.append("nickname", this.item.nickname)
       const token = this.$router.app.$store.getters.getToken
-      http.formAxios.post('/rest-auth/user/update/', frm)
+      http.formAxios.put('/rest-auth/user/update/', frm)
       .then(({data}) => {
         alert("수정되었습니다.")
         this.loading = false;
