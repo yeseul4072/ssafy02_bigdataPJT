@@ -181,7 +181,7 @@
             <v-list three-line>
               <v-list-item class="kinder_list">
                 <v-list-item-content style="max-width:200px;max-height:200px;">
-                  <v-img src="https://picsum.photos/200/200?image=20" style="border-radius:3px;" />
+                  <v-img min-height="200" :src="item.image" style="border-radius:3px;" />
                 </v-list-item-content>
                 <v-list-item-content class="pl-4" style="height:200px; padding-top:3px;">
                   <v-list-item-title style="font-size:20px; font-weight:700">
@@ -449,6 +449,7 @@ export default {
     },
     getKindergartenList () {
       http.axios.get(`/kindergartens/?lat=${this.lat}&lng=${this.lng}`).then(({ data }) => {
+        console.log(data)
         for (const i in data) {
           data[i].isShow = true
           data[i].color = this.getColor(data[i].grade)
