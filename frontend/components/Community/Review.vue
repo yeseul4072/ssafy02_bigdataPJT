@@ -3,7 +3,12 @@
     <v-list-item>
       <v-list-item-avatar>
         <v-img
+          v-if="review.user.profile_image != null"
           :src="review.user.profile_image"
+        />
+        <v-img
+          v-else
+          :src="require('@/assets/default_profile.png')"
         />
       </v-list-item-avatar>
       <v-list-item-content>

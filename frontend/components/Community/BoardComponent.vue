@@ -163,6 +163,7 @@ export default {
       http.axios.post(`/community/${this.board.id}/favorite/`)
         .then(({ data }) => {
           this.board.favorite_yn = !this.board.favorite_yn
+          this.$emit('open-contact-form')
         })
     },
     goToWrite () {
