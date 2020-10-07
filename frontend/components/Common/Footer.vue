@@ -1,9 +1,9 @@
 <template>
-  <v-container class="justify-center wrap" fluid fill-height>
+  <v-container class="justify-center wrap mt-9" fluid fill-height>
     <v-row fill-height>
       <v-col cols="1" />
       <v-col cols="1" align="center">
-        <v-img :src="require('../../assets/logo_foot.png')" height="70px" width="70px" />
+        <logo-icon />
       </v-col>
       <v-col cols="6">
         <v-row>
@@ -122,16 +122,28 @@
       <v-col cols="3" class="d-flex justify-center">
         <ul class="sns" style="margin-top:15px;">
           <li class="icon">
-            <a href="https://www.facebook.com/"><v-img :src="require('../../assets/foot_ic_facebook.png')" /></a>
+            <a href="https://www.facebook.com/">
+              <!-- <v-img :src="require('../../assets/foot_ic_facebook.png')" /> -->
+              <v-icon class="mdi-36px">mdi-facebook</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="https://section.blog.naver.com/BlogHome.nhn?directoryNo=0&currentPage=1&groupId=0"><v-img :src="require('../../assets/foot_ic_blog.png')" /></a>
+            <a href="https://section.blog.naver.com/BlogHome.nhn?directoryNo=0&currentPage=1&groupId=0">
+              <!-- <v-img :src="require('../../assets/foot_ic_blog.png')" /> -->
+              <v-icon class="mdi-36px">mdi-blogger</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="https://www.instagram.com/?hl=ko"><v-img :src="require('../../assets/foot_ic_insta.png')" /></a>
+            <a href="https://www.instagram.com/?hl=ko">
+              <!-- <v-img :src="require('../../assets/foot_ic_insta.png')" /> -->
+              <v-icon class="mdi-36px">mdi-instagram</v-icon>
+            </a>
           </li>
           <li class="icon">
-            <a href="https://www.youtube.com/"><v-img :src="require('../../assets/foot_ic_youtube.png')" /></a>
+            <a href="https://www.youtube.com/">
+              <!-- <v-img :src="require('../../assets/foot_ic_youtube.png')" /> -->
+              <v-icon class="mdi-36px">mdi-youtube</v-icon>
+            </a>
           </li>
         </ul>
       </v-col>
@@ -143,10 +155,13 @@
 <script>
 import PrivatePolicy from '@/components/Common/Footer/Policy.vue'
 import Terms from '@/components/Common/Footer/Terms.vue'
+import LogoIcon from '@/components/Common/Header/Logo.vue'
+
 export default {
   components: {
     PrivatePolicy,
-    Terms
+    Terms,
+    LogoIcon
   },
   data () {
     return {
@@ -160,10 +175,11 @@ export default {
 <style scoped>
 .wrap{
   height: 180px;
-  background-color:#333;
+  /* background-color:#333; */
   font-weight: 600;
   color: #999 ;
   font-size: 1vw;
+  border-top: thin solid #d9d9d9;
 }
 ul{
   list-style: none;

@@ -95,11 +95,11 @@
                     v-for="(tag, i) in kinder.tags"
                     :key="i"
                     class="ma-1 chip"
-                    color="#41b883"
+                    color="green accent-4"
                     text-color="#black"
                     outlined
                   >
-                    <v-icon left color="#41b883">
+                    <v-icon left color="green accent-4">
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}

@@ -216,7 +216,7 @@
                       mdi-server-plus
                     </v-icon>
 
-                    <span class="success--text" style="color:#69F0AE"> {{ features[key] }}</span>
+                    <span style="color:black;"> {{ features[key] }}</span>
                   </v-chip>
 
                   <!-- </v-list-item-subtitle> -->

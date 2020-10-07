@@ -57,12 +57,12 @@
                     v-for="(tag, i) in kinder.left.tags"
                     :key="i"
                     class="ma-1"
-                    color="success"
+                    color="green accent-4"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="success" left>
+                    <v-icon color="green accent-4" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}
@@ -97,12 +97,12 @@
                     v-for="(tag, i) in kinder.right.tags"
                     :key="i"
                     class="ma-1"
-                    color="green"
+                    color="green accent-4"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="green" left>
+                    <v-icon color="green accent-4" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}
