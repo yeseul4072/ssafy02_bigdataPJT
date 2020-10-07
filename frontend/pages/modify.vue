@@ -17,7 +17,7 @@
           justify="center"
         >
           <h1 style="font-size:40px; font-weight:400;">
-            <span class="success--text" style="font-weight:700; font-size:40px;">어린이ZIP</span> 회원가입
+            <span class="success--text" style="font-weight:700; font-size:40px;">어린이ZIP</span> 회원정보
           </h1>
         </v-row>
         <v-row
@@ -54,7 +54,7 @@
               </v-btn>
             </template>
             <v-avatar width="184" height="184">
-              <v-img ref="img" src="/user2.png" />
+              <v-img ref="img" :src="user && user.profile_image ? user.profile_image : '/user2.png'" />
             </v-avatar>
           </v-badge>
         </v-row>
@@ -76,44 +76,10 @@
               <tr width="100%;">
                 <td width="100%">
                   <v-text-field
-                    v-model="id"
+                    v-model="user.username"
                     placeholder="아이디를 입력해 주세요."
                     color="grey"
-                    :success-messages="!iderror ? id_text : false"
-                    :error-messages="iderror ? id_text : false"
-                    @blur="vaildId"
-                  />
-                </td>
-              </tr>
-              <div class="empty" />
-              <tr>
-                <th>
-                  비밀번호
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <v-text-field
-                    v-model="password"
-                    placeholder="비밀번호를 입력해 주세요."
-                    color="grey"
-                    type="password"
-                    :success-messages="!pwerror ? pw_text : false"
-                    :error-messages="pwerror ? pw_text : false"
-                    @blur="vaildPassword"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <v-text-field
-                    v-model="re_password"
-                    placeholder="비밀번호를 다시 한번 입력해 주세요."
-                    color="grey"
-                    type="password"
-                    :success-messages="!repwerror ? repw_text : false"
-                    :error-messages="repwerror ? repw_text : false"
-                    @change="vaildRePassword"
+                    readonly
                   />
                 </td>
               </tr>
@@ -126,12 +92,9 @@
               <tr width="100%">
                 <td width="100%">
                   <v-text-field
-                    v-model="nickname"
+                    v-model="user.nickname"
                     placeholder="닉네임을 입력해 주세요."
                     color="grey"
-                    :success-messages="!nickerror ? nick_text : false"
-                    :error-messages="nickerror ? nick_text : false"
-                    @blur="vaildNickname"
                   />
                 </td>
               </tr>
@@ -144,12 +107,9 @@
               <tr>
                 <td>
                   <v-text-field
-                    v-model="email"
+                    v-model="user.email"
                     placeholder="이메일을 입력해 주세요."
                     color="grey"
-                    :success-messages="!emailerror ? email_text : false"
-                    :error-messages="emailerror ? email_text : false"
-                    @blur="vaildEmail"
                   />
                 </td>
               </tr>
@@ -162,11 +122,9 @@
               <tr>
                 <td>
                   <v-text-field
-                    v-model="address"
+                    v-model="user.address"
                     placeholder="관심 지역을 입력해 주세요."
                     color="grey"
-                    :success-messages="!addrerror ? addr_text : false"
-                    :error-messages="addrerror ? addr_text : false"
                     @click="openDaumZipAddress"
                   />
                 </td>
@@ -185,9 +143,9 @@
             depressed
             dark
             style="width:240px;"
-            @click="signup"
+            @click="modify"
           >
-            <span style="font-size:16px; font-weight:400">가입완료</span>
+            <span style="font-size:16px; font-weight:400">수정완료</span>
           </v-btn>
         </v-row>
 
@@ -207,80 +165,16 @@ import http from "@/util/http_common.js"
 export default {
   data () {
     return {
-        id:'',
-        password:'',
-        re_password:'',
-        nickname:'',
-        email:'',
-        address: '',
-        lat: '',
-        lng: '',
-
-        iderror: false,
-        id_text: '사용할 수 없는 아이디입니다.',
-        pwerror: false,
-        pw_text: '사용할 수 없는 패스워드입니다.',
-        repwerror: false,
-        repw_text: '비밀번호가 일치하지 않습니다.',
-        emailerror: false,
-        email_text: '사용할 수 없는 이메일입니다.',
-        nickerror:false,
-        nick_text: '사용할 수 없는 닉네임입니다.',
-        addrerror:false,
-        addr_text: '주소가 올바르지 않습니다.',
+        user: {},
     }
   },
+  mounted() {
+      http.axios.get('/rest-auth/user/profile/').then(({data}) => {
+          console.log(data)
+          this.user = data
+      })
+  },
   methods: {
-    vaildID() {
-      http.axios.get(`/rest-auth/validate/username/?username=${this.id}`)
-        .then(({data}) => {
-          this.iderror = false;
-        })
-        .catch((error) => {
-          this.iderror = true;
-        })
-    },
-    vaildPassword() {
-      http.axios.get(`/rest-auth/validate/password/?password=${this.password}`)
-        .then(({data}) => {
-          this.pwerror = false;
-        })
-        .catch((error) => {
-          this.pwerror = true;
-        })
-    },
-    vaildRePassword() {
-      if(this.password == this.re_password) {
-        this.repwerror = false;
-      }else {
-        this.repwerror = true;
-      }
-    },
-    vaildNickname() {
-      http.axios.get(`/rest-auth/validate/nickname/?nickname=${this.nickname}`)
-        .then(({data}) => {
-          this.nickerror = false;
-        })
-        .catch((error) => {
-          this.nickerror = true;
-        })
-    },
-    vaildEmail() {
-      http.axios.get(`/rest-auth/validate/email/?email=${this.email}`)
-        .then(({data}) => {
-          this.emailerror = false;
-        })
-        .catch((error) => {
-          this.emailerror = true;
-        })
-    },
-    vaildAddr() {
-      if(this.lat && this.lng) {
-        this.addrerror = false;
-      }else {
-        this.addrerror = true;
-      }
-    },
     clickImg() {
         $("#file").click();
     },
@@ -315,41 +209,32 @@ export default {
     },
 
     setAddress(address, lng, lat) {
-        console.log(address, lat, lng)
-        this.address = address
-        this.lng = lng
-        this.lat = lat
+        this.user.address = address
+        this.user.lng = lng
+        this.user.lat = lat
     },
-    signup() {
-      var frm = new FormData();
-      frm.append("profile_image", document.getElementById("file").files[0]);
-      frm.append("username", this.id)
-      frm.append("email", this.email)
-      frm.append("password1", this.password)
-      frm.append("password2", this.re_password)
-      frm.append("latitude", this.lat)
-      frm.append("longitude", this.lng)
-      frm.append("address", this.address)
-      frm.append("nickname", this.nickname)
-      frm.append("is_director", 'False')
-      console.log(frm)
-      http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
-        headers: {
-          'accept': '*/*',
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(({data}) => {
-        console.log(data)
-      })
-
-      // http.axios.post('/rest-auth/registration/', {
-      //   'username':this.id,
-      //   'email':this.email,
-      //   'password1':this.password,
-      //   'password2':this.re_password,
-      // }).then( ({data}) => {
-      //   console.log(data);
-      // })
+    modify() {
+    //   var frm = new FormData();
+    //   console.log(document.getElementById("file").files[0])
+    //   frm.append("profile_image", document.getElementById("file").files[0]);
+    //   frm.append("username", this.id)
+    //   frm.append("email", this.email)
+    //   frm.append("password1", this.password)
+    //   frm.append("password2", this.re_password)
+    //   frm.append("latitude", this.lat)
+    //   frm.append("longitude", this.lng)
+    //   frm.append("address", this.address)
+    //   frm.append("nickname", this.nickname)
+    //   frm.append("is_director", 'False')
+    //   console.log(frm)
+    //   http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
+    //     headers: {
+    //       'accept': '*/*',
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   }).then(({data}) => {
+    //     console.log(data)
+    //   })
     }
   }
 }
