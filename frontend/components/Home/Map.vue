@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -22,6 +23,9 @@ export default {
   mounted () {
     window.kakao && window.kakao.maps ? this.initMap() : this.addScript()
   },
+  computed: {
+    ...mapGetters(['getUser'])
+  },
   methods: {
     openMap () {
       this.isMap = true
@@ -30,7 +34,7 @@ export default {
       const self = this
       setTimeout(function () {
         const container = document.getElementById('map')
-        const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
+        const options = { center: new kakao.maps.LatLng(self.getUser.latitude, self.getUser.longitude), level: 3 }
         const map = new kakao.maps.Map(container, options)
         // 컨트롤러 생성
         const mapTypeControl = new kakao.maps.MapTypeControl()
