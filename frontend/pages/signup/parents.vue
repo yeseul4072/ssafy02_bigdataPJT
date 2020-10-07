@@ -54,7 +54,7 @@
               </v-btn>
             </template>
             <v-avatar width="184" height="184">
-              <v-img ref="img" src="/user2.png" />
+              <v-img ref="img" />
             </v-avatar>
           </v-badge>
         </v-row>
@@ -201,8 +201,8 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<!--<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>-->
-<!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>-->
+<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>
 <script>
 import http from "@/util/http_common.js"
 // import axios from "axios"
@@ -232,6 +232,9 @@ export default {
         addr_text:  '',
         loading:false,
     }
+  },
+  mounted() {
+    this.$refs.img.src = "/user2.png";
   },
   methods: {
     validCheck() {
