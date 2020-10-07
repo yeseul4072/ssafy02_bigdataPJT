@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row
-      class="signup"
+      class="modify"
       align="center"
     >
       <div style="margin-top:100px;">
@@ -17,7 +17,7 @@
           justify="center"
         >
           <h1 style="font-size:40px; font-weight:400;">
-            <span class="success--text" style="font-weight:700; font-size:40px;">어린이ZIP</span> 회원정보
+            <span style="color:#1fc981;font-weight:700; font-size:40px;">어린이ZIP</span> 회원정보
           </h1>
         </v-row>
         <v-row
@@ -54,7 +54,7 @@
               </v-btn>
             </template>
             <v-avatar width="184" height="184">
-              <v-img ref="img" :src="user && user.profile_image ? user.profile_image : '/user2.png'" />
+              <v-img ref="img" />
             </v-avatar>
           </v-badge>
         </v-row>
@@ -76,8 +76,23 @@
               <tr width="100%;">
                 <td width="100%">
                   <v-text-field
-                    v-model="user.username"
-                    placeholder="아이디를 입력해 주세요."
+                    v-model="item.username"
+                    color="grey"
+                    readonly
+                  />
+                </td>
+              </tr>
+              <div class="empty" />
+              <tr>
+                <th>
+                  이메일
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <v-text-field
+                    v-model="item.email"
+                    placeholder="이메일을 입력해 주세요."
                     color="grey"
                     readonly
                   />
@@ -92,24 +107,11 @@
               <tr width="100%">
                 <td width="100%">
                   <v-text-field
-                    v-model="user.nickname"
+                    v-model="item.nickname"
                     placeholder="닉네임을 입력해 주세요."
                     color="grey"
-                  />
-                </td>
-              </tr>
-              <div class="empty" />
-              <tr>
-                <th>
-                  이메일
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <v-text-field
-                    v-model="user.email"
-                    placeholder="이메일을 입력해 주세요."
-                    color="grey"
+                    :error-messages="nickerror ? nick_text : ''"
+                    @blur="validNickname()"
                   />
                 </td>
               </tr>
@@ -122,9 +124,11 @@
               <tr>
                 <td>
                   <v-text-field
-                    v-model="user.address"
+                    v-model="item.address"
                     placeholder="관심 지역을 입력해 주세요."
                     color="grey"
+                    :error-messages="addrerror ? addr_text : false"
+                    readonly
                     @click="openDaumZipAddress"
                   />
                 </td>
@@ -137,15 +141,16 @@
           style="margin-top:20px;"
         >
           <v-btn
-            color="#0dCA78"
+            :color="'#0dCA78'"
             rounded
             x-large
             depressed
             dark
             style="width:240px;"
+            :loading="loading"
             @click="modify"
           >
-            <span style="font-size:16px; font-weight:400">수정완료</span>
+            <span style="font-size:18px; font-weight:500">수정완료</span>
           </v-btn>
         </v-row>
 
@@ -165,16 +170,44 @@ import http from "@/util/http_common.js"
 export default {
   data () {
     return {
-        user: {},
+        item: {
+
+        },
+        nick:'',
+        nickerror:false,
+        nick_text: '',
+        addrerror:false,
+        addr_text:  '',
+        loading:false,
     }
   },
   mounted() {
-      http.axios.get('/rest-auth/user/profile/').then(({data}) => {
-          console.log(data)
-          this.user = data
-      })
+    http.axios.get('/rest-auth/user/profile/').then(({data}) => {
+      if(data.profile_image)
+        this.$refs.img.src = data.profile_image;
+      else
+        this.$refs.img.src = "/user2.png";
+      this.item = data;
+      this.nick = data.nickname;
+    })
   },
   methods: {
+    validNickname() {
+      if(this.item.nickname == this.nick) {
+        this.nickerror = false;
+        return;
+      }
+
+      http.axios.get(`/rest-auth/validate/nickname/?nickname=${this.item.nickname}`)
+        .then(({data}) => {
+          this.nickerror = false;
+          this.nick_text = '사용할 수 있는 닉네임입니다.'
+        })
+        .catch((error) => {
+          this.nickerror = true;
+          this.nick_text = '사용할 수 없는 닉네임입니다.'
+        })
+    },
     clickImg() {
         $("#file").click();
     },
@@ -207,34 +240,34 @@ export default {
             }
         }).open();
     },
-
     setAddress(address, lng, lat) {
-        this.user.address = address
-        this.user.lng = lng
-        this.user.lat = lat
+        this.item.address = address
+        this.item.longitude = lng
+        this.item.latitude = lat
+    },
+    validCheck() {
+      return this.nickerror || this.addrerror;
     },
     modify() {
-    //   var frm = new FormData();
-    //   console.log(document.getElementById("file").files[0])
-    //   frm.append("profile_image", document.getElementById("file").files[0]);
-    //   frm.append("username", this.id)
-    //   frm.append("email", this.email)
-    //   frm.append("password1", this.password)
-    //   frm.append("password2", this.re_password)
-    //   frm.append("latitude", this.lat)
-    //   frm.append("longitude", this.lng)
-    //   frm.append("address", this.address)
-    //   frm.append("nickname", this.nickname)
-    //   frm.append("is_director", 'False')
-    //   console.log(frm)
-    //   http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
-    //     headers: {
-    //       'accept': '*/*',
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   }).then(({data}) => {
-    //     console.log(data)
-    //   })
+      if(this.validCheck()){
+        return;
+      }
+      this.loading = true;
+      var frm = new FormData();
+      if(document.getElementById("file").files[0]) {
+        frm.append("profile_image", document.getElementById("file").files[0]);
+      }
+      frm.append("latitude", this.item.latitude)
+      frm.append("longitude", this.item.longitude)
+      frm.append("address", this.item.address)
+      frm.append("nickname", this.item.nickname)
+      const token = this.$router.app.$store.getters.getToken
+      http.formAxios.post('/rest-auth/user/update/', frm)
+      .then(({data}) => {
+        alert("수정되었습니다.")
+        this.loading = false;
+        this.$router.push('/home')
+      })
     }
   }
 }
@@ -266,12 +299,12 @@ export default {
         border-color: #666666 !important;
     }
     .logo {
-      background: url(/Vue.png) center center / cover no-repeat;
+      background: url(~assets/logo.png) center center / cover no-repeat;
       margin-bottom:5px;
       height:50px;
       width:50px;
     }
-    .signup {
+    .modify {
         background-color: #f9f9f9;
         width:100%;
         margin:0;

@@ -92,6 +92,7 @@
                     v-for="(item, index) in userTap"
                     :key="index"
                     link
+                    @click="move(userAction[index])"
                   >
                     <v-row>
                       <v-col cols="4" align="center">
@@ -202,6 +203,7 @@ export default {
     return {
       userTap: ['회원정보', '로그아웃'],
       userIcon: ['far fa-user tapIcon', 'fas fa-power-off tapIcon'],
+      userAction: ['modify', 'logout'],
       notiTap: [
         '\'아이와 함께 쿠키...\' 게시글에 댓글 \'4\'개가 달렸습니다.',
         '\'엄청난 글씨로 믿...\' 리뷰에 댓글 \'1\'개가 달렸습니다.',
@@ -227,6 +229,18 @@ export default {
     },
     goToHome () {
       this.$router.push('/home')
+    },
+    move (action) {
+      if (action === 'modify') {
+        this.$router.push('/modify')
+      } else if (action === 'logout') {
+        // console.log(this.$router.app.$store)
+        this.$router.app.$store.commit('setIsLogin', false)
+        this.$router.app.$store.commit('setUser', null)
+        this.$router.app.$store.commit('setToken', '')
+        this.$router.push('/')
+        // todo: logout
+      }
     }
     // changeBoard () {
     //   const cur = this.$store.state.Header.isBoard

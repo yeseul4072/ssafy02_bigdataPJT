@@ -17,7 +17,7 @@
           justify="center"
         >
           <h1 style="font-size:40px; font-weight:400;">
-            <span class="success--text" style="font-weight:700; font-size:40px;">어린이ZIP</span> 회원가입
+            <span style="color:#1fc981;font-weight:700; font-size:40px;">어린이ZIP</span> 회원가입
           </h1>
         </v-row>
         <v-row
@@ -54,7 +54,7 @@
               </v-btn>
             </template>
             <v-avatar width="184" height="184">
-              <v-img ref="img" src="/user2.png" />
+              <v-img ref="img" />
             </v-avatar>
           </v-badge>
         </v-row>
@@ -201,8 +201,8 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<!--<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>-->
-<!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>-->
+<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>
 <script>
 import http from "@/util/http_common.js"
 // import axios from "axios"
@@ -232,6 +232,9 @@ export default {
         addr_text:  '',
         loading:false,
     }
+  },
+  mounted() {
+    this.$refs.img.src = "/user2.png";
   },
   methods: {
     validCheck() {
@@ -386,13 +389,8 @@ export default {
       frm.append("address", this.address)
       frm.append("nickname", this.nickname)
       frm.append("is_director", 'False')
-      console.log(frm)
-      http.axios.post('http://j3a111.p.ssafy.io:8000/rest-auth/registration/', frm, {
-        headers: {
-          'accept': '*/*',
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(({data}) => {
+      http.formAxios.post('/rest-auth/registration/', frm)
+      .then(({data}) => {
         alert(data.detail)
         this.loading = false;
         this.$router.push('/login')
@@ -428,7 +426,7 @@ export default {
         border-color: #666666 !important;
     }
     .logo {
-      background: url(/Vue.png) center center / cover no-repeat;
+      background: url(~assets/logo.png) center center / cover no-repeat;
       margin-bottom:5px;
       height:50px;
       width:50px;

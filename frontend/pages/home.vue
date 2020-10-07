@@ -93,6 +93,7 @@ export default {
   },
   data () {
     return {
+      overlay: false,
       kinders1: [],
       kinders2: [],
       feature1: '',
@@ -119,6 +120,7 @@ export default {
   },
   created () {
     if (!this.isLogin) { this.$router.push('/login') } else {
+      this.$router.app.$store.commit('setOverlay', true)
       http.axios.get('/kindergartens/feature-based-recommend/')
         .then(({ data }) => {
           // 특징 매핑
@@ -170,6 +172,7 @@ export default {
               break
             }
           }
+          this.$router.app.$store.commit('setOverlay', false)
         })
 
       http.axios.get('/community/main-articles/')
