@@ -135,7 +135,6 @@ export default {
           // 데이터 형태 처리
           for (let i = 0; i < 12; i++) {
             const temp = {}
-            data[i].url = 'kinder_temp.jpg'
             data[i].distance = data[i].distance.toFixed(1)
 
             // 토큰 처리
@@ -149,7 +148,6 @@ export default {
             }
             temp.left = data[i++]
 
-            data[i].url = 'kinder_temp.jpg'
             data[i].distance = data[i].distance.toFixed(1)
 
             // 토큰 처리
@@ -182,7 +180,6 @@ export default {
       http.axios.get('/kindergartens/activated-reviews/')
         .then(({ data }) => {
           for (const i in data) {
-            data[i].url = 'kinder_temp.jpg'
             data[i].avg_score = Number(data[i].avg_score.toFixed(1))
             data[i].tags = []
             let idx = 0
