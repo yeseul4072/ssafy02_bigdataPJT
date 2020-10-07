@@ -17,7 +17,7 @@
           justify="center"
         >
           <h1 style="font-size:40px; font-weight:400;">
-            <span class="success--text" style="font-weight:700; font-size:40px;">어린이ZIP</span> 회원정보
+            <span style="color:#1fc981;font-weight:700; font-size:40px;">어린이ZIP</span> 회원정보
           </h1>
         </v-row>
         <v-row
@@ -262,8 +262,7 @@ export default {
       frm.append("address", this.item.address)
       frm.append("nickname", this.item.nickname)
       const token = this.$router.app.$store.getters.getToken
-      console.log(token)
-            http.formAxios.post('/rest-auth/user/update/', frm)
+      http.formAxios.post('/rest-auth/user/update/', frm)
       .then(({data}) => {
         alert("수정되었습니다.")
         this.loading = false;
@@ -300,7 +299,7 @@ export default {
         border-color: #666666 !important;
     }
     .logo {
-      background: url(/Vue.png) center center / cover no-repeat;
+      background: url(~assets/logo.png) center center / cover no-repeat;
       margin-bottom:5px;
       height:50px;
       width:50px;

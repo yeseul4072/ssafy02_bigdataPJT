@@ -46,7 +46,6 @@ export default {
     ...mapGetters(['isBoard', 'getOverlay'])
   },
   mounted () {
-    console.log(this.notMain)
   },
   methods: {
     checkHeight (height) {

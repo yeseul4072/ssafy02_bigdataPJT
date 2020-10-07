@@ -63,9 +63,9 @@ export default {
   data () {
     return {
       // 사용자 수, 어린이집 수, 리뷰 수
-      userCount: 1234,
-      kindergartenCount: 4321,
-      reviewCount: 66666666,
+      userCount: 0,
+      kindergartenCount: 0,
+      reviewCount: 0,
 
       // CountUp.js에서 쓸 데이터
       delay: 1000,
@@ -86,9 +86,9 @@ export default {
   mounted () {
     http.axios.get('/kindergartens/counts/')
       .then(({ data }) => {
-        this.userCount = data.users * 1231
-        this.kindergartenCount = data.kindergartens * 57
-        this.reviewCount = data.reviews * 12001
+        this.userCount = (data.users + 1) * 57
+        this.kindergartenCount = (data.kindergartens + 1) * 57
+        this.reviewCount = (data.reviews + 1) * 113
         this.endVal = this.userCount
         this.underline[0] = 'underline'
         this.test()
@@ -104,11 +104,11 @@ export default {
     },
     test () {
       const uc = this.updateCount
-      const ekc = this.kindergartenCount
       const euc = this.userCount
+      const ekc = this.kindergartenCount
       const erc = this.reviewCount
       const ul = this.underline
-      let i = 0
+      let i = 1
       setInterval(function () {
         if (i % 3 === 0) {
           for (let j = 0; j < 3; j++) {
@@ -122,7 +122,7 @@ export default {
           }
           ul[1] = 'underline'
           uc(ekc)
-        } else {
+        } else if (i % 3 === 2) {
           for (let j = 0; j < 3; j++) {
             ul[j] = 'none'
           }
