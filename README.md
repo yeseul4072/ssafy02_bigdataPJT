@@ -1,4 +1,4 @@
-<img src="./img/banner.JPG" width=100%>
+[<img src="./img/banner.JPG" width=100%>](http://childrenzip.site)
 
 ![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
 
@@ -118,51 +118,34 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 
 
-### 주요 기능
+## ✅ 주요 기능
+
+- 어린이집 추천
+  - 사용자가 선호하는 특징 분석, 사이트 내 활동 분석을 기반으로 한 추천 시스템 
+  - 필터 기능
+  # <img src="./img/recommend.gif" width=50%>  
 
 - 전국 어린이집 조회 
-  - 필터 기능 
   - 어린이집 찜 기능
-- 어린이집 추천
-  - 사용자가 입력 및 클릭한 데이터를 바탕으로 비슷한 어린이집 추천 
+  - 교사평균 근속연수, 교사 1인당 유아 수, 100m²당 CCTV수 등 정보 시각화
+  - 어린이집 평점, 리뷰 작성 및 조회
+  # <img src="./img/kinder_info.gif" width=50%>  
+
 - 커뮤니티
-  - 원하는 게시판 생성 기능
-  - 게시판 즐겨찾기  
-- 원장과 원격 화상 상담 
-
-
-
-- 어린이집 정보와 더불어 지역구별 인구당 범죄 발생 빈도 & 강력 범죄 비율 시각화
-- 어린이집 리뷰 데이터를 기반으로 어린이집 추천 
-
-<br><br>
-[<img src="./img/logo.png" width=50>](http://childrenzip.site/)를 클릭해 사이트를 확인하세요! 😊
-
-### 사용 기술
-
-```
-DB : MySQL
-Language : Python, JavaScript
-Browser : Chrome
-FrameWork : Django, Vue, Nuxt
-ETC : Docker
-```
+  - 원하는 게시판 조회 및 생성
+  # <img src="./img/create_board.gif" width=50%>  
+  - 게시글 및 댓글 추가 삭제    
+  # <img src="./img/create_post.gif" width=50%>
 
 
 
 
 
-<br><br>
+## 🎥 시연 영상
 
-### 사용된 도구
-- npx 6.14.5
-- nuxt.js 2.14.6
-- Django 3.12.0
-- IDE: Visual Studio Code 1.48
+> 아래 이미지를 클릭하면 시연 영상을 시청할 수 있습니다.
 
-<img src="./img/skill_set.png" width=100%>
-
-<br><br>
+[![어린이ZIP 시연영상](https://img.youtube.com/vi/qOEFXODnMOA/hqdefault.jpg)](https://youtu.be/qOEFXODnMOA)
 
 
 
