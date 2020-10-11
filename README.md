@@ -20,6 +20,66 @@
 
 
 
+### 사용된 기술
+
+<img src="./img/skill_set.png" width=100%>
+
+
+
+### 프로젝트 구조(한)
+
+```
+.
+├── .gitignore # Git 버전 관리에서 제외할 파일 목록을 지정하는 파일
+├── README.md
+├── img # 이미지 관련 폴더
+├── members_docs # 팀원 문서화
+├── frontend
+│   ├── assets # style, image, font 등 컴파일 되지 않는 리소스 관련 폴더
+│   ├── pages # 응용프로그램 보기 및 경로(라우팅)을 포함
+│   │   ├── board # 게시판 관련 페이지
+│   │   ├── community # 커뮤니티 관련 페이지
+│   │   ├── kinder # 어린이집 관련 페이지
+│   │   ├── signup # 계정관련 페이지
+│   │   └── ... # 라우팅 될 각 페이지
+│   ├── static # 변경되지 않는 정적 파일(favicon, robots.txt, sitemap.xml 등)
+│   ├── nuxt.config.js # Nuxt.js 에 대한 config 파일
+│   ├── package.json # Vue에서 사용하는 것과 동일하게 종속성 및 스크립트 작성
+│   ├── layouts # 각 page에 고정된 레이아웃을 반복해서 설정해서 넣어줘야 할경우
+│   └── components # Nuxt.js가 스캔해서 자동으로 가져옴
+│       ├── Common # 헤더, 푸터, 공통 컴포넌트 관련
+│       ├── Community # 커뮤니티 관련
+│       ├── Home # 메인페이지 관련
+│       ├── Kinder # 어린이집 관련
+│       ├── Launcher # 런처페이지
+│       └── Search # 검색 관련
+└── backend
+    ├── account # 계정 API
+    ├── community # 게시판 API
+    ├── kindergartens # 어린이집 API
+    ├── spc_pjt # Django 설정 파일
+    ├── templates
+    ├── Dockerfile # Django 이미지 작업
+    ├── manage.py # Django 실행 파일
+    ├── requirements.txt # 의존성 관리
+    └── bigdata
+        ├── analyze.py # 크롤링해온 어린이집 정보 정형화 및 저장
+    	├── crawling.py # 어린이집 정보 크롤링 할 코드
+    	├── recommend.py # 추천알고리즘을 적용 할 코드
+    	└── requriements.txt # 의존성 관리
+    	
+```
+
+
+
+
+
+### 프로젝트 프로세스
+
+<img src="./img/process_struct.png" width=100%>
+
+
+
 ### 서비스 개요 
 
 `어린이zip`은 어린이집 데이터를 기반으로 사용자의 니즈와 기호를 반영해 어린이집을 추천해주는 웹 애플리케이션(web application)입니다. 
@@ -70,16 +130,5 @@ ETC : Docker
 ### ERD
 
 [ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
-
-<br><br>
-
-### 사용된 도구
-- npx 6.14.5
-- nuxt.js 2.14.6
-- Django 3.12.0
-- IDE: Visual Studio Code 1.48
-
-
-<img src="./img/skill_set.png" width=100%>
 
 <br><br>
