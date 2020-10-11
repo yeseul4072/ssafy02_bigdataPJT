@@ -44,7 +44,12 @@
         <v-list-item class="px-8">
           <v-list-item-avatar>
             <v-img
-              :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+              v-if="user.profile_image != null"
+              :src="user.profile_image"
+            />
+            <v-img
+              v-else
+              :src="require('@/assets/default_profile.png')"
             />
           </v-list-item-avatar>
           <v-list-item-content>
@@ -183,7 +188,12 @@
             <v-list-item class="px-4 pt-2">
               <v-list-item-avatar>
                 <v-img
-                  :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+                  v-if="profile.profile_image != null"
+                  :src="profile.profile_image"
+                />
+                <v-img
+                  v-else
+                  :src="require('@/assets/default_profile.png')"
                 />
               </v-list-item-avatar>
               <v-list-item-content>
@@ -280,8 +290,8 @@
 
 <script>
 import http from '@/util/http_common.js'
-import BannerImage from '@/components/Community/Banner.vue'
-import Review from '@/components/Community/Review.vue'
+import BannerImage from '@/components/Community/Banner'
+import Review from '@/components/Community/Review'
 
 export default {
   components: { BannerImage, Review },

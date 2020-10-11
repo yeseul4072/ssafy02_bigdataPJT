@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  props: ['lat', 'lng'],
+  props: ['lat', 'lng', 'name'],
   data () {
     return {
       kakao_API: 'dff523ff715cfa66c3e0461e1f477834',
@@ -22,6 +22,7 @@ export default {
     initMap () {
       const lat = this.lat
       const lng = this.lng
+      const name = this.name
       setTimeout(function () {
         const container = document.getElementById('map')
         const options = { center: new kakao.maps.LatLng(lat, lng), level: 3 }
@@ -33,10 +34,27 @@ export default {
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT)
         const center = map.getCenter()
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'
-        const imageSize = new kakao.maps.Size(45, 50)
+        const imageSize = new kakao.maps.Size(24, 35)
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
         const marker = new kakao.maps.Marker({ position: center, image: markerImage })
         marker.setMap(map)
+
+        const content = '<div class="customoverlay">' +
+                        '  <a href="javascript:void(0);">' +
+                        `    <span class="title">${name}</span>` +
+                        '  </a>' +
+                        '</div>'
+        const position = new kakao.maps.LatLng(center.getLat(), center.getLng())
+
+        // 오버레이생성
+        const customOverlay = new kakao.maps.CustomOverlay({
+          map,
+          position,
+          content,
+          yAnchor: 0.2,
+          xAnchor: 0.49
+        })
+        customOverlay.setMap(map)
       }, 100)
     },
     addScript () {
@@ -57,7 +75,7 @@ export default {
 }
 .customoverlay {position:relative;bottom:85px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;}
 .customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
-.customoverlay a {display:block;text-decoration:none;color:#000 !important;text-align:center;border-radius:6px;font-size:16px !important;font-weight:bold;overflow:hidden;background: #FFBF00;background: #FFBF00 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+.customoverlay span {display:block;text-decoration:none;color:#000 !important;text-align:center;border-radius:6px;font-size:16px !important;font-weight:bold;overflow:hidden;background: #FFBF00;background: #FFBF00 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
 .customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:16px !important;font-weight:bold;}
 .customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
 

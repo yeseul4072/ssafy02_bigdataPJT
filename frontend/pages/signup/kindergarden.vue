@@ -216,7 +216,7 @@ export default {
         border-color: #666666 !important;
     }
     .logo {
-      background: url(/Vue.png) center center / cover no-repeat;
+      background: url(~assets/logo.png) center center / cover no-repeat;
       margin-bottom:5px;
       height:50px;
       width:50px;

@@ -6,7 +6,7 @@
       <v-card-title style="height:40%">
         <v-row style="width:100%;height:200px;overflow: hidden;">
           <v-col cols="6">
-            <v-img class="cursor" style="height:176px;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+review.url)" @click="linkKinder" />
+            <v-img class="cursor" style="height:176px;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="review.kindergarten.image_url" @click="linkKinder" />
           </v-col>
           <v-col cols="6" style="padding-left:0;">
             <v-row style="font-weight:800;">
@@ -16,12 +16,12 @@
               v-for="(tag, i) in review.tags"
               :key="i"
               class="ma-1"
-              color="green"
-              text-color="#black"
+              color="green accent-4"
+              text-color="black"
               outlined
               small
             >
-              <v-icon color="green" left x-small>
+              <v-icon color="green accent-4" left x-small>
                 mdi-server-plus
               </v-icon>
               {{ tag }}

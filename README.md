@@ -1,8 +1,8 @@
 # 어린이ZIP
 
-> 특화-Sub PJT 2 
+> 특화-Sub PJT 3
 >
-> 2020.09.07~2020.09.18(총 2주)
+> 2020.09.21~2020.10.08(총 3주)
 
 | 이름         | 역할                                   |
 | ------------ | -------------------------------------- |
@@ -11,6 +11,12 @@
 | 서지훈       | Frontend Develop                       |
 | 안성민       | Fullstack Develop, 데이터 수집 및 정제 |
 | 허예슬       | Backend Develop                        |
+
+<br><br>
+
+![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
+
+<br>
 
 
 
@@ -34,21 +40,26 @@
 - 어린이집 추천
   - 사용자가 선호하는 특징 분석, 사이트 내 활동 분석을 기반으로 한 추천 시스템 
   - 필터 기능
-<p>
-<img width="50%" src="./gif/function_1.gif">
-</p>
+  # <img src="./img/recommend.gif" width=50%>  
 
 - 전국 어린이집 조회 
   - 어린이집 찜 기능
   - 교사평균 근속연수, 교사 1인당 유아 수, 100m²당 CCTV수 등 정보 시각화
   - 어린이집 평점, 리뷰 작성 및 조회
-<p>
-<img width="50%" src="./gif/function_2.gif">
-</p>
+  # <img src="./img/kinder_info.gif" width=50%>  
+
+- 커뮤니티
+  - 원하는 게시판 조회 및 생성
+  # <img src="./img/create_board.gif" width=50%>  
+  - 게시글 및 댓글 추가 삭제    
+  # <img src="./img/create_post.gif" width=50%>
 
 ### 시연 영상
 [![어린이ZIP 시연영상](https://img.youtube.com/vi/qOEFXODnMOA/hqdefault.jpg)](https://youtu.be/qOEFXODnMOA)
 
+
+<br><br>
+[<img src="./img/logo.png" width=50>](http://childrenzip.site/)를 클릭해 사이트를 확인하세요! 😊
 
 ### 사용 기술
 
@@ -62,10 +73,20 @@ ETC : Docker
 
 
 
-### ERD(수정 예정)
+### ERD
 
 [ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
+<br><br>
 
 
-### WireFrame
+### 사용된 도구
+- npx 6.14.5
+- nuxt.js 2.14.6
+- Django 3.12.0
+- IDE: Visual Studio Code 1.48
+
+
+<img src="./img/skill_set.png" width=100%>
+
+<br><br>

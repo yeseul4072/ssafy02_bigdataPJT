@@ -6,7 +6,14 @@
           <v-col cols="12" align="center">
             <v-avatar size="12vw">
               <v-img
-                :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+                v-if="user.profile_image != null"
+                :src="user.profile_image"
+                height="150px"
+                width="150px"
+              />
+              <v-img
+                v-else
+                :src="require('@/assets/default_profile.png')"
                 height="150px"
                 width="150px"
               />
@@ -83,7 +90,8 @@
             </v-row>
           </v-col>
           <v-col cols="12" align="center" class="py-0">
-            <span style="font-size:0.8vw;color:#4f4f4f;">* 항목별 별을 눌러 평점을 주세요</sapn>
+            <span style="font-size:0.8vw;color:#4f4f4f;">
+              * 항목별 별을 눌러 평점을 주세요
             </span>
           </v-col>
         </v-row>
@@ -139,8 +147,6 @@
         </v-row>
       </v-col>
     </v-row>
-    </v-col>
-    </v-row>
   </div>
 </template>
 
@@ -180,8 +186,12 @@ export default {
         require: [val => (val || '').length > 0 || '입력이 필요합니다.'],
         text: [val => (val || '').length > 9 || '10자이상 입력이 필요합니다.']
       },
-      msg: ''
+      msg: '',
+      user: {}
     }
+  },
+  mounted () {
+    this.user = this.$store.getters.getUser
   },
   methods: {
     writeReview () {

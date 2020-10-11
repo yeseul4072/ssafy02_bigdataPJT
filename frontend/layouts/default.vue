@@ -1,6 +1,14 @@
 <template>
   <div>
     <v-app>
+      <v-overlay
+        :value="getOverlay"
+        style="z-index: 110;"
+        opacity="1"
+        color="white"
+      >
+        <v-img :src="require('@/assets/loading.gif')" />
+      </v-overlay>
       <common-header v-if="notMain" />
       <!-- <v-expand-transition > -->
       <nav-board
@@ -11,7 +19,7 @@
       />
       <!-- </v-expand-transition> -->
       <div :style="{'height' : (boardHeight) + 'px' }" />
-      <Nuxt />
+      <Nuxt :key="$route.fullPath" />
       <common-footer v-if="notMain" />
     </v-app>
   </div>
@@ -33,9 +41,11 @@ export default {
   computed: {
     notMain () {
       // ignore = ['/', '/']
-      return this.$route.path !== '/' && this.$route.path !== '/login' && this.$route.path.indexOf('/signup')
+      return this.$route.path !== '/' && this.$route.path.indexOf('/login') && this.$route.path.indexOf('/signup')
     },
-    ...mapGetters(['isBoard'])
+    ...mapGetters(['isBoard', 'getOverlay'])
+  },
+  mounted () {
   },
   methods: {
     checkHeight (height) {

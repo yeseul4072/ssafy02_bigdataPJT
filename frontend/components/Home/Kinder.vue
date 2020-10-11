@@ -19,6 +19,7 @@
             class="mx-2"
             fab
             dark
+            depressed
             x-small
             color="#0CC476"
             style="pointer-events: none !important;"
@@ -34,7 +35,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row style="height:300px;">
-                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.left.url)" @click="linkKinder(kinder.left.id)" />
+                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="kinder.left.image" @click="linkKinder(kinder.left.id)" />
                 </v-row>
                 <v-row align="center">
                   <span class="mt-4 mb-1" style="font-size:1.5vw;font-wight:800;padding-left:6px">
@@ -56,12 +57,12 @@
                     v-for="(tag, i) in kinder.left.tags"
                     :key="i"
                     class="ma-1"
-                    color="success"
+                    color="green accent-4"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="success" left>
+                    <v-icon color="green accent-4" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}
@@ -74,7 +75,7 @@
             <v-row>
               <v-col cols="12" style="padding:30px;">
                 <v-row style="height:300px;">
-                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="require('../../assets/'+kinder.right.url)" @click="linkKinder(kinder.right.id)" />
+                  <v-img class="cursor" style="height:100%;border-radius: 7px;-moz-border-radius: 7px;-khtml-border-radius: 7px;-webkit-border-radius: 7px;" :src="kinder.right.image" @click="linkKinder(kinder.right.id)" />
                 </v-row>
                 <v-row align="center">
                   <span style="font-size:1.5vw;font-wight:800;padding-left:6px;margin-top:15px; margin-bottom:5px;">
@@ -96,12 +97,12 @@
                     v-for="(tag, i) in kinder.right.tags"
                     :key="i"
                     class="ma-1"
-                    color="green"
+                    color="green accent-4"
                     text-color="#black"
                     outlined
                     small
                   >
-                    <v-icon color="green" left>
+                    <v-icon color="green accent-4" left>
                       mdi-server-plus
                     </v-icon>
                     {{ tag }}

@@ -7,7 +7,7 @@
         </p>
       </div>
       <div style="text-align:center; margin-top: 20px;">
-        <div class="text-center">
+        <div class="text-center mt-11">
           <v-btn
             v-if="isLogin"
             x-large

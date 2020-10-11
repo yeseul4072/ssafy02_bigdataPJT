@@ -116,6 +116,10 @@ export default {
       } else {
         this.$router.push(`/community/${id}`)
       }
+    },
+    test () {
+      this.$on('open-contact-form', () => {
+      })
     }
   }
 

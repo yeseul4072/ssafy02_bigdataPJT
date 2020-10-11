@@ -6,7 +6,14 @@
           <v-col cols="12" align="center">
             <v-avatar size="12vw">
               <v-img
-                :src="'https://www.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sexy-afro-2-512.png'"
+                v-if="review.user.profile_image"
+                :src="review.user.profile_image"
+                height="150px"
+                width="150px"
+              />
+              <v-img
+                v-else
+                :src="require('@/assets/default_profile.png')"
                 height="150px"
                 width="150px"
               />
@@ -95,13 +102,13 @@
               </v-row>
               <v-row class="pl-4" style="font-size:1.5vh;width:100%;" align="end">
                 <div style="display:inline-block" class="pr-3">
-                  unseng@gmail.com
+                  {{ review.user.nickname }}
                 </div>
                 <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
                 <div style="display:inline-block" class="px-3">
                   {{ review.created_at | diffDate }}
                 </div>
-                <template v-if="review.user == 9">
+                <template v-if="review.user.id == user.id">
                   <i class="fas fas fa-ellipsis-v" style="color:#DEDEDE" />
                   <v-dialog
                     v-model="isDelete"
@@ -224,8 +231,12 @@ export default {
   props: ['review'],
   data () {
     return {
-      isDelete: false
+      isDelete: false,
+      user: {}
     }
+  },
+  mounted () {
+    this.user = this.$store.getters.getUser
   },
   methods: {
     reviewLike () {

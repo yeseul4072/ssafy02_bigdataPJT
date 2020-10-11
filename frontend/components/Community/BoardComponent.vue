@@ -16,22 +16,26 @@
               <span>
                 {{ board.title }}
               </span>
-              <span v-if="board.title !== '공지사항' && board.title !== 'FAQ' && board.title !== '1:1문의'" class="pl-2">
-                <v-icon
-                  v-if="!board.favorite_yn"
-                  class="cm-bc-icon"
-                  @click="bmBoard"
+              <span v-if="board.title !== '공지사항' && board.title !== 'FAQ'" class="pl-2">
+                <span
+                  v-if="board.title !== '1:1문의'"
                 >
-                  mdi-star-outline
-                </v-icon>
-                <v-icon
-                  v-else
-                  class="cm-bc-icon"
-                  color="yellow"
-                  @click="bmBoard"
-                >
-                  mdi-star
-                </v-icon>
+                  <v-icon
+                    v-if="!board.favorite_yn"
+                    class="cm-bc-icon"
+                    @click="bmBoard"
+                  >
+                    mdi-star-outline
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    class="cm-bc-icon"
+                    color="yellow"
+                    @click="bmBoard"
+                  >
+                    mdi-star
+                  </v-icon>
+                </span>
                 <v-btn
                   class="cm-bc-icon"
                   depressed
@@ -163,6 +167,7 @@ export default {
       http.axios.post(`/community/${this.board.id}/favorite/`)
         .then(({ data }) => {
           this.board.favorite_yn = !this.board.favorite_yn
+          this.$emit('open-contact-form')
         })
     },
     goToWrite () {

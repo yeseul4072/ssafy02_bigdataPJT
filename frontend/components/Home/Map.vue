@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -22,15 +23,20 @@ export default {
   mounted () {
     window.kakao && window.kakao.maps ? this.initMap() : this.addScript()
   },
+  computed: {
+    ...mapGetters(['getUser'])
+  },
   methods: {
     openMap () {
       this.isMap = true
     },
     initMap () {
       const self = this
+      this.selected_lat = self.getUser.latitude
+      this.selected_lng = self.getUser.longitude
       setTimeout(function () {
         const container = document.getElementById('map')
-        const options = { center: new kakao.maps.LatLng(33.450701, 126.570667), level: 3 }
+        const options = { center: new kakao.maps.LatLng(self.getUser.latitude, self.getUser.longitude), level: 3 }
         const map = new kakao.maps.Map(container, options)
         // 컨트롤러 생성
         const mapTypeControl = new kakao.maps.MapTypeControl()
@@ -39,37 +45,39 @@ export default {
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT)
         const center = map.getCenter()
         const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'
-        const imageSize = new kakao.maps.Size(45, 50)
+        const imageSize = new kakao.maps.Size(24, 35)
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
         const marker = new kakao.maps.Marker({ position: center, image: markerImage })
         marker.setMap(map)
         const content = '<div class="customoverlay">' +
-                          '  <a href="javascript:void(0);" target="_blank">' +
+                          '  <a href="javascript:void(0);">' +
                           '    <span class="title">선택된 중심지역</span>' +
                           '  </a>' +
                           '</div>'
-        const position = new kakao.maps.LatLng(center.getLat() - 0.0001, center.getLng())
+        const position = new kakao.maps.LatLng(center.getLat(), center.getLng())
 
         // 오버레이생성
         let customOverlay = new kakao.maps.CustomOverlay({
           map,
           position,
           content,
-          yAnchor: 1
+          yAnchor: 0.2,
+          xAnchor: 0.49
         })
         kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
           const latlng = mouseEvent.latLng
           marker.setPosition(latlng)
           self.selected_lat = latlng.getLat()
           self.selected_lng = latlng.getLng()
-          const position = new kakao.maps.LatLng(this.selected_lat - 0.0001, this.selected_lng)
+          const position = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())
 
           customOverlay.setMap(null)
           customOverlay = new kakao.maps.CustomOverlay({
             map,
             position,
             content,
-            yAnchor: 1
+            yAnchor: 0.2,
+            xAnchor: 0.49
           })
         })
       }, 100)

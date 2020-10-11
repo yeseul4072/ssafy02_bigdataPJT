@@ -181,7 +181,7 @@
             <v-list three-line>
               <v-list-item class="kinder_list">
                 <v-list-item-content style="max-width:200px;max-height:200px;">
-                  <v-img src="https://picsum.photos/200/200?image=20" style="border-radius:3px;" />
+                  <v-img min-height="200" :src="item.image" style="border-radius:3px;" />
                 </v-list-item-content>
                 <v-list-item-content class="pl-4" style="height:200px; padding-top:3px;">
                   <v-list-item-title style="font-size:20px; font-weight:700">
@@ -216,7 +216,7 @@
                       mdi-server-plus
                     </v-icon>
 
-                    <span class="success--text" style="color:#69F0AE"> {{ features[key] }}</span>
+                    <span style="color:black;"> {{ features[key] }}</span>
                   </v-chip>
 
                   <!-- </v-list-item-subtitle> -->
@@ -400,10 +400,8 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.$route)
     this.lat = this.$route.query.lat
     this.lng = this.$route.query.lng
-    console.log(this.$route)
     this.getKindergartenList()
   },
   methods: {
@@ -469,7 +467,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @media (min-width:320px) and (max-width:960px) {
     #left-panel {
         display:none

@@ -31,28 +31,32 @@
         />
       </div>
 
-      <div style="padding-top: 10px;">
+      <div style="padding-top: 15px;">
         <v-btn
           class="mx-2"
           fab
+          small
           dark
+          depressed
           color="#0CC476"
           style="margin:0px !important;"
           @click="searchValidation"
         >
-          <v-icon>
+          <v-icon style="font-size:20px;">
             fas fa-search
           </v-icon>
         </v-btn>
         <v-btn
           class="mx-2"
+          small
           fab
           dark
+          depressed
           color="#0CC476"
           style="margin:0px !important;"
           @click="openMap"
         >
-          <v-icon>
+          <v-icon style="font-size:20px;">
             fas fa-map
           </v-icon>
         </v-btn>
@@ -204,7 +208,6 @@ export default {
       const geocoder = new kakao.maps.services.Geocoder()
 
       const callback = function (result, status) {
-        console.log(result)
         if (status === kakao.maps.services.Status.OK) {
           setAddress(result[0].x, result[0].y)
         }
@@ -214,13 +217,12 @@ export default {
     setAddress(lng, lat) {
       this.lng = lng
       this.lat = lat
-      console.log(lng,lat, "!!!")
       this.$router.push({
           path: '/searchkind',
           query: {
               "lng": this.lng,
               "lat": this.lat
-          }
+          },
       });
     },
     setLng(lng){
