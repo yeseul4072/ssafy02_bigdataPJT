@@ -46,6 +46,7 @@
   - 원하는 게시판 생성 기능
   <br>
   <img src="./img/create_board.gif" width=50%>
+  <br>
   - 게시글 관리 
   <br>
   <img src="./img/create_post.gif" width=50%>
