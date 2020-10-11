@@ -423,7 +423,7 @@ export default {
       const scrollH = e.target.scrollingElement.scrollHeight
       const scrollT = e.target.scrollingElement.scrollTop
       const clientH = e.target.scrollingElement.clientHeight
-      if (scrollT + clientH >= scrollH) {
+      if (scrollT + clientH >= scrollH - 5) {
         this.loadReview()
       }
     },
