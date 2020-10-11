@@ -69,6 +69,8 @@ ETC : Docker
 
 ### ERD
 
+<img src="./img/erd.png" width=100%>
+
 [ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
 <br><br>
@@ -78,7 +80,6 @@ ETC : Docker
 - nuxt.js 2.14.6
 - Django 3.12.0
 - IDE: Visual Studio Code 1.48
-
 
 <img src="./img/skill_set.png" width=100%>
 
