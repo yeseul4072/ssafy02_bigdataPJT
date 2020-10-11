@@ -4,7 +4,7 @@
 
 <br>
 
-### Translation: [US](#) [KR](../)
+### Translation: [US](#) [KR](https://github.com/msnodeve/Children-ZIP)
 
 <br>
 
@@ -32,15 +32,18 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 ## 📌 Table of Contents
 
-- [Tech Stacks](#-Tech-Stacks)
-- [Project Structure](#-Project-Structure)
-- [ERD](#-ERD)
-- [Project Process](#-Project-Process)
-- [Main Function](#-Main-Function)
-- [Demonstration](#-Demonstration)
-- [Browsers Supported](#-Browsers-Supported)
-- [Developers](#-Developers)
-- [References](#-References)
+- [🏠 Daycare center recommendation platform, Children-ZIP](#-daycare-center-recommendation-platform-children-zip)
+  - [Motive](#motive)
+- [📌 Table of Contents](#-table-of-contents)
+- [🔨 Tech Stacks](#-tech-stacks)
+- [🧱 Project Structure](#-project-structure)
+- [📜 ERD](#-erd)
+- [🔍 Project Process](#-project-process)
+- [✅ Main Function](#-main-function)
+- [🎥 Demonstration](#-demonstration)
+- [🌏 Browsers Supported](#-browsers-supported)
+- [👩‍💻 Developers](#-developers)
+- [🔗 References](#-references)
 
 <br>
 
