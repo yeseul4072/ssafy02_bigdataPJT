@@ -1,4 +1,4 @@
-<img src="../img/banner.JPG" width=100%>
+[<img src="../img/banner.JPG" width=100%>](http://childrenzip.site)
 
 ![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
 
@@ -16,6 +16,12 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 
 
+### Motive
+
+> Through interviews with parents with young children, I learned that when choosing a daycare center, people generally search for information using recommendations from acquaintances or Naver Cafe, but in the process, a lot of information is spread out, which makes them confused.
+>
+> 
+
 
 
 ## 📌 Table of Contents
@@ -27,9 +33,8 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 - [Main Function](#-Main-Function)
 - [Demonstration](#-Demonstration)
 - [Browsers Supported](#-Browsers-Supported)
-- [Creator](#-Creator)
-- [License](#-License)
-- [Reference](#-Reference)
+- [Developers](#-Developers)
+- [References](#-References)
 
 
 
@@ -108,8 +113,65 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 
 
+## ✅ Main Function
+
+- Recommended Daycare centers
+
+  - Recommendation system based on user's preferred feature analysis and user's activity analysis
+  - Filtering
+
+   <img src="C:/Users/multicampus/Desktop/2020-2/2_특화프로젝트_subpjt2/img/recommend.gif" width=50%>
+
+- Searching national Daycare centers
+
+  - Bookmark
+  - Visualization of information such as average number of years of service for teachers, number of infants per teacher, and number of CCTVs per 100m²
+  - Write and view ratings and reviews of Daycare center
+
+   <img src="C:/Users/multicampus/Desktop/2020-2/2_특화프로젝트_subpjt2/img/kinder_info.gif" width=50%>
+
+- Community
+
+  - Search and create the desired board
+
+   <img src="C:/Users/multicampus/Desktop/2020-2/2_특화프로젝트_subpjt2/img/create_board.gif" width=50%>
+
+  - Add and delete posts and comments
+
+   <img src="C:/Users/multicampus/Desktop/2020-2/2_특화프로젝트_subpjt2/img/create_post.gif" width=50%>
+
+
+
+
+
+## 🎥 Demonstration
+
+[![Children-ZIP Demo video](https://img.youtube.com/vi/qOEFXODnMOA/hqdefault.jpg)](https://youtu.be/qOEFXODnMOA)
+
+
+
+
+
 ## :globe_with_meridians: Browsers Supported
 
 | <img src='../img/chrome.png' width=60> | <img src='../img/firefox.png' width=60> | <img src='../img/edge.png' width=60> | <img src='../img/safari.png' width=60> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |                            latest                            |                            latest                            |                            latest                            |                            latest                            |
+
+
+
+
+
+## 👩‍💻 Developers
+
+- MyeongSeok KIM (https://github.com/msnodeve)
+- Yeseul Heo (https://github.com/yeseul4072)
+- Jihoon Seo (https://github.com/sjh7141)
+- SungMin Ahn (https://github.com/asm9677)
+- Yongjoon Seo (https://github.com/YongjoonSeo)
+
+
+
+## 🔗 References
+
+- [Our Development Story](https://www.notion.so/msnodeve/GG-ZIP-4755010382c943ec9444ecdb22ea01c5)
