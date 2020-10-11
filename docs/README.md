@@ -2,7 +2,9 @@
 
 ![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
 
+<br>
 
+<br>
 
 ## 🏠 Daycare center recommendation platform, Children-ZIP
 
@@ -14,15 +16,17 @@ It recommends daycare centers in a way that combines Content-Based Filtering and
 
 Click [here](http://childrenzip.site/) to check the site 🙂
 
-
+<br>
 
 ### Motive
 
 > Through interviews with parents with young children, I learned that when choosing a daycare center, people generally search for information using recommendations from acquaintances or Naver Cafe, but in the process, a lot of information is spread out, which makes them confused.
 >
-> 
+> The project was planned with the hope that parents would be able to see information about daycare centers at a glance, and that they would be able to alleviate the tiredness of exploring daycare centers by recommending centers to parents.
 
+<br>
 
+<br>
 
 ## 📌 Table of Contents
 
@@ -36,17 +40,17 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 - [Developers](#-Developers)
 - [References](#-References)
 
+<br>
 
-
-
+<br>
 
 ## 🔨 Tech Stacks
 
 <img src="../img/skill_set.png" width=100%>
 
+<br>
 
-
-
+<br>
 
 ## 🧱 Project Structure
 
@@ -91,9 +95,9 @@ Click [here](http://childrenzip.site/) to check the site 🙂
     	└── requriements.txt # dependency management
 ```
 
+<br>
 
-
-
+<br>
 
 ## 📜 ERD
 
@@ -101,17 +105,17 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 [ERD Diagram link](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
+<br>
 
-
-
+<br>
 
 ## 🔍 Project Process
 
 <img src="../img/process_struct.png" width=100%>
 
+<br>
 
-
-
+<br>
 
 ## ✅ Main Function
 
@@ -140,17 +144,17 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
    <img src="C:/Users/multicampus/Desktop/2020-2/2_특화프로젝트_subpjt2/img/create_post.gif" width=50%>
 
+<br>
 
-
-
+<br>
 
 ## 🎥 Demonstration
 
 [![Children-ZIP Demo video](https://img.youtube.com/vi/qOEFXODnMOA/hqdefault.jpg)](https://youtu.be/qOEFXODnMOA)
 
+<br>
 
-
-
+<br>
 
 ## :globe_with_meridians: Browsers Supported
 
@@ -158,9 +162,9 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |                            latest                            |                            latest                            |                            latest                            |                            latest                            |
 
+<br>
 
-
-
+<br>
 
 ## 👩‍💻 Developers
 
@@ -170,7 +174,9 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 - SungMin Ahn (https://github.com/asm9677)
 - Yongjoon Seo (https://github.com/YongjoonSeo)
 
+<br>
 
+<br>
 
 ## 🔗 References
 

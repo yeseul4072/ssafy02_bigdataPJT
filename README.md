@@ -2,7 +2,9 @@
 
 ![Github](https://img.shields.io/badge/vue-2.6.11-%234FC08D?style=plastic&logo=Vue.js)![Github](https://img.shields.io/pypi/djversions/djangorestframework?color=green&label=django&logo=django&style=plastic)![Github](https://img.shields.io/badge/MySQL-8.0-%234479A1?style=plastic&logo=mysql)![Github](https://img.shields.io/badge/build-passing-brightgreen?style=plastic)
 
+<br>
 
+<br>
 
 ## 🏠 어린이집 추천 플랫폼, 어린이ZIP
 
@@ -14,7 +16,7 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 [여기](http://childrenzip.site/)를 클릭해 사이트를 확인하세요 🙂
 
-
+<br>
 
 ### 개발 동기
 
@@ -22,9 +24,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 >
 > 어린이집 정보를 한 눈에 볼 수 있고, 또 자녀에게 꼭 맞는 어린이집을 추천해줌으로써 부모님들이 어린이집을 탐색할 때 느끼는 피곤함을 덜 수 있지 않을까? 라는 생각으로 프로젝트를 기획하였습니다. 
 
+<br>
 
-
-
+<br>
 
 ## 📌 목차 
 
@@ -38,17 +40,17 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 - [개발자](#-개발자)
 - [참고](#-참고)
 
+<br>
 
-
-
+<br>
 
 ## 🔨 사용된 기술
 
 <img src="./img/skill_set.png" width=100%>
 
+<br>
 
-
-
+<br>
 
 ## 🧱 프로젝트 구조
 
@@ -94,9 +96,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
     	
 ```
 
+<br>
 
-
-
+<br>
 
 ## 📜 ERD
 
@@ -104,19 +106,17 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 [ERD Diagram link](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
+<br>
 
-
-
+<br>
 
 ## 🔍 프로젝트 프로세스
 
 <img src="./img/process_struct.png" width=100%>
 
+<br>
 
-
-
-
-
+<br>
 
 ## ✅ 주요 기능
 
@@ -137,9 +137,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
   - 게시글 및 댓글 추가 삭제    
   # <img src="./img/create_post.gif" width=50%>
 
+<br>
 
-
-
+<br>
 
 ## 🎥 시연 영상
 
@@ -147,9 +147,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 [![어린이ZIP 시연영상](https://img.youtube.com/vi/qOEFXODnMOA/hqdefault.jpg)](https://youtu.be/qOEFXODnMOA)
 
+<br>
 
-
-
+<br>
 
 ## :globe_with_meridians: 지원하는 브라우저
 
@@ -157,9 +157,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |                            latest                            |                            latest                            |                            latest                            |                            latest                            |
 
+<br>
 
-
-
+<br>
 
 ## 👩‍💻 개발자
 
@@ -169,9 +169,9 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 - 안성민 (https://github.com/asm9677)
 - 서용준 (https://github.com/YongjoonSeo)
 
+<br>
 
-
-
+<br>
 
 ## 🔗 참고
 
