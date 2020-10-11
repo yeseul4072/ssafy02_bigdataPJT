@@ -4,6 +4,8 @@
 
 <br>
 
+### Translation: [US](#) [KR](../)
+
 <br>
 
 ## 🏠 Daycare center recommendation platform, Children-ZIP
@@ -156,7 +158,7 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 <br>
 
-## :globe_with_meridians: Browsers Supported
+## 🌏 Browsers Supported
 
 | <img src='../img/chrome.png' width=60> | <img src='../img/firefox.png' width=60> | <img src='../img/edge.png' width=60> | <img src='../img/safari.png' width=60> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
