@@ -69,7 +69,7 @@ ETC : Docker
 
 ### ERD
 
-<img src="./img/erd.png" width=100%>
+<img src="./img/erd.PNG" width=100%>
 
 [ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
