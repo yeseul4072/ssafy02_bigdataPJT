@@ -44,13 +44,12 @@
   - 사용자가 입력 및 클릭한 데이터를 바탕으로 비슷한 어린이집 추천 
 - 커뮤니티
   - 원하는 게시판 생성 기능
-  - 게시판 즐겨찾기  
-- 원장과 원격 화상 상담 
+  <br>
+  <img src="./img/create_board.gif" width=50%>
+  - 게시글 관리 
+  <br>
+  <img src="./img/create_post.gif" width=50%>
 
-
-
-- 어린이집 정보와 더불어 지역구별 인구당 범죄 발생 빈도 & 강력 범죄 비율 시각화
-- 어린이집 리뷰 데이터를 기반으로 어린이집 추천 
 
 <br><br>
 [<img src="./img/logo.png" width=50>](http://childrenzip.site/)를 클릭해 사이트를 확인하세요! 😊
