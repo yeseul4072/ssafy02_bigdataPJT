@@ -43,13 +43,10 @@
 - 어린이집 추천
   - 사용자가 입력 및 클릭한 데이터를 바탕으로 비슷한 어린이집 추천 
 - 커뮤니티
-  - 원하는 게시판 생성 기능
-  <br>
-  <img src="./img/create_board.gif" width=50%>
-  <br>
-  - 게시글 관리 
-  <br>
-  <img src="./img/create_post.gif" width=50%>
+  - 원하는 게시판 생성 기능  
+  # <img src="./img/create_board.gif" width=50%>  
+  - 게시글 관리   
+  # <img src="./img/create_post.gif" width=50%>
 
 
 <br><br>
