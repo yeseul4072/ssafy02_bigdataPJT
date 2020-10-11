@@ -16,6 +16,8 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 
 
+
+
 ## 📌 Table of Contents
 
 - [Tech Stacks](#-Tech-Stacks)
@@ -31,9 +33,13 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 
 
+
+
 ## 🔨 Tech Stacks
 
 <img src="../img/skill_set.png" width=100%>
+
+
 
 
 
@@ -82,9 +88,23 @@ Click [here](http://childrenzip.site/) to check the site 🙂
 
 
 
+
+
+## 📜 ERD
+
+<img src="../img/erd.PNG" width=100%>
+
+[ERD Diagram link](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
+
+
+
+
+
 ## 🔍 Project Process
 
 <img src="../img/process_struct.png" width=100%>
+
+
 
 
 

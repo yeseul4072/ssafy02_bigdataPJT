@@ -40,9 +40,13 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 
 
+
+
 ## 🔨 사용된 기술
 
 <img src="./img/skill_set.png" width=100%>
+
+
 
 
 
@@ -94,6 +98,16 @@ Content-Based Filtering 기법과 User-Based Collaborative Filtering 기법을 �
 
 
 
+## 📜 ERD
+
+<img src="./img/erd.PNG" width=100%>
+
+[ERD Diagram link](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
+
+
+
+
+
 ## 🔍 프로젝트 프로세스
 
 <img src="./img/process_struct.png" width=100%>
@@ -136,9 +150,7 @@ ETC : Docker
 
 
 
-### ERD
 
-[ERD Diagram](https://www.erdcloud.com/d/a36xRNx6woXE7ukPk)
 
 <br><br>
 
@@ -147,7 +159,6 @@ ETC : Docker
 - nuxt.js 2.14.6
 - Django 3.12.0
 - IDE: Visual Studio Code 1.48
-
 
 <img src="./img/skill_set.png" width=100%>
 
