@@ -25,13 +25,13 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('rest-auth/', include('rest_auth.urls')), # rest_auth url 등록
-    path('rest-auth/', include('accounts.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')), # 회원가입
-    path('accounts/', include('allauth.urls')), # 회원가입 email
-    path('accounts-rest/registration/account-confirm-email/<str:key>/', confirm_email, name='account_confirm_email'), # 회원가입 email verification
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # swagger
-    path('community/', include('community.urls')),
-    path('kindergartens/', include('kindergartens.urls')),
+    path('api/admin/', admin.site.urls),
+    path('api/rest-auth/', include('rest_auth.urls')), # rest_auth url 등록
+    path('api/rest-auth/', include('accounts.urls')),
+    path('api/rest-auth/registration/', include('rest_auth.registration.urls')), # 회원가입
+    path('api/accounts/', include('allauth.urls')), # 회원가입 email
+    path('api/accounts-rest/registration/account-confirm-email/<str:key>/', confirm_email, name='account_confirm_email'), # 회원가입 email verification
+    path('api/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'), # swagger
+    path('api/community/', include('community.urls')),
+    path('api/kindergartens/', include('kindergartens.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
