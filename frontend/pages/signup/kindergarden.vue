@@ -11,7 +11,10 @@
         <v-row
           justify="center"
         >
-          <a href="/" class="logo" />
+          <nuxt-link
+            to="/"
+            class="logo"
+          />
         </v-row>
         <v-row
           justify="center"
@@ -160,7 +163,8 @@
 </template>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-<script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<!--<script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> -->
+<script type="text/JavaScript" src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <script>
 
 export default {

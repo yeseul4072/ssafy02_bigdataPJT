@@ -58,6 +58,7 @@
 
 <script>
 import http from '@/util/http_common.js'
+import EventBus from '@/util/event_bus'
 export default {
   // props: ['is-show'],
   data () {
@@ -84,27 +85,12 @@ export default {
 
   },
   mounted () {
-    http.axios.get('/community/favorite/boards/')
-      .then(({ data }) => {
-        if (data.length === 0) {
-          this.bookmarkBoard = []
-          this.bookmarkBoard.push([{
-            title: '북마크 추가',
-            id: 0
-          }])
-        } else {
-          for (let i = 0; i < 15; i = i + 5) {
-            this.bookmarkBoard.push(data.slice(i, i + 5))
-          }
-          let row = parseInt(data.length / 5)
-          row = row >= 3 ? 2 : row
-          const col = data.length % 5
-          this.bookmarkBoard[row][col] = {
-            title: '북마크 추가',
-            id: 0
-          }
-        }
-      })
+    const self = this
+    self.getBoardList()
+
+    EventBus.$on('sync-board-list', function () {
+      self.getBoardList()
+    })
   },
   methods: {
     validation () {
@@ -117,9 +103,28 @@ export default {
         this.$router.push(`/community/${id}`)
       }
     },
-    test () {
-      this.$on('open-contact-form', () => {
-      })
+    getBoardList () {
+      http.axios.get('/community/favorite/boards/')
+        .then(({ data }) => {
+          this.bookmarkBoard = []
+          if (data.length === 0) {
+            this.bookmarkBoard.push([{
+              title: '북마크 추가',
+              id: 0
+            }])
+          } else {
+            for (let i = 0; i < 15; i = i + 5) {
+              this.bookmarkBoard.push(data.slice(i, i + 5))
+            }
+            let row = parseInt(data.length / 5)
+            row = row >= 3 ? 2 : row
+            const col = data.length % 5
+            this.bookmarkBoard[row][col] = {
+              title: '북마크 추가',
+              id: 0
+            }
+          }
+        })
     }
   }
 

@@ -239,7 +239,7 @@ export default {
         this.$router.push('/modify')
       } else if (action === 'logout') {
         // console.log(this.$router.app.$store)
-        this.$router.app.$store.commit('setIsLogin', false)
+        this.$router.app.$store.commit('setIsLogin', 0)
         this.$router.app.$store.commit('setUser', null)
         this.$router.app.$store.commit('setToken', '')
         this.$router.push('/')
