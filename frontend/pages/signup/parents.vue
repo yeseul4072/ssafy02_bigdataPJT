@@ -408,7 +408,12 @@ export default {
       http.formAxios.post('/rest-auth/registration/', frm)
       .then(({data}) => {
         this.loading = false;
-        this.$router.push('/login')
+        this.$router.push({
+          path: '/login',
+          query: {
+              "success": true
+          }
+        })
       })
     }
   }

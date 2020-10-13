@@ -81,6 +81,37 @@
         </div> -->
       </div>
     </div>
+    <v-dialog
+      v-model="success"
+      max-width="400"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          <v-container class="justify-center wrap" fluid fill-height>
+            <v-row justify="center">
+              <v-img
+                :src="require('@/assets/success.png')"
+                max-width="50"
+              />
+            </v-row>
+            <v-row justify="center" class="mt-3">
+              <span style="font-weight:700;">회원가입을 축하드립니다</span>
+            </v-row>
+          </v-container>
+        </v-card-title>
+        <v-card-text>대한민국 No.1 어린이집 추천 플랫폼! '어린이ZIP'에서 사랑하는 우리아이가 다닐 어린이집을 찾아보세요!</v-card-text>
+        <v-card-actions style="text-align:center">
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary darken-1"
+            text
+            @click="success = false"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <div class="banner" />
   </div>
 </template>
@@ -96,11 +127,16 @@ export default {
       id: '',
       password: '',
       error: false,
-      error_text: ''
+      error_text: '',
+      success: false
     }
   },
   computed: {
     ...mapGetters(['isLogin', 'getToken'])
+  },
+  mounted () {
+    this.success = this.$route.query.success
+    history.pushState({ data: '' }, '', '/login')
   },
   methods: {
     // switchButton (e) {
