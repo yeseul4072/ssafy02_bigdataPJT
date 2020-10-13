@@ -82,8 +82,9 @@
                     v-model="id"
                     placeholder="아이디를 입력해 주세요."
                     color="grey"
-                    :success-messages="!iderror ? id_text : ''"
-                    :error-messages="iderror ? id_text : ''"
+                    :success="!iderror && (id_text !== '')"
+                    :success-messages="id_text"
+                    :error="iderror && (id_text !== '')"
                     @blur="validID()"
                   />
                 </td>
@@ -101,8 +102,9 @@
                     placeholder="비밀번호를 입력해 주세요."
                     color="grey"
                     type="password"
-                    :success-messages="!pwerror ? pw_text : ''"
-                    :error-messages="pwerror ? pw_text : ''"
+                    :success="!pwerror && (pw_text !== '')"
+                    :success-messages="pw_text"
+                    :error="pwerror && (pw_text !== '')"
                     @blur="validPassword()"
                   />
                 </td>
@@ -114,8 +116,9 @@
                     placeholder="비밀번호를 다시 한번 입력해 주세요."
                     color="grey"
                     type="password"
-                    :success-messages="!repwerror ? repw_text : ''"
-                    :error-messages="repwerror ? repw_text : ''"
+                    :success="!repwerror && (repw_text !== '')"
+                    :success-messages="repw_text"
+                    :error="repwerror && (repw_text !== '')"
                     @input="validRePassword()"
                   />
                 </td>
@@ -132,8 +135,9 @@
                     v-model="nickname"
                     placeholder="닉네임을 입력해 주세요."
                     color="grey"
-                    :success-messages="!nickerror ? nick_text : ''"
-                    :error-messages="nickerror ? nick_text : ''"
+                    :success="!nickerror && (nick_text !== '')"
+                    :success-messages="nick_text"
+                    :error="nickerror && (nick_text !== '')"
                     @blur="validNickname()"
                   />
                 </td>
@@ -150,8 +154,9 @@
                     v-model="email"
                     placeholder="이메일을 입력해 주세요."
                     color="grey"
-                    :success-messages="!emailerror ? email_text : ''"
-                    :error-messages="emailerror ? email_text : ''"
+                    :success="!emailerror && (email_text !== '')"
+                    :success-messages="email_text"
+                    :error="emailerror && (email_text !== '')"
                     @blur="validEmail()"
                   />
                 </td>
@@ -168,8 +173,9 @@
                     v-model="address"
                     placeholder="관심 지역을 입력해 주세요."
                     color="grey"
-                    :success-messages="!addrerror ? addr_text : false"
-                    :error-messages="addrerror ? addr_text : false"
+                    :success="!addrerror && (addr_text !== '')"
+                    :success-messages="addr_text"
+                    :error="addrerror && (addr_text !== '')"
                     readonly
                     @click="openDaumZipAddress"
                   />
@@ -252,7 +258,7 @@ export default {
         })
         .catch((error) => {
           this.iderror = true;
-          this.id_text = '사용할 수 없는 아이디입니다.';
+          this.id_text = error.response.data;
         })
     },
     validPassword() {
@@ -261,9 +267,9 @@ export default {
           this.pwerror = false;
           this.pw_text = '사용할 수 있는 비밀번호입니다.';
         })
-        .catch((error) => {
+        .catch(({response}) => {
           this.pwerror = true;
-          this.pw_text = '사용할 수 없는 비밀번호입니다.';
+          this.pw_text = response.data;
         })
     },
     validRePassword() {
@@ -281,9 +287,9 @@ export default {
           this.nickerror = false;
           this.nick_text = '사용할 수 있는 닉네임입니다.'
         })
-        .catch((error) => {
+        .catch(({response}) => {
           this.nickerror = true;
-          this.nick_text = '사용할 수 없는 닉네임입니다.'
+          this.nick_text = response.data;
         })
     },
     validEmail() {
@@ -292,9 +298,9 @@ export default {
           this.emailerror = false;
           this.email_text = '사용할 수 있는 이메일입니다.'
         })
-        .catch((error) => {
+        .catch(({response}) => {
           this.emailerror = true;
-          this.email_text = '사용할 수 없는 이메일입니다.'
+          this.email_text = response.data;
         })
     },
     validAddr() {
@@ -324,11 +330,17 @@ export default {
     },
 
     openDaumZipAddress() {
+        var self = this;
         var setAddress = this.setAddress;
         new daum.Postcode({
             oncomplete(data) {
                 var geocoder = new kakao.maps.services.Geocoder();
-
+                if(data.address.indexOf('서울') === -1) {
+                  // data.address="서울 강남구 테헤란로 212 (멀티캠퍼스)"
+                  self.addr_text = '서울 이외지역을 설정하셨습니다.'
+                  self.addrerror = true
+                  return
+                }
                 var callback = function(result, status) {
                     if (status === kakao.maps.services.Status.OK) {
                         setAddress(data.address, result[0].x, result[0].y);

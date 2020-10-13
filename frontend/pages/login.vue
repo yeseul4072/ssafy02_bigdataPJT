@@ -17,23 +17,24 @@
 
         <div class="form">
           <v-text-field
-            ref="id"
             v-model="id"
             outlined
             color="success"
             label="아이디"
-            :error-messages=" error ? error_text : ''"
+            hide-details
           />
           <v-text-field
+            class="mt-5"
+            ref="id"
             v-model="password"
             outlined
             color="#0CC476"
             label="비밀번호"
-            hide-details
             type="password"
             @keydown.enter="login"
+            :error-messages=" error ? error_text : ''"
           />
-          <v-list-item style="padding:0;margin-top:30px;">
+          <v-list-item style="padding:0;">
             <v-list-item-content style="padding:0">
               <v-checkbox label="아이디 저장" color="success" dense style="margin:0px" />
             </v-list-item-content>
