@@ -35,7 +35,7 @@
           >
             <div>
               <span
-                @click="selected=index; goSearch();"
+                @click="selected=index; goSearch(1);"
               >
                 {{ item.text }}
               </span>

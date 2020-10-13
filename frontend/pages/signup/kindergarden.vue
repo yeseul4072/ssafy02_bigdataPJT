@@ -11,7 +11,10 @@
         <v-row
           justify="center"
         >
-          <a href="/" class="logo" />
+          <nuxt-link
+            to="/"
+            class="logo"
+          />
         </v-row>
         <v-row
           justify="center"
