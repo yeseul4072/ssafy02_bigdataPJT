@@ -1,6 +1,6 @@
 export default ({
   state: {
-    isLogin: sessionStorage.getItem('isLogin'),
+    isLogin: parseInt(sessionStorage.getItem('isLogin')),
     user: sessionStorage.getItem('user')
 
   },

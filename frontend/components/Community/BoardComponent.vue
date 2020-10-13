@@ -127,6 +127,7 @@
 <script>
 import http from '@/util/http_common.js'
 import BoardDetail from '@/components/Community/BoardDetail.vue'
+import EventBus from '@/util/event_bus'
 export default {
   components: { BoardDetail },
   props: ['board', 'articles'],
@@ -167,7 +168,7 @@ export default {
       http.axios.post(`/community/${this.board.id}/favorite/`)
         .then(({ data }) => {
           this.board.favorite_yn = !this.board.favorite_yn
-          this.$emit('open-contact-form')
+          EventBus.$emit('sync-board-list')
         })
     },
     goToWrite () {

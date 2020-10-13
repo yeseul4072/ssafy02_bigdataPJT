@@ -16,7 +16,14 @@
         <div class="divider" />
 
         <div class="form">
-          <v-text-field v-model="id" outlined color="success" label="아이디" />
+          <v-text-field
+            ref="id"
+            v-model="id"
+            outlined
+            color="success"
+            label="아이디"
+            :error-messages=" error ? error_text : ''"
+          />
           <v-text-field
             v-model="password"
             outlined
@@ -61,7 +68,7 @@
           </v-row>
         </div>
 
-        <div class="other-service">
+        <!-- <div class="other-service">
           <div class="add-option">
             <div class="wrap">
               <p>다른 서비스로 로그인</p>
@@ -70,53 +77,59 @@
               <a class="_facebook _serviceIcon" title="facebook" href="#" @mouseover="switchButton" />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="banner" />
   </div>
 </template>
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script> -->
 <script>
-import http from "@/util/http_common.js"
+import http from '@/util/http_common.js'
 import { mapGetters } from 'vuex'
 
 export default {
   data () {
     return {
-        id:'',
-        password:'',
+      id: '',
+      password: '',
+      error: false,
+      error_text: ''
     }
   },
   computed: {
-    ...mapGetters(['isLogin','getToken'])
+    ...mapGetters(['isLogin', 'getToken'])
   },
   methods: {
-    switchButton (e) {
-      const kakaoIcon = $('._kakao')
-      let className = e.target.classList
-      for (let i = 0; i < e.target.classList.length; i++) {
-        if (e.target.classList[i] != '_serviceIcon') { className = e.target.classList[i] }
-      }
-      const targetIcon = $(`.${className}`)
-      kakaoIcon.attr('class',`${className} _serviceIcon`);
-      targetIcon.attr('class',`_kakao _serviceIcon`);
-    },
-    getSession() {
-      http.axios.get('/rest-auth/user/profile').then(({data}) => {
+    // switchButton (e) {
+    //   const kakaoIcon = $('._kakao')
+    //   let className = e.target.classList
+    //   for (let i = 0; i < e.target.classList.length; i++) {
+    //     if (e.target.classList[i] != '_serviceIcon') { className = e.target.classList[i] }
+    //   }
+    //   const targetIcon = $(`.${className}`)
+    //   kakaoIcon.attr('class', `${className} _serviceIcon`)
+    //   targetIcon.attr('class', '_kakao _serviceIcon')
+    // },
+    getSession () {
+      http.axios.get('/rest-auth/user/profile').then(({ data }) => {
         this.$router.app.$store.commit('setUser', data)
       })
       this.$router.push('/home')
     },
-    login() {
+    login () {
       http.axios.post('/rest-auth/login/', {
-        'username':this.id,
-        'password':this.password,
-      }).then( ({data}) => {
+        username: this.id,
+        password: this.password
+      }).then(({ data }) => {
         this.$router.app.$store.commit('setIsLogin', true)
         this.$router.app.$store.commit('setToken', `Token ${data.key}`)
         this.getSession()
+      }).catch(() => {
+        this.error = true
+        this.error_text = '아이디 또는 비밀번호가 일치하지 않습니다.'
+        this.$refs.id.focus()
       })
     }
   }

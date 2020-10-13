@@ -56,7 +56,6 @@ export default {
   props: ['review', 'profile'],
   data () {
     return {
-      snackbar: false
     }
   },
   mounted () {

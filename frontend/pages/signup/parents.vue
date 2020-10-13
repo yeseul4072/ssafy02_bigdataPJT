@@ -11,7 +11,10 @@
         <v-row
           justify="center"
         >
-          <a href="/" class="logo" />
+          <nuxt-link
+            to="/"
+            class="logo"
+          />
         </v-row>
         <v-row
           justify="center"
@@ -392,7 +395,6 @@ export default {
       frm.append("is_director", 'False')
       http.formAxios.post('/rest-auth/registration/', frm)
       .then(({data}) => {
-        alert(data.detail)
         this.loading = false;
         this.$router.push('/login')
       })
