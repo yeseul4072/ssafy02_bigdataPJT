@@ -161,7 +161,8 @@
 </template>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-<script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<!--<script type="text/JavaScript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>-->
+<script type="text/JavaScript" src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <!--<script type="text/JavaScript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&autoload=false"></script>-->
 <!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dff523ff715cfa66c3e0461e1f477834&libraries=services"></script>-->
 <script>
