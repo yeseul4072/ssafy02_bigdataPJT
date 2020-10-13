@@ -12,14 +12,18 @@
           v-model="selectedSi"
           :items="si"
           label="시/도"
+          dense
+          :menu-props="{maxHeight: 250}"
         />
       </div>
-      <div style="width:24.7%; padding: 0 1%">
+      <div style="width:24.7%; padding: 0 1%;">
         <v-overflow-btn
           v-model="selectedGugun"
           :items="gugun"
           :disabled="(selectedSi=='')?true:false"
           label="시/군/구"
+          dense
+          :menu-props="{maxHeight: 250}"
         />
       </div>
       <div style="width:24.7%; padding: 0 1%;">
@@ -28,6 +32,8 @@
           :items="dong"
           :disabled="(selectedGugun=='')?true:false"
           label="읍/면/동"
+          dense
+          :menu-props="{maxHeight: 250}"
         />
       </div>
 

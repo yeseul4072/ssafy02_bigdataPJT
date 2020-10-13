@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="MainHeader" style="background-color:white; z-index:99; ">
+    <div class="MainHeader" style="background-color:white; z-index:100; ">
       <div class="HeaderGradient" />
       <v-container fluid class="cont">
         <div class="Logo">
@@ -43,27 +43,28 @@
                 rounded="lg"
                 offset-y
                 style="z-index:99;"
+
               >
                 <template v-slot:activator="{ attrs, on }">
                   <li type="button">
-                    <template v-if="notiTap.length!=0">
-                      <v-badge color="red" :content="notiTap.length">
+                    <!-- <template v-if="notiTemp.length!=0">
+                      <v-badge color="red" :content="notiTemp.length">
                         <i
                           v-bind="attrs"
                           class="mdi mdi-bell-outline NavIcon"
                           v-on="on"
                         />
                       </v-badge>
-                    </template>
-                    <i v-else class="mdi mdi-bell-outline NavIcon" />
+                    </template> -->
+                    <i v-bind="attrs" class="mdi mdi-bell-outline NavIcon" v-on="on"/>
                   </li>
                 </template>
 
-                <v-list>
+                <v-list flat outlined>
                   <v-list-item
-                    v-for="item in notiTap"
+                    v-for="item in notiTemp"
                     :key="item"
-                    link
+                    inactive
                   >
                     <v-list-item-title class="tapFont" v-text="item" />
                   </v-list-item>
@@ -125,7 +126,7 @@
         absolute
         right
         temporary
-        style="position:fixed"
+        style="position:fixed; z-index: 100;"
       >
         <v-list
           nav
@@ -149,8 +150,8 @@
             <v-list-item>
               <v-row>
                 <v-col cols="3" align="center">
-                  <template v-if="notiTap.length!=0">
-                    <v-badge color="red" :content="notiTap.length">
+                  <template v-if="notiTemp.length!=0">
+                    <v-badge color="red" :content="notiTemp.length">
                       <i class="far fa-bell MNavIcon" />
                     </v-badge>
                   </template>
@@ -210,6 +211,9 @@ export default {
         '\'코로나.. 퇴원하고..\' 게시글에 댓글 \'1\'개가 달렸습니다.',
         '\'어제 돈까스 시켜...\' 게시글에 댓글 \'3\'개가 달렸습니다.',
         '\'내일이면 보름달\' 게시글에 댓글 \'1\'개가 달렸습니다.'
+      ],
+      notiTemp: [
+        '알림이 없습니다'
       ],
       drawer: false,
       group: null
