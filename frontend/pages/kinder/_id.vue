@@ -5,12 +5,11 @@
         <!-- 좌측 -->
         <v-col cols="3" style="padding-right:30px;">
           <v-row style="width:100%;">
-            <v-col cols="12" class="mb-8 card">
+            <v-col cols="12" class="mb-8 card" align="center">
               <v-img
                 class="white--text align-end mb-3"
                 height="270px"
-                width="270px"
-
+                width="100%"
                 :src="kinder.image"
               />
               <div style="text-align:center;font-size:1.5vw;font-weight:800;">
